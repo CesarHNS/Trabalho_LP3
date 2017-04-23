@@ -1,0 +1,22 @@
+package pacote.Model;
+
+public class Servico {
+	private String codigo;
+	private String descricao;
+	private double preco;
+	private int quantidade;
+
+	// constructors
+	public Servico() {
+		super();
+	}
+
+	public Servico(String codigo, String descricao, double preco, int quantidade) {
+		super();
+		this.codigo = codigo;
+		this.descricao = descricao;
+		this.preco = preco;
+		this.quantidade = quantidade;
+	}
+
+}

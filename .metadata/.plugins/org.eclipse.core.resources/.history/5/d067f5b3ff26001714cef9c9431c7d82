@@ -1,0 +1,10 @@
+package pacote.Model;
+
+public class Cliente {
+	private String nome;
+	private String dataNasc;
+	
+	private Endereco endereco ;
+	private Contato contato;
+
+}

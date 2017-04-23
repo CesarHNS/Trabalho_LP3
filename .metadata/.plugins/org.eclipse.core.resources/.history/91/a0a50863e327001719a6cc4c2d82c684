@@ -1,0 +1,162 @@
+package pacote.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.JTable;
+
+public class TelaClientes extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTable table;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_3;
+	private JTextField textField_6;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaClientes frame = new TelaClientes();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public TelaClientes() {
+		setTitle("Tela de cadastro de clientes\r\n");
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//fecha apenas a janela onde estou quando clico no X
+		setBounds(320, 150, 1045, 650);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(66, 33, 296, 23);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(373, 33, 114, 23);
+		textField_1.setColumns(10);
+		contentPane.add(textField_1);
+		
+		JLabel lblNewLabel = new JLabel("Nome do Cliente:");
+		lblNewLabel.setBounds(66, 17, 127, 14);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Telefone:");
+		lblNewLabel_1.setBounds(373, 17, 74, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(475, 119, 190, 23);
+		contentPane.add(comboBox);
+		
+		JLabel lblMaisFiltros = new JLabel("Mais Filtros:");
+		lblMaisFiltros.setBounds(475, 97, 114, 14);
+		contentPane.add(lblMaisFiltros);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(675, 119, 238, 23);
+		textField_2.setColumns(10);
+		contentPane.add(textField_2);
+		
+		JLabel lblFiltros = new JLabel("Filtros:");
+		lblFiltros.setBounds(675, 97, 151, 14);
+		contentPane.add(lblFiltros);
+		
+		JButton btnNewButton = new JButton("Pesquisar");
+		btnNewButton.setBackground(SystemColor.controlShadow);
+		btnNewButton.setBounds(923, 121, 106, 23);
+		contentPane.add(btnNewButton);
+		
+		table = new JTable();
+		table.setBounds(10, 153, 1019, 457);
+		contentPane.add(table);
+		
+		JButton btnNewButton_1 = new JButton("Adicionar");
+		btnNewButton_1.setBackground(SystemColor.controlShadow);
+		btnNewButton_1.setToolTipText("Adicionar um novo cliente");
+		btnNewButton_1.setBounds(10, 107, 127, 35);
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnRemover = new JButton("Remover");
+		btnRemover.setBackground(SystemColor.controlShadow);
+		btnRemover.setToolTipText("Remover um cliente");
+		btnRemover.setBounds(158, 107, 127, 35);
+		contentPane.add(btnRemover);
+		
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setBackground(SystemColor.controlShadow);
+		btnModificar.setToolTipText("Modificar um cliente ");
+		btnModificar.setBounds(303, 107, 127, 35);
+		contentPane.add(btnModificar);
+		
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(733, 33, 296, 23);
+		contentPane.add(textField_4);
+		
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setBounds(733, 17, 127, 14);
+		contentPane.add(lblEmail);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		textField_5.setBounds(10, 33, 46, 23);
+		contentPane.add(textField_5);
+		
+		JLabel lblCdigo = new JLabel("C\u00F3digo:");
+		lblCdigo.setBounds(10, 17, 57, 14);
+		contentPane.add(lblCdigo);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(497, 34, 114, 23);
+		contentPane.add(textField_3);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(621, 34, 102, 23);
+		contentPane.add(textField_6);
+		
+		JLabel lblCelular = new JLabel("Celular:");
+		lblCelular.setBounds(497, 17, 74, 14);
+		contentPane.add(lblCelular);
+		
+		JLabel lblDataNascimento = new JLabel("Data Nascimento:");
+		lblDataNascimento.setBounds(621, 17, 102, 14);
+		contentPane.add(lblDataNascimento);
+	}
+	private static class __Tmp {
+		private static void __tmp() {
+			  javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();
+		}
+	}
+}

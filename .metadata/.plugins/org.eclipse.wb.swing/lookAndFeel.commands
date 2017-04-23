@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+	<set-visible id="Metal" visible="true"/>
+	<set-visible id="Nimbus" visible="true"/>
+	<set-visible id="Windows" visible="true"/>
+	<set-visible id="Windows Classic" visible="true"/>
+	<set-visible id="JRE" visible="true"/>
+</commands>
