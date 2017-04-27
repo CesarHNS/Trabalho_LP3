@@ -1,22 +1,22 @@
-package pacote.Model;
+package Model;
 
-public class Veiculo {
+public class Servico {
 	private String codigo;
 	private String descricao;
-	private String montadora;
-	private String placa;
+	private double preco;
+	private int quantidade;
 
 	// constructors
-	public Veiculo() {
+	public Servico() {
 		super();
 	}
 
-	public Veiculo(String codigo, String descricao, String montadora, String placa) {
+	public Servico(String codigo, String descricao, double preco, int quantidade) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
-		this.montadora = montadora;
-		this.placa = placa;
+		this.preco = preco;
+		this.quantidade = quantidade;
 	}
 
 	// getters and setters
@@ -36,20 +36,20 @@ public class Veiculo {
 		this.descricao = descricao;
 	}
 
-	public String getMontadora() {
-		return montadora;
+	public double getPreco() {
+		return preco;
 	}
 
-	public void setMontadora(String montadora) {
-		this.montadora = montadora;
+	public void setPreco(double preco) {
+		this.preco = preco;
 	}
 
-	public String getPlaca() {
-		return placa;
+	public int getQuantidade() {
+		return quantidade;
 	}
 
-	public void setPlaca(String placa) {
-		this.placa = placa;
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
 	}
 
 	@Override
@@ -58,8 +58,10 @@ public class Veiculo {
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((montadora == null) ? 0 : montadora.hashCode());
-		result = prime * result + ((placa == null) ? 0 : placa.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(preco);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + quantidade;
 		return result;
 	}
 
@@ -71,7 +73,7 @@ public class Veiculo {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Veiculo other = (Veiculo) obj;
+		Servico other = (Servico) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
@@ -82,15 +84,9 @@ public class Veiculo {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (montadora == null) {
-			if (other.montadora != null)
-				return false;
-		} else if (!montadora.equals(other.montadora))
+		if (Double.doubleToLongBits(preco) != Double.doubleToLongBits(other.preco))
 			return false;
-		if (placa == null) {
-			if (other.placa != null)
-				return false;
-		} else if (!placa.equals(other.placa))
+		if (quantidade != other.quantidade)
 			return false;
 		return true;
 	}
@@ -98,8 +94,8 @@ public class Veiculo {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Veiculo [codigo=").append(codigo).append(", descricao=").append(descricao)
-				.append(", montadora=").append(montadora).append(", placa=").append(placa).append("]");
+		builder.append("Servico [codigo=").append(codigo).append(", descricao=").append(descricao).append(", preco=")
+				.append(preco).append(", quantidade=").append(quantidade).append("]");
 		return builder.toString();
 	}
 

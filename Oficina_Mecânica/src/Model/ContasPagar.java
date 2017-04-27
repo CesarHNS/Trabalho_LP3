@@ -1,18 +1,18 @@
-package pacote.Model;
+package Model;
 
-public class ContasReceber {
+public class ContasPagar {
 	private String codigo;
-	private OrdemServico ordemServico;
+	private Fornecedor fornecedor;
 
 	// constructors
-	public ContasReceber() {
+	public ContasPagar() {
 		super();
 	}
 
-	public ContasReceber(String codigo, OrdemServico ordemServico) {
+	public ContasPagar(String codigo, Fornecedor fornecedor) {
 		super();
 		this.codigo = codigo;
-		this.ordemServico = ordemServico;
+		this.fornecedor = fornecedor;
 	}
 
 	// getters and setters
@@ -24,12 +24,12 @@ public class ContasReceber {
 		this.codigo = codigo;
 	}
 
-	public OrdemServico getOrdemServico() {
-		return ordemServico;
+	public Fornecedor getFornecedor() {
+		return fornecedor;
 	}
 
-	public void setOrdemServico(OrdemServico ordemServico) {
-		this.ordemServico = ordemServico;
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ContasReceber {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((ordemServico == null) ? 0 : ordemServico.hashCode());
+		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
 		return result;
 	}
 
@@ -49,16 +49,16 @@ public class ContasReceber {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ContasReceber other = (ContasReceber) obj;
+		ContasPagar other = (ContasPagar) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (ordemServico == null) {
-			if (other.ordemServico != null)
+		if (fornecedor == null) {
+			if (other.fornecedor != null)
 				return false;
-		} else if (!ordemServico.equals(other.ordemServico))
+		} else if (!fornecedor.equals(other.fornecedor))
 			return false;
 		return true;
 	}
@@ -66,8 +66,7 @@ public class ContasReceber {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ContasReceber [codigo=").append(codigo).append(", ordemServico=").append(ordemServico)
-				.append("]");
+		builder.append("ContasPagar [codigo=").append(codigo).append(", fornecedor=").append(fornecedor).append("]");
 		return builder.toString();
 	}
 

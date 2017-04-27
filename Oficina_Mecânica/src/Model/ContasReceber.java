@@ -1,18 +1,18 @@
-package pacote.Model;
+package Model;
 
-public class ContasPagar {
+public class ContasReceber {
 	private String codigo;
-	private Fornecedor fornecedor;
+	private OrdemServico ordemServico;
 
 	// constructors
-	public ContasPagar() {
+	public ContasReceber() {
 		super();
 	}
 
-	public ContasPagar(String codigo, Fornecedor fornecedor) {
+	public ContasReceber(String codigo, OrdemServico ordemServico) {
 		super();
 		this.codigo = codigo;
-		this.fornecedor = fornecedor;
+		this.ordemServico = ordemServico;
 	}
 
 	// getters and setters
@@ -24,12 +24,12 @@ public class ContasPagar {
 		this.codigo = codigo;
 	}
 
-	public Fornecedor getFornecedor() {
-		return fornecedor;
+	public OrdemServico getOrdemServico() {
+		return ordemServico;
 	}
 
-	public void setFornecedor(Fornecedor fornecedor) {
-		this.fornecedor = fornecedor;
+	public void setOrdemServico(OrdemServico ordemServico) {
+		this.ordemServico = ordemServico;
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ContasPagar {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
+		result = prime * result + ((ordemServico == null) ? 0 : ordemServico.hashCode());
 		return result;
 	}
 
@@ -49,16 +49,16 @@ public class ContasPagar {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ContasPagar other = (ContasPagar) obj;
+		ContasReceber other = (ContasReceber) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (fornecedor == null) {
-			if (other.fornecedor != null)
+		if (ordemServico == null) {
+			if (other.ordemServico != null)
 				return false;
-		} else if (!fornecedor.equals(other.fornecedor))
+		} else if (!ordemServico.equals(other.ordemServico))
 			return false;
 		return true;
 	}
@@ -66,7 +66,8 @@ public class ContasPagar {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ContasPagar [codigo=").append(codigo).append(", fornecedor=").append(fornecedor).append("]");
+		builder.append("ContasReceber [codigo=").append(codigo).append(", ordemServico=").append(ordemServico)
+				.append("]");
 		return builder.toString();
 	}
 

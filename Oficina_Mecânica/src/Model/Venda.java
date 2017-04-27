@@ -1,22 +1,22 @@
-package pacote.Model;
+package Model;
 
-public class Servico {
+public class Venda {
 	private String codigo;
-	private String descricao;
-	private double preco;
+	private double valor;
 	private int quantidade;
+	private Funcionario funcionario;
 
 	// constructors
-	public Servico() {
+	public Venda() {
 		super();
 	}
 
-	public Servico(String codigo, String descricao, double preco, int quantidade) {
+	public Venda(String codigo, double valor, int quantidade, Funcionario funcionario) {
 		super();
 		this.codigo = codigo;
-		this.descricao = descricao;
-		this.preco = preco;
+		this.valor = valor;
 		this.quantidade = quantidade;
+		this.funcionario = funcionario;
 	}
 
 	// getters and setters
@@ -28,20 +28,12 @@ public class Servico {
 		this.codigo = codigo;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public double getValor() {
+		return valor;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public double getPreco() {
-		return preco;
-	}
-
-	public void setPreco(double preco) {
-		this.preco = preco;
+	public void setValor(double valor) {
+		this.valor = valor;
 	}
 
 	public int getQuantidade() {
@@ -52,16 +44,24 @@ public class Servico {
 		this.quantidade = quantidade;
 	}
 
+	public Funcionario getFuncionario() {
+		return funcionario;
+	}
+
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(preco);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((funcionario == null) ? 0 : funcionario.hashCode());
 		result = prime * result + quantidade;
+		long temp;
+		temp = Double.doubleToLongBits(valor);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -73,20 +73,20 @@ public class Servico {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Servico other = (Servico) obj;
+		Venda other = (Venda) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (descricao == null) {
-			if (other.descricao != null)
+		if (funcionario == null) {
+			if (other.funcionario != null)
 				return false;
-		} else if (!descricao.equals(other.descricao))
-			return false;
-		if (Double.doubleToLongBits(preco) != Double.doubleToLongBits(other.preco))
+		} else if (!funcionario.equals(other.funcionario))
 			return false;
 		if (quantidade != other.quantidade)
+			return false;
+		if (Double.doubleToLongBits(valor) != Double.doubleToLongBits(other.valor))
 			return false;
 		return true;
 	}
@@ -94,9 +94,9 @@ public class Servico {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Servico [codigo=").append(codigo).append(", descricao=").append(descricao).append(", preco=")
-				.append(preco).append(", quantidade=").append(quantidade).append("]");
+		builder.append("Venda [codigo=").append(codigo).append(", valor=").append(valor).append(", quantidade=")
+				.append(quantidade).append(", funcionario=").append(funcionario).append("]");
 		return builder.toString();
 	}
-
+	
 }
