@@ -1,21 +1,25 @@
 package Model;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public class Cliente {
-	private long[] id;
-	private String[] nome;
-	private String[] dataNasc;
-	private String[] cpf;
-	
-	private Endereco[] endereco;
-	private Contato[] contato;
-	
+	private long id;
+	private String nome;
+	private Date dataNasc;
+	private String cpf;
+	private String endereco;
+	private String bairro;
+	private String cidade;
+	private String estado;
+
+	private Contato contato;
+
 	public Cliente() {
 		super();
 	}
-	
-	public Cliente(long[] id, String[] nome, String[] dataNasc, String[] cpf, Endereco[] endereco, Contato[] contato) {
+
+	public Cliente(long id, String nome, Date dataNasc, String cpf, String endereco, Contato contato) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -25,51 +29,51 @@ public class Cliente {
 		this.contato = contato;
 	}
 
-	public long[] getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(long[] id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public String[] getNome() {
+	public String getNome() {
 		return nome;
 	}
 
-	public void setNome(String[] nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	public String[] getDataNasc() {
+	public Date getDataNasc() {
 		return dataNasc;
 	}
 
-	public void setDataNasc(String[] dataNasc) {
+	public void setDataNasc(Date dataNasc) {
 		this.dataNasc = dataNasc;
 	}
 
-	public String[] getCpf() {
+	public String getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(String[] cpf) {
+	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 
-	public Endereco[] getEndereco() {
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco[] endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
 
-	public Contato[] getContato() {
+	public Contato getContato() {
 		return contato;
 	}
 
-	public void setContato(Contato[] contato) {
+	public void setContato(Contato contato) {
 		this.contato = contato;
 	}
 
@@ -77,12 +81,12 @@ public class Cliente {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(contato);
-		result = prime * result + Arrays.hashCode(cpf);
-		result = prime * result + Arrays.hashCode(dataNasc);
-		result = prime * result + Arrays.hashCode(endereco);
-		result = prime * result + Arrays.hashCode(id);
-		result = prime * result + Arrays.hashCode(nome);
+		result = prime * result + ((contato == null) ? 0 : contato.hashCode());
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		result = prime * result + ((dataNasc == null) ? 0 : dataNasc.hashCode());
+		result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
 
@@ -95,27 +99,64 @@ public class Cliente {
 		if (getClass() != obj.getClass())
 			return false;
 		Cliente other = (Cliente) obj;
-		if (!Arrays.equals(contato, other.contato))
+		if (contato == null) {
+			if (other.contato != null)
+				return false;
+		} else if (!contato.equals(other.contato))
 			return false;
-		if (!Arrays.equals(cpf, other.cpf))
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
 			return false;
-		if (!Arrays.equals(dataNasc, other.dataNasc))
+		if (dataNasc == null) {
+			if (other.dataNasc != null)
+				return false;
+		} else if (!dataNasc.equals(other.dataNasc))
 			return false;
-		if (!Arrays.equals(endereco, other.endereco))
+		if (endereco == null) {
+			if (other.endereco != null)
+				return false;
+		} else if (!endereco.equals(other.endereco))
 			return false;
-		if (!Arrays.equals(id, other.id))
+		if (id != other.id)
 			return false;
-		if (!Arrays.equals(nome, other.nome))
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Cliente [id=" + Arrays.toString(id) + ", nome=" + Arrays.toString(nome) + ", dataNasc="
-				+ Arrays.toString(dataNasc) + ", cpf=" + Arrays.toString(cpf) + ", endereco="
-				+ Arrays.toString(endereco) + ", contato=" + Arrays.toString(contato) + "]";
+		return "Cliente [id=" + id + ", nome=" + nome + ", dataNasc=" + dataNasc + ", cpf=" + cpf + ", endereco="
+				+ endereco + ", contato=" + contato + "]";
 	}
 
-	
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 }

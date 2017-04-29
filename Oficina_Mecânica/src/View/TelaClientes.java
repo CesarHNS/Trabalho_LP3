@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
+import Dao.ClienteDAO;
+
 import java.awt.Rectangle;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
@@ -21,10 +23,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
+import Model.Cliente;
+
+//User Interface UI = view
+
 public class TelaClientes extends JFrame {
 
 	/**
-	 * 
+	 *  
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -100,6 +106,9 @@ public class TelaClientes extends JFrame {
 		tfPesquisaCliente.setColumns(10);
 		contentPane.add(tfPesquisaCliente);
 
+		/***********************************************************************
+		 * Botão para pesquisar os clientes cadastrados
+		 **********************************************************************/
 		JButton btnPesquisarCliente = new JButton("Pesquisar");
 		btnPesquisarCliente.setBackground(SystemColor.controlShadow);
 		btnPesquisarCliente.setBounds(923, 121, 106, 23);
@@ -109,23 +118,25 @@ public class TelaClientes extends JFrame {
 		table.setBounds(10, 153, 1019, 457);
 		contentPane.add(table);
 
+		/***********************************************************************
+		 * Botão que adiciona clientes
+		 **********************************************************************/
+
 		JButton btnAdicionarCliente = new JButton("Adicionar");
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// criando um array para salvar os dados digitados pelo usuário
-				ArrayList<String> Registro = new ArrayList<String>();
 
-				Registro.add(tfBairroCliente.getText());
-				Registro.add(tfCelularCliente.getText());
-				Registro.add(tfCepCliente.getText());
-				Registro.add(tfCidadeCliente.getText());
-				Registro.add(tfCodigoCliente.getText());
-				Registro.add(tfCpfCliente.getText());
-				Registro.add(tfEmailCliente.getText());
-				Registro.add(tfEnderecoCliente.getText());
-				Registro.add(tfNomeCliente.getText());
-				Registro.add(tfTelefoneCliente.getText());
-				Registro.add(cbEstadoCliente.getText());
+				Cliente cliente = new Cliente();
+
+				cliente.setCpf((tfCpfCliente.getText()));
+				cliente.setNome((tfNomeCliente.getText()));
+
+				ClienteDAO dao = new ClienteDAO();
+
+				// passando o objeto cliente para o metódo adicionar da classe
+				// de negócios DAO
+				dao.adicionar(cliente);
+
 			}
 		});
 		btnAdicionarCliente.setBackground(SystemColor.controlShadow);
@@ -133,12 +144,18 @@ public class TelaClientes extends JFrame {
 		btnAdicionarCliente.setBounds(10, 107, 127, 35);
 		contentPane.add(btnAdicionarCliente);
 
+		/***********************************************************************
+		 * Botão para remover clientes
+		 **********************************************************************/
 		JButton btnRemoverCliente = new JButton("Remover");
 		btnRemoverCliente.setBackground(SystemColor.controlShadow);
 		btnRemoverCliente.setToolTipText("Remover um cliente");
 		btnRemoverCliente.setBounds(158, 107, 127, 35);
 		contentPane.add(btnRemoverCliente);
 
+		/***********************************************************************
+		 * Botão para modificar clientes
+		 **********************************************************************/
 		JButton btnModificarCliente = new JButton("Modificar");
 		btnModificarCliente.setBackground(SystemColor.controlShadow);
 		btnModificarCliente.setToolTipText("Modificar um cliente ");
@@ -231,9 +248,9 @@ public class TelaClientes extends JFrame {
 		JLabel lblDigitePesquisaAqui = new JLabel("Digite sua pesquisa aqui:");
 		lblDigitePesquisaAqui.setBounds(675, 101, 151, 14);
 		contentPane.add(lblDigitePesquisaAqui);
-		
+
 		JComboBox<String> cbEstadoCliente = new JComboBox<String>();
-		cbEstadoCliente.setModel(new DefaultComboBoxModel<String>(new String[] {"SP"}));
+		cbEstadoCliente.setModel(new DefaultComboBoxModel<String>(new String[] { "SP" }));
 		cbEstadoCliente.setBounds(951, 33, 74, 23);
 		contentPane.add(cbEstadoCliente);
 
