@@ -324,7 +324,7 @@ public class TelaClientes extends JFrame {
 							email, telefone, celular);
 
 					tableModel.addRow(cliente);
-					// LimparTela();
+					LimparTela();
 					JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
 
 				} catch (NumberFormatException e) {
@@ -365,6 +365,29 @@ public class TelaClientes extends JFrame {
 
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				if (jtClientes.getSelectedRow() != -1) {
+
+					// quando uma linha não está selecionada seu indice tem o
+					// valor
+					// de -1
+					// por isso faço a comparação abaixo					
+			
+					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 0);
+					jtClientes.setValueAt(tfNomeCliente.getText(), jtClientes.getSelectedRow(), 1);
+					jtClientes.setValueAt(tfDataNascimento.getText(), jtClientes.getSelectedRow(), 2);
+					jtClientes.setValueAt(tfCpfCliente.getText(), jtClientes.getSelectedRow(), 3);
+					jtClientes.setValueAt(tfEnderecoCliente.getText(), jtClientes.getSelectedRow(), 4);
+					jtClientes.setValueAt(tfBairroCliente.getText(), jtClientes.getSelectedRow(), 5);
+					jtClientes.setValueAt(tfCepCliente.getText(), jtClientes.getSelectedRow(), 6);
+					jtClientes.setValueAt(tfCidadeCliente.getText(), jtClientes.getSelectedRow(), 7);
+					jtClientes.setValueAt(cbEstado.getSelectedItem(), jtClientes.getSelectedRow(), 8);
+					jtClientes.setValueAt(tfEmailCliente.getText(), jtClientes.getSelectedRow(), 9);
+					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 10);
+					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 11);
+					
+					
+				}
 			}
 		});
 		btnModificarCliente.setBounds(303, 107, 127, 35);
