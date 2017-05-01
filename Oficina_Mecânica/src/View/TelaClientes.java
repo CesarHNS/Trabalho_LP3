@@ -33,6 +33,8 @@ import Model.Cliente;
 import Model.ClienteTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 //User Interface UI = view
 
@@ -242,25 +244,52 @@ public class TelaClientes extends JFrame {
 		btnPesquisarCliente.setBounds(923, 121, 106, 23);
 		btnPesquisarCliente.setBackground(SystemColor.controlShadow);
 		contentPane.add(btnPesquisarCliente);
-		
-		//Utilizando o ScrollPane para que os nomes das colunas apareçam no JTable
+
+		// Utilizando o ScrollPane para que os nomes das colunas apareçam no
+		// JTable
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 153, 1019, 457);
 		contentPane.add(scrollPane);
-		
-				jtClientes = new JTable();
-				scrollPane.setViewportView(jtClientes);
-				jtClientes.setToolTipText("");
-				jtClientes.setModel(
-						new DefaultTableModel(new Object[][] {}, new String[] { "C\u00F3digo", "Nome", "Data de Nascimento",
-								"CPF", "Endereco", "Bairro", "Cidade", "Estado", "Email", "Telefone", "Celular" }) {
-							boolean[] columnEditables = new boolean[] { false, false, false, false, false, false, false, false,
-									false, false, false };
 
-							public boolean isCellEditable(int row, int column) {
-								return columnEditables[column];
-							}
-						});
+		jtClientes = new JTable();
+		jtClientes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				if (jtClientes.getSelectedRow() != -1) {
+
+					// quando uma linha não está selecionada seu indice tem o
+					// valor
+					// de -1
+					// por isso faço a comparação abaixo
+					tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
+					tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
+					tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
+					tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
+					tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
+					tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
+					tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
+					tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
+					cbEstado.setSelectedItem(jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString());
+					tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
+					tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
+					tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
+
+				}
+			}
+		});
+		scrollPane.setViewportView(jtClientes);
+		jtClientes.setToolTipText("");
+		jtClientes.setModel(
+				new DefaultTableModel(new Object[][] {}, new String[] { "C\u00F3digo", "Nome", "Data de Nascimento",
+						"CPF", "Endereco", "Bairro", "Cidade", "Estado", "Email", "Telefone", "Celular" }) {
+					boolean[] columnEditables = new boolean[] { false, false, false, false, false, false, false, false,
+							false, false, false };
+
+					public boolean isCellEditable(int row, int column) {
+						return columnEditables[column];
+					}
+				});
 
 		ClienteTableModel tableModel = new ClienteTableModel();
 		jtClientes.setModel(tableModel);
@@ -295,7 +324,7 @@ public class TelaClientes extends JFrame {
 							email, telefone, celular);
 
 					tableModel.addRow(cliente);
-					LimparTela();
+					// LimparTela();
 					JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
 
 				} catch (NumberFormatException e) {
@@ -314,7 +343,14 @@ public class TelaClientes extends JFrame {
 		JButton btnRemoverCliente = new JButton("Remover");
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
+				// quando uma linha não está selecionada seu indice tem o valor
+				// de -1
+				// por isso faço a comparação abaixo
+				if (jtClientes.getSelectedRow() != -1) {
+					tableModel.removeRow(jtClientes.getSelectedRow());
+					JOptionPane.showMessageDialog(null, "Cliente removido com sucesso");
+				}
 			}
 		});
 		btnRemoverCliente.setBounds(158, 107, 127, 35);
@@ -326,6 +362,11 @@ public class TelaClientes extends JFrame {
 		 * Botão para modificar clientes
 		 **********************************************************************/
 		JButton btnModificarCliente = new JButton("Modificar");
+
+		btnModificarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnModificarCliente.setBounds(303, 107, 127, 35);
 		btnModificarCliente.setBackground(SystemColor.controlShadow);
 		btnModificarCliente.setToolTipText("Modificar um cliente ");

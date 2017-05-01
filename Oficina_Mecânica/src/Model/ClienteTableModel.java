@@ -13,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 public class ClienteTableModel extends AbstractTableModel {
 
 	private ArrayList<Cliente> ListaCliente;
-	private String[] NomesColunas = { "Código", "Nome", "Data de Nascimento", "CPF", "Endereco", "Bairro", "Cidade",
+	private String[] NomesColunas = { "Código", "Nome", "Data de Nascimento", "CPF", "Endereco", "Bairro","CEP", "Cidade",
 			"Estado", "Email", "Telefone", "Celular" };
 	
 	
