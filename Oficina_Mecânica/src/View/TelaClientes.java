@@ -306,7 +306,7 @@ public class TelaClientes extends JFrame {
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-
+									
 					Long codigo = Long.parseLong(tfCodigoCliente.getText());
 					String nome = tfNomeCliente.getText();
 					String dataNasc = tfDataNascimento.getText();

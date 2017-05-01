@@ -38,6 +38,7 @@ public class TelaControle extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaControle() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//quando clico no X fecha apenas a janela onde estou 
 		setBounds(100, 100, 1280, 720);
 		contentPane = new JPanel();
@@ -110,17 +111,17 @@ public class TelaControle extends JFrame {
 			}
 		});
 		btnVeculos.setToolTipText("Cadastrar Ve\u00EDculos");
-		btnVeculos.setBounds(25, 341, 144, 44);
+		btnVeculos.setBounds(25, 395, 144, 44);
 		panel.add(btnVeculos);
 		btnVeculos.setBackground(SystemColor.controlShadow);
 		
 		JButton btnContasPagar = new JButton("Contas a Pagar");
-		btnContasPagar.setBounds(25, 396, 144, 44);
+		btnContasPagar.setBounds(25, 450, 144, 44);
 		panel.add(btnContasPagar);
 		btnContasPagar.setBackground(SystemColor.controlShadow);
 		
 		JButton btnContasAReceber = new JButton("Contas a Receber");
-		btnContasAReceber.setBounds(25, 451, 144, 44);
+		btnContasAReceber.setBounds(25, 505, 144, 44);
 		panel.add(btnContasAReceber);
 		btnContasAReceber.setBackground(SystemColor.controlShadow);
 		
@@ -137,10 +138,28 @@ public class TelaControle extends JFrame {
 		panel.add(btnServios);
 		
 		JButton btnOrdensDeServico = new JButton("OS");
+		btnOrdensDeServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaOrdemServico ObjOrdemServico = new TelaOrdemServico();
+				ObjOrdemServico.setVisible(true);
+			}
+		});
 		btnOrdensDeServico.setToolTipText("Gerar ordem de servi\u00E7o");
 		btnOrdensDeServico.setBounds(25, 286, 144, 44);
 		panel.add(btnOrdensDeServico);
 		btnOrdensDeServico.setBackground(SystemColor.controlShadow);
+		
+		JButton btnVendas = new JButton("Vendas");
+		btnVendas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaVendas ObjTelaVendas = new TelaVendas();
+				ObjTelaVendas.setVisible(true);
+			}
+		});
+		btnVendas.setToolTipText("Realizar Vendas de Produtos");
+		btnVendas.setBackground(SystemColor.controlShadow);
+		btnVendas.setBounds(25, 340, 144, 44);
+		panel.add(btnVendas);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
