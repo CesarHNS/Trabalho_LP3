@@ -217,14 +217,52 @@ public class TelaClientes extends JFrame {
 		JLabel lblNomeCliente = new JLabel("Nome do Cliente:");
 		lblNomeCliente.setBounds(66, 17, 127, 14);
 		contentPane.add(lblNomeCliente);
+		
+		JButton btnPesquisarCliente = new JButton("Pesquisar");
+		btnPesquisarCliente.setBounds(923, 121, 106, 23);
+		btnPesquisarCliente.setBackground(SystemColor.controlShadow);
+		contentPane.add(btnPesquisarCliente);
+
+		// Utilizando o ScrollPane para que os nomes das colunas apareçam no
+		// JTable
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 153, 1019, 457);
+		contentPane.add(scrollPane);
+
+		jtClientes = new JTable();
 
 		JLabel lblTelefoneCliente = new JLabel("Telefone:");
 		lblTelefoneCliente.setBounds(443, 56, 74, 14);
 		contentPane.add(lblTelefoneCliente);
+		
+		JButton btnAdicionarCliente = new JButton("Adicionar");
+		btnAdicionarCliente.setBounds(10, 107, 127, 35);
+		btnAdicionarCliente.setBackground(SystemColor.controlShadow);
+		btnAdicionarCliente.setToolTipText("Adicionar um novo cliente");
+		contentPane.add(btnAdicionarCliente);
 
 		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
 		cbFiltrosCliente.setBounds(475, 119, 190, 23);
 		contentPane.add(cbFiltrosCliente);
+		
+		JButton btnModificarCliente = new JButton("Modificar");
+		btnModificarCliente.setBounds(303, 107, 127, 35);
+		btnModificarCliente.setBackground(SystemColor.controlShadow);
+		btnModificarCliente.setToolTipText("Modificar um cliente ");
+		contentPane.add(btnModificarCliente);
+		
+		scrollPane.setViewportView(jtClientes);
+		jtClientes.setToolTipText("");
+		jtClientes.setModel(
+				new DefaultTableModel(new Object[][] {}, new String[] { "C\u00F3digo", "Nome", "Data de Nascimento",
+						"CPF", "Endereco", "Bairro","CEP", "Cidade", "Estado", "Email", "Telefone", "Celular" }) {
+					boolean[] columnEditables = new boolean[] { false, false, false, false, false, false, false, false,
+							false, false, false };
+
+					public boolean isCellEditable(int row, int column) {
+						return columnEditables[column];
+					}
+				});
 
 		JComboBox<String> cbEstado = new JComboBox<String>();
 		cbEstado.setBounds(951, 33, 63, 23);
@@ -238,98 +276,27 @@ public class TelaClientes extends JFrame {
 		contentPane.add(cbEstado);
 
 		/***********************************************************************
-		 * Botão para pesquisar os clientes cadastrados
-		 **********************************************************************/
-		JButton btnPesquisarCliente = new JButton("Pesquisar");
-		btnPesquisarCliente.setBounds(923, 121, 106, 23);
-		btnPesquisarCliente.setBackground(SystemColor.controlShadow);
-		contentPane.add(btnPesquisarCliente);
-
-		// Utilizando o ScrollPane para que os nomes das colunas apareçam no
-		// JTable
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 153, 1019, 457);
-		contentPane.add(scrollPane);
-
-		jtClientes = new JTable();
-		jtClientes.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				if (jtClientes.getSelectedRow() != -1) {
-
-					// quando uma linha não está selecionada seu indice tem o
-					// valor
-					// de -1
-					// por isso faço a comparação abaixo
-					tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
-					tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
-					tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
-					tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
-					tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
-					tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
-					tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
-					tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
-					cbEstado.setSelectedItem(jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString());
-					tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
-					tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
-					tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
-
-				}
-			}
-		});
-		scrollPane.setViewportView(jtClientes);
-		jtClientes.setToolTipText("");
-		jtClientes.setModel(
-				new DefaultTableModel(new Object[][] {}, new String[] { "C\u00F3digo", "Nome", "Data de Nascimento",
-						"CPF", "Endereco", "Bairro", "Cidade", "Estado", "Email", "Telefone", "Celular" }) {
-					boolean[] columnEditables = new boolean[] { false, false, false, false, false, false, false, false,
-							false, false, false };
-
-					public boolean isCellEditable(int row, int column) {
-						return columnEditables[column];
-					}
-				});
-
-		//ClienteTableModel tableModel = new ClienteTableModel();
-		//jtClientes.setModel(tableModel);
-
-		/***********************************************************************
 		 * Botão que adiciona os clientes
 		 **********************************************************************/
 
-		JButton btnAdicionarCliente = new JButton("Adicionar");
-		btnAdicionarCliente.setBounds(10, 107, 127, 35);
-		btnAdicionarCliente.setBackground(SystemColor.controlShadow);
-		btnAdicionarCliente.setToolTipText("Adicionar um novo cliente");
-		contentPane.add(btnAdicionarCliente);
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-								
-					ArrayList<Cliente> ListaCliente;
-					String[] NomesColunas = { "Código", "Nome", "Data de Nascimento", "CPF", "Endereco", "Bairro","CEP", "Cidade",
-							"Estado", "Email", "Telefone", "Celular" };
-					DefaultTableModel 
-					
-					
-					Long codigo = Long.parseLong(tfCodigoCliente.getText());
-					String nome = tfNomeCliente.getText();
-					String dataNasc = tfDataNascimento.getText();
-					String cpf = tfCpfCliente.getText();
-					String endereco = tfEnderecoCliente.getText();
-					String bairro = tfBairroCliente.getText();
-					String cep = tfCepCliente.getText();
-					String cidade = tfCidadeCliente.getText();
-					String estado = (String) cbEstado.getSelectedItem();
-					String email = tfEmailCliente.getText();
-					String celular = tfCelularCliente.getText();
-					String telefone = tfTelefoneCliente.getText();
+				try {								
+				DefaultTableModel tableModel = (DefaultTableModel)jtClientes.getModel();
+				Object[] clientes = {Long.parseLong(tfCodigoCliente.getText()),
+					tfNomeCliente.getText(),
+					 tfDataNascimento.getText(),
+					tfCpfCliente.getText(),
+					tfEnderecoCliente.getText(),
+					tfBairroCliente.getText(),
+					tfCepCliente.getText(),
+					tfCidadeCliente.getText(),
+					(String) cbEstado.getSelectedItem(),
+					tfEmailCliente.getText(),
+					tfCelularCliente.getText(),
+					tfTelefoneCliente.getText()};				
 
-					Cliente cliente = new Cliente(codigo, nome, dataNasc, cpf, endereco, bairro, cep, cidade, estado,
-							email, telefone, celular);
-
-					tableModel.addRow(cliente);
+					tableModel.addRow(clientes);
 					LimparTela();
 					JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
 
@@ -349,10 +316,9 @@ public class TelaClientes extends JFrame {
 		JButton btnRemoverCliente = new JButton("Remover");
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				DefaultTableModel tableModel = (DefaultTableModel)jtClientes.getModel();
 
-				// quando uma linha não está selecionada seu indice tem o valor
-				// de -1
-				// por isso faço a comparação abaixo
+			//verificando se existe linha selecionada
 				if (jtClientes.getSelectedRow() != -1) {
 					tableModel.removeRow(jtClientes.getSelectedRow());
 					JOptionPane.showMessageDialog(null, "Cliente removido com sucesso");
@@ -363,21 +329,41 @@ public class TelaClientes extends JFrame {
 		btnRemoverCliente.setBackground(SystemColor.controlShadow);
 		btnRemoverCliente.setToolTipText("Remover um cliente");
 		contentPane.add(btnRemoverCliente);
+		
+		/***********************************************************************
+		 * selecionar uma linha da tabela de clientes
+		 **********************************************************************/		
+		jtClientes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				if (jtClientes.getSelectedRow() != -1) {
+
+					tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
+					tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
+					tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
+					tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
+					tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
+					tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
+					tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
+					tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
+					cbEstado.setSelectedItem(jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString());
+					tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
+					tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
+					tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
+
+				}
+			}
+		});
 
 		/***********************************************************************
 		 * Botão para modificar clientes
 		 **********************************************************************/
-		JButton btnModificarCliente = new JButton("Modificar");
-
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
+				//verificando se existe linha selecionada
 				if (jtClientes.getSelectedRow() != -1) {
-
-					// quando uma linha não está selecionada seu indice tem o
-					// valor
-					// de -1
-					// por isso faço a comparação abaixo					
 			
 					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 0);
 					jtClientes.setValueAt(tfNomeCliente.getText(), jtClientes.getSelectedRow(), 1);
@@ -389,18 +375,16 @@ public class TelaClientes extends JFrame {
 					jtClientes.setValueAt(tfCidadeCliente.getText(), jtClientes.getSelectedRow(), 7);
 					jtClientes.setValueAt(cbEstado.getSelectedItem(), jtClientes.getSelectedRow(), 8);
 					jtClientes.setValueAt(tfEmailCliente.getText(), jtClientes.getSelectedRow(), 9);
-					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 10);
-					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 11);
+					jtClientes.setValueAt(tfCelularCliente.getText(), jtClientes.getSelectedRow(), 10);
+					jtClientes.setValueAt(tfTelefoneCliente.getText(), jtClientes.getSelectedRow(), 11);
 					
+					LimparTela();
+					JOptionPane.showMessageDialog(null, "Cliente modificado com sucesso");
 					
 				}
 			}
 		});
-		btnModificarCliente.setBounds(303, 107, 127, 35);
-		btnModificarCliente.setBackground(SystemColor.controlShadow);
-		btnModificarCliente.setToolTipText("Modificar um cliente ");
-		contentPane.add(btnModificarCliente);
-
+	
 	}
 
 	/***********************************************************************

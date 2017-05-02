@@ -221,7 +221,7 @@ public class TelaOrdemServico extends JFrame {
 		btnAdicionar.setBounds(190, 315, 102, 29);
 		contentPane.add(btnAdicionar);
 		
-		btnRelatrio = new JButton("Relat\u00F3rio:");
+		btnRelatrio = new JButton("Relat\u00F3rio");
 		btnRelatrio.setBounds(302, 315, 102, 29);
 		contentPane.add(btnRelatrio);
 		btnRelatrio.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
