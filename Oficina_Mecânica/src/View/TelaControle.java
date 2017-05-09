@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
 
@@ -58,7 +59,13 @@ public class TelaControle extends JFrame {
 		btnClientes.setToolTipText("Cadastrar Clientes");
 		btnClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				TelaClientes ObjTelaClientes = new TelaClientes();
+				TelaClientes ObjTelaClientes = null;
+				try {
+					ObjTelaClientes = new TelaClientes();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				ObjTelaClientes.setVisible(true);
 			}
 		});

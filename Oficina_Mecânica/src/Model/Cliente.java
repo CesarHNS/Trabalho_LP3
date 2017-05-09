@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -134,6 +135,18 @@ public class Cliente {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	public boolean Persistir(){
+		return true;
+	}
+	
+	public ArrayList<Cliente> getClientes(){
+		ArrayList<Cliente> clientes = new ArrayList<>();
+		
+		//ArrayList<> cli
+		
+		return clientes;
 	}
 
 	@Override
