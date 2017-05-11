@@ -16,7 +16,7 @@ public class ClienteTableModel extends AbstractTableModel {
 
 	private List<Cliente> linhas;
 	private String[] NomesColunas = { "Código", "Nome", "Data de Nascimento", "CPF", "Endereco", "Bairro", "CEP",
-			"Cidade", "Estado", "Email", "Telefone", "CElular" };
+			"Cidade", "Estado", "Email", "Celular", "Telefone" };
 
 	public ClienteTableModel() {
 		linhas = new ArrayList<Cliente>();
@@ -77,9 +77,9 @@ public class ClienteTableModel extends AbstractTableModel {
 		case 9:
 			return cliente.getEmail();
 		case 10:
-			return cliente.getTelefone();
-		case 11:
 			return cliente.getCelular();
+		case 11:
+			return cliente.getTelefone();
 		default:
 			throw new IndexOutOfBoundsException("columnIndex out of bounds");
 

@@ -83,7 +83,8 @@ public class TelaClientes extends JFrame {
 
 	/***********************************************************
 	 * Create the frame.
-	 * @throws ParseException 
+	 * 
+	 * @throws ParseException
 	 ***********************************************************/
 
 	public TelaClientes() throws ParseException {
@@ -167,7 +168,6 @@ public class TelaClientes extends JFrame {
 		tfDataNascimento.setBounds(687, 72, 114, 23);
 		tfDataNascimento.setColumns(10);
 		contentPane.add(tfDataNascimento);
-			
 
 		MaskFormatter fmtCpf = new MaskFormatter("###.###.###-##");
 		tfCpfCliente = new JFormattedTextField(fmtCpf);
@@ -257,9 +257,11 @@ public class TelaClientes extends JFrame {
 		btnAdicionarCliente.setToolTipText("Adicionar um novo cliente");
 		contentPane.add(btnAdicionarCliente);
 
-		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
-		cbFiltrosCliente.setBounds(475, 119, 190, 23);
-		contentPane.add(cbFiltrosCliente);
+		JButton btnRemoverCliente = new JButton("Remover");
+		btnRemoverCliente.setBounds(158, 107, 127, 35);
+		btnRemoverCliente.setBackground(SystemColor.controlShadow);
+		btnRemoverCliente.setToolTipText("Remover um cliente");
+		contentPane.add(btnRemoverCliente);
 
 		JButton btnModificarCliente = new JButton("Modificar");
 		btnModificarCliente.setBounds(303, 107, 127, 35);
@@ -272,15 +274,16 @@ public class TelaClientes extends JFrame {
 		modelo = new ClienteTableModel();
 		jtClientes.setModel(modelo);
 
+		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
+		cbFiltrosCliente.setBounds(475, 119, 190, 23);
+		contentPane.add(cbFiltrosCliente);
+
 		JComboBox<String> cbEstado = new JComboBox<String>();
 		cbEstado.setBounds(951, 33, 63, 23);
-		cbEstado.setModel(new DefaultComboBoxModel<String>(new String[] { "Acre \t", "Alagoas \t", "Amap\u00E1 \t",
-				"Amazonas \t", "Bahia \t", "Cear\u00E1 \t", "Distrito Federal \t", "Esp\u00EDrito Santo \t",
-				"Goi\u00E1s \t\t ", "Maranh\u00E3o \t ", "Mato Grosso \t\t ", "Mato Grosso do Sul \t\t ",
-				"Minas Gerais \t\t ", "Par\u00E1 \t\t ", "Para\u00EDba \t ", "Paran\u00E1 \t\t ", "Pernambuco \t \t ",
-				"Piau\u00ED \t\t ", "Rio de Janeiro \t ", "Rio Grande do Norte \t\t ", "Rio Grande do Sul \t ",
-				"Rond\u00F4nia \t\t ", "Roraima \t ", "Santa Catarina \t", "S\u00E3o Paulo \t\t ", "Sergipe \t\t ",
-				"Tocantins \t" }));
+		cbEstado.setModel(new DefaultComboBoxModel<String>(new String[] { "AC \t", "AL \t", "AP \t", "AM \t", "BA \t",
+				"CE \t", "DF \t", "ES \t", "GO\t ", "MA \t ", "MT \t ", "MS\t ", "MG \t ", "PA \t ", "PB \t ", "PN \t ",
+				"PE \t ", "PI\t ", "RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t",
+				"SP \t ", "SE \t ", "TO \t" }));
 		contentPane.add(cbEstado);
 
 		/***********************************************************************
@@ -289,6 +292,8 @@ public class TelaClientes extends JFrame {
 
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
+				tfCodigoCliente.setEnabled(true);
 
 				Cliente cliente = new Cliente();
 
@@ -317,22 +322,22 @@ public class TelaClientes extends JFrame {
 		/***********************************************************************
 		 * Botão para remover clientes
 		 **********************************************************************/
-		JButton btnRemoverCliente = new JButton("Remover");
+
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
+				tfCodigoCliente.setEnabled(true);
 
 				// verificando se existe linha selecionada
 				if (jtClientes.getSelectedRow() != -1) {
 					modelo.removeCliente(jtClientes.getSelectedRow());
 					LimparTela();
 					JOptionPane.showMessageDialog(null, "Cliente removido com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um cliente");
 				}
 			}
 		});
-		btnRemoverCliente.setBounds(158, 107, 127, 35);
-		btnRemoverCliente.setBackground(SystemColor.controlShadow);
-		btnRemoverCliente.setToolTipText("Remover um cliente");
-		contentPane.add(btnRemoverCliente);
 
 		/***********************************************************************
 		 * selecionar uma linha da tabela de clientes
@@ -340,7 +345,10 @@ public class TelaClientes extends JFrame {
 		jtClientes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				// desabilitando o textField do codigo do cliente
+				// para que o usuário não modifique o código
+				tfCodigoCliente.setEnabled(false);
+				// verificando se existe linha selecionada
 				if (jtClientes.getSelectedRow() != -1) {
 
 					tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
@@ -366,10 +374,11 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				tfCodigoCliente.setEnabled(true);
+
 				// verificando se existe linha selecionada
 				if (jtClientes.getSelectedRow() != -1) {
 
-					jtClientes.setValueAt(tfCodigoCliente.getText(), jtClientes.getSelectedRow(), 0);
 					jtClientes.setValueAt(tfNomeCliente.getText(), jtClientes.getSelectedRow(), 1);
 					jtClientes.setValueAt(tfDataNascimento.getText(), jtClientes.getSelectedRow(), 2);
 					jtClientes.setValueAt(tfCpfCliente.getText(), jtClientes.getSelectedRow(), 3);
@@ -385,6 +394,8 @@ public class TelaClientes extends JFrame {
 					LimparTela();
 					JOptionPane.showMessageDialog(null, "Cliente modificado com sucesso");
 
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um cliente");
 				}
 			}
 		});
@@ -392,7 +403,7 @@ public class TelaClientes extends JFrame {
 	}
 
 	/***********************************************************************
-	 * Método para limpar a tela após o cadastramento dos clientes
+	 * Método para limpar os TextFields após o cadastramento dos clientes
 	 **********************************************************************/
 	private void LimparTela() {
 		tfCodigoCliente.setText("");
