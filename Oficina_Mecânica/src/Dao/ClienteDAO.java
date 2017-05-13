@@ -1,25 +1,22 @@
-package Dao;
+package dao;
 
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
-import Model.Cliente;
+import model.Cliente;
 
 //bussiness logic layer bll = 
 public class ClienteDAO {
 
 	public boolean adicionar(Cliente cliente) {
-		
 
-			// Criando um ArrayList para salvar os clientes informados pelo
-			// usuário
-			ArrayList<String> ListaClientes = new ArrayList<String>();
+		// Criando um ArrayList para salvar os clientes informados pelo
+		// usuário
+		ArrayList<String> ListaClientes = new ArrayList<String>();
 
-			ListaClientes.add(cliente.toString());
+		ListaClientes.add(cliente.toString());
 
-			System.out.println(ListaClientes);
-	
+		System.out.println(ListaClientes);
+
 		return true;
 
 	}

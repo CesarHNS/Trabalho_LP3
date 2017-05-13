@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Funcionario {
 	private String codigo;
@@ -6,14 +6,15 @@ public class Funcionario {
 	private String cpf;
 	private String senha;
 	private String cargo;
-	
+
 	private Endereco endereco;
 	private Contato contato;
-	
-	//constructors 
+
+	// constructors
 	public Funcionario() {
 		super();
 	}
+
 	public Funcionario(String codigo, String nome, String cpf, String senha, String cargo, Endereco endereco,
 			Contato contato) {
 		super();
@@ -25,6 +26,7 @@ public class Funcionario {
 		this.endereco = endereco;
 		this.contato = contato;
 	}
+
 	public Funcionario(String codigo, String nome, String cpf, String senha, String cargo) {
 		super();
 		this.codigo = codigo;
@@ -33,6 +35,7 @@ public class Funcionario {
 		this.senha = senha;
 		this.cargo = cargo;
 	}
+
 	public Funcionario(String nome, String cpf, String senha, String cargo) {
 		super();
 		this.nome = nome;
@@ -40,50 +43,64 @@ public class Funcionario {
 		this.senha = senha;
 		this.cargo = cargo;
 	}
-	
-	//getters and setters
+
+	// getters and setters
 	public String getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public String getCpf() {
 		return cpf;
 	}
+
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
 	public String getSenha() {
 		return senha;
 	}
+
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
 	public String getCargo() {
 		return cargo;
 	}
+
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
 	}
+
 	public Endereco getEndereco() {
 		return endereco;
 	}
+
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
+
 	public Contato getContato() {
 		return contato;
 	}
+
 	public void setContato(Contato contato) {
 		this.contato = contato;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -95,6 +112,7 @@ public class Funcionario {
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -131,6 +149,7 @@ public class Funcionario {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -139,7 +158,5 @@ public class Funcionario {
 				.append(endereco).append(", contato=").append(contato).append("]");
 		return builder.toString();
 	}
-	
-	
-	
+
 }

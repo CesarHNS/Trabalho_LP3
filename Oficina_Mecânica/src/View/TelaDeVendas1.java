@@ -1,295 +1,305 @@
-package View;
+package view;
 
-import Model.Cliente;
-import Model.Produtos;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import javax.swing.JOptionPane;
+
+import model.Cliente;
+import model.Produtos;
 
 /**
  *
  * @author lucas
  */
 public class TelaDeVendas1 extends javax.swing.JFrame {
-    
-    TelaClientes TelaAnterior;
-    Produtos p;
-    double pvSelecionado;
 
-    /**
-     *
-     * @param TelaAnterior
-     */
-    public TelaDeVendas1(TelaClientes TelaAnterior){
-        this();
-        this.TelaAnterior = TelaAnterior;
-    }
-    
-    private String[] Clientes;
-    private String[] produtos;
+	TelaClientes TelaAnterior;
+	Produtos p;
+	double pvSelecionado;
 
-    public void lerArquivos() { //entrada dos arquivos inseridos nos arquivos clientes.txt e produto.txt
-        try {
-            File fileClientes = new File("clientes.txt");
-            InputStream is;
-            is = new FileInputStream(fileClientes);
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
+	/**
+	 *
+	 * @param TelaAnterior
+	 */
+	public TelaDeVendas1(TelaClientes TelaAnterior) {
+		this();
+		this.TelaAnterior = TelaAnterior;
+	}
 
-            String texto = br.readLine();
+	private String[] Clientes;
+	private String[] produtos;
 
-            while (texto != null) {
-                Clientes = new String[3];
-                Clientes = texto.split(";");
+	public void lerArquivos() { // entrada dos arquivos inseridos nos arquivos
+								// clientes.txt e produto.txt
+		try {
+			File fileClientes = new File("clientes.txt");
+			InputStream is;
+			is = new FileInputStream(fileClientes);
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
 
-                carregarTabelaCliente();
-                texto = br.readLine();
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+			String texto = br.readLine();
 
-        try {
+			while (texto != null) {
+				Clientes = new String[3];
+				Clientes = texto.split(";");
 
-            File file = new File("produto.txt");
-            InputStream is;
-            is = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
+				carregarTabelaCliente();
+				texto = br.readLine();
+			}
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
 
-            String texto = br.readLine();
+		try {
 
-            while (texto != null) {
-                produtos = new String[6];//3 componentes na tabela
+			File file = new File("produto.txt");
+			InputStream is;
+			is = new FileInputStream(file);
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
 
-                produtos = texto.split(";");//vai quebrar cada elemento qnd ver um ;
+			String texto = br.readLine();
 
-                carregarTabelaProduto(); //carrega a tabela ao reabrir
+			while (texto != null) {
+				produtos = new String[6];// 3 componentes na tabela
 
-                texto = br.readLine();
-                //contador++;
-            }
+				produtos = texto.split(";");// vai quebrar cada elemento qnd ver
+											// um ;
 
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+				carregarTabelaProduto(); // carrega a tabela ao reabrir
 
-    public void carregarTabelaCliente() {
+				texto = br.readLine();
+				// contador++;
+			}
 
-        Cliente c = new Cliente();
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
 
-        jComboBox2.addItem(c.getNome());
+	public void carregarTabelaCliente() {
 
-    }
+		Cliente c = new Cliente();
 
-    public void carregarTabelaProduto() {
+		jComboBox2.addItem(c.getNome());
 
-        double pv = 0.0f;
-        double pc = 0.0f;
-        try {
-            pv = Double.parseDouble(produtos[3]);
-            pc = Double.parseDouble(produtos[4]);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Tabela não carregada..");
-        }
+	}
 
-        p = new Produtos();
+	public void carregarTabelaProduto() {
 
-        jComboBox3.addItem(p.getDescricao());
-    }
+		double pv = 0.0f;
+		double pc = 0.0f;
+		try {
+			pv = Double.parseDouble(produtos[3]);
+			pc = Double.parseDouble(produtos[4]);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Tabela não carregada..");
+		}
 
-    public double verifProdEQtde() {
-        try {            
-            pvSelecionado = p.getPreco();
-            int qtdePacotes = Integer.parseInt(jTextField2.getText());
-            if(qtdePacotes>0){
-            return (10 * qtdePacotes * pvSelecionado);
-            }else
-                return -2;
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return -1;
-    }
+		p = new Produtos();
 
-    /**
-     * Creates new form TelaDeVendas
-     */
-    public TelaDeVendas1() {
-        initComponents();
-        lerArquivos();
-    }
+		jComboBox3.addItem(p.getDescricao());
+	}
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	public double verifProdEQtde() {
+		try {
+			pvSelecionado = p.getPreco();
+			int qtdePacotes = Integer.parseInt(jTextField2.getText());
+			if (qtdePacotes > 0) {
+				return (10 * qtdePacotes * pvSelecionado);
+			} else
+				return -2;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return -1;
+	}
 
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jButton2 = new javax.swing.JButton();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+	/**
+	 * Creates new form TelaDeVendas
+	 */
+	public TelaDeVendas1() {
+		initComponents();
+		lerArquivos();
+	}
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("VENDA");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
+	/**
+	 * This method is called from within the constructor to initialize the form.
+	 * WARNING: Do NOT modify this code. The content of this method is always
+	 * regenerated by the Form Editor.
+	 */
+	@SuppressWarnings("unchecked")
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        jButton2.setText("FINALIZAR VENDA");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+		jComboBox2 = new javax.swing.JComboBox<>();
+		jButton2 = new javax.swing.JButton();
+		jComboBox3 = new javax.swing.JComboBox<>();
+		jLabel1 = new javax.swing.JLabel();
+		jLabel2 = new javax.swing.JLabel();
+		jLabel3 = new javax.swing.JLabel();
+		jTextField2 = new javax.swing.JTextField();
 
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
-            }
-        });
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setTitle("VENDA");
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosed(java.awt.event.WindowEvent evt) {
+				formWindowClosed(evt);
+			}
 
-        jLabel1.setText("SELECIONE O CLIENTE");
+			public void windowClosing(java.awt.event.WindowEvent evt) {
+				formWindowClosing(evt);
+			}
+		});
 
-        jLabel2.setText("SELECIONE O PRODUTO");
+		jButton2.setText("FINALIZAR VENDA");
+		jButton2.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButton2ActionPerformed(evt);
+			}
+		});
 
-        jLabel3.setText("QUANTIDADE DE PACOTES");
-        jLabel3.setToolTipText("Lembrando que cada pacote tem 10 produtos");
+		jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jComboBox3ActionPerformed(evt);
+			}
+		});
 
-        jTextField2.setToolTipText("Lembrando que cada pacote tem 10 produtos");
+		jLabel1.setText("SELECIONE O CLIENTE");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(77, 77, 77)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(27, 27, 27))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(161, 161, 161))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(jButton2)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
+		jLabel2.setText("SELECIONE O PRODUTO");
 
-        pack();
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+		jLabel3.setText("QUANTIDADE DE PACOTES");
+		jLabel3.setToolTipText("Lembrando que cada pacote tem 10 produtos");
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        this.dispose();
-    }//GEN-LAST:event_formWindowClosed
+		jTextField2.setToolTipText("Lembrando que cada pacote tem 10 produtos");
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        JOptionPane.showMessageDialog(this, "A venda nao foi feita!\n\n Encerrando...");
-    }//GEN-LAST:event_formWindowClosing
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addGap(77, 77, 77)
+						.addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+						javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+						javax.swing.GroupLayout.PREFERRED_SIZE).addGap(74, 74, 74))
+				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup().addGap(37, 37, 37).addComponent(jLabel1)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101,
+										Short.MAX_VALUE)
+								.addComponent(jLabel2).addGap(27, 27, 27))
+				.addGroup(layout.createSequentialGroup().addGap(134, 134, 134)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+								.addComponent(jLabel3).addComponent(jButton2))
+						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup()
+								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 66,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGap(161, 161, 161)));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addGap(6, 6, 6)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(jLabel1).addComponent(jLabel2))
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+						.addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+				.addGap(33, 33, 33).addComponent(jLabel3)
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+				.addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+						javax.swing.GroupLayout.PREFERRED_SIZE).addGap(51, 51, 51).addComponent(jButton2)
+				.addContainerGap(19, Short.MAX_VALUE)));
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(this.verifProdEQtde()!=(-1)){
-            JOptionPane.showMessageDialog(this, "Venda realizada com sucesso, valor a ser pago é de:\nR$ "+this.verifProdEQtde());
-            this.dispose();
-            new TelaControle().setVisible(true);
-        }else if(this.verifProdEQtde()==-2){
-            JOptionPane.showMessageDialog(this, "Quantidade não pode ser negativa !");
-        }else
-            JOptionPane.showMessageDialog(this, "Venda não realizada!");
-    }//GEN-LAST:event_jButton2ActionPerformed
+		pack();
+		setLocationRelativeTo(null);
+	}// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox3ActionPerformed
+	private void formWindowClosed(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosed
+		this.dispose();
+	}// GEN-LAST:event_formWindowClosed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+		JOptionPane.showMessageDialog(this, "A venda nao foi feita!\n\n Encerrando...");
+	}// GEN-LAST:event_formWindowClosing
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaDeVendas1().setVisible(true);
-            }
-        });
-    }
+	private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
+		if (this.verifProdEQtde() != (-1)) {
+			JOptionPane.showMessageDialog(this,
+					"Venda realizada com sucesso, valor a ser pago é de:\nR$ " + this.verifProdEQtde());
+			this.dispose();
+			new TelaControle().setVisible(true);
+		} else if (this.verifProdEQtde() == -2) {
+			JOptionPane.showMessageDialog(this, "Quantidade não pode ser negativa !");
+		} else
+			JOptionPane.showMessageDialog(this, "Venda não realizada!");
+	}// GEN-LAST:event_jButton2ActionPerformed
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField2;
-    // End of variables declaration//GEN-END:variables
+	private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jComboBox3ActionPerformed
+		// TODO add your handling code here:
+	}// GEN-LAST:event_jComboBox3ActionPerformed
+
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String args[]) {
+		/* Set the Nimbus look and feel */
+		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting
+		// code (optional) ">
+		/*
+		 * If Nimbus (introduced in Java SE 6) is not available, stay with the
+		 * default look and feel. For details see
+		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.
+		 * html
+		 */
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(TelaDeVendas1.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		}
+
+		/* Create and display the form */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new TelaDeVendas1().setVisible(true);
+			}
+		});
+	}
+
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JButton jButton2;
+	private javax.swing.JComboBox<String> jComboBox2;
+	private javax.swing.JComboBox<String> jComboBox3;
+	private javax.swing.JLabel jLabel1;
+	private javax.swing.JLabel jLabel2;
+	private javax.swing.JLabel jLabel3;
+	private javax.swing.JTextField jTextField2;
+	// End of variables declaration//GEN-END:variables
 }

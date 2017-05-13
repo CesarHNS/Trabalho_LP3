@@ -1,8 +1,6 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 public class Cliente {
 
@@ -136,16 +134,15 @@ public class Cliente {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
-	public boolean Persistir(){
+
+	// O método persistir salva o cliente na base de dados
+	public boolean Persistir() {
 		return true;
 	}
-	
-	public ArrayList<Cliente> getClientes(){
+
+	// Dentro do model posso retornar um ArrayList de Clientes
+	public static ArrayList<Cliente> getClientes() {
 		ArrayList<Cliente> clientes = new ArrayList<>();
-		
-		//ArrayList<> cli
-		
 		return clientes;
 	}
 
@@ -244,5 +241,4 @@ public class Cliente {
 				+ ", email=" + email + ", telefone=" + telefone + ", celular=" + celular + "]";
 	}
 
-	
 }

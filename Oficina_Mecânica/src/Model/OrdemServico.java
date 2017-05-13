@@ -1,33 +1,37 @@
-package Model;
+package model;
 
 public class OrdemServico {
 	private String codigo;
 	private double valor;
-	
-	//constructors
+
+	// constructors
 	public OrdemServico() {
 		super();
 	}
+
 	public OrdemServico(String codigo, double valor) {
 		super();
 		this.codigo = codigo;
 		this.valor = valor;
 	}
-	
-	//getters and setters
+
+	// getters and setters
 	public String getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
 	public double getValor() {
 		return valor;
 	}
+
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -38,6 +42,7 @@ public class OrdemServico {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -56,11 +61,12 @@ public class OrdemServico {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OrdemServico [codigo=").append(codigo).append(", valor=").append(valor).append("]");
 		return builder.toString();
-	}	
+	}
 
 }

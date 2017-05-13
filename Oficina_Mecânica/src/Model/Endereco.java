@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Endereco {
 	private String endereco;
@@ -49,7 +49,5 @@ public class Endereco {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
-	
-	
+
 }

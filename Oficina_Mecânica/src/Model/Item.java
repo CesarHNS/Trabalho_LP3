@@ -1,40 +1,47 @@
-package Model;
+package model;
 
 public class Item {
 	private String codigo;
 	private int quantidade;
 	private double valor;
-	
-	//constructors
+
+	// constructors
 	public Item() {
 		super();
 	}
+
 	public Item(String codigo, int quantidade, double valor) {
 		super();
 		this.codigo = codigo;
 		this.quantidade = quantidade;
 		this.valor = valor;
 	}
-	
-	//setters and getters
+
+	// setters and getters
 	public String getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
 	public int getQuantidade() {
 		return quantidade;
 	}
+
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
+
 	public double getValor() {
 		return valor;
 	}
+
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -46,6 +53,7 @@ public class Item {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -66,6 +74,7 @@ public class Item {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -73,9 +82,5 @@ public class Item {
 				.append(valor).append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
-	
+
 }

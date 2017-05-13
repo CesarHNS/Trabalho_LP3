@@ -1,10 +1,14 @@
-package Model;
+package tableModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
+
+import model.Cliente;
+import model.Funcionario;
+import model.Item;
 
 /*********************************************************************
  * 
@@ -14,16 +18,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
  ********************************************************************/
 public class ClienteTableModel extends AbstractTableModel {
 
-	private List<Cliente> linhas;
+	private List<String[]> linhas;
 	private String[] NomesColunas = { "Código", "Nome", "Data de Nascimento", "CPF", "Endereco", "Bairro", "CEP",
 			"Cidade", "Estado", "Email", "Celular", "Telefone" };
 
 	public ClienteTableModel() {
-		linhas = new ArrayList<Cliente>();
+		linhas = new ArrayList<String[]>();
 	}
 
 	public ClienteTableModel(List<Funcionario> lista) {
-		linhas = new ArrayList<Cliente>();
+		linhas = new ArrayList<String[]>();
 	}
 
 	@Override
@@ -53,33 +57,33 @@ public class ClienteTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Cliente cliente = linhas.get(rowIndex);
+		String[] temporaria = linhas.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
-			return cliente.getId();
+			return temporaria[0];
 		case 1:
-			return cliente.getNome();
+			return temporaria[1];
 		case 2:
-			return cliente.getDataNasc();
+			return temporaria[2];
 		case 3:
-			return cliente.getCpf();
+			return temporaria[3];
 		case 4:
-			return cliente.getEndereco();
+			return temporaria[4];
 		case 5:
-			return cliente.getBairro();
+			return temporaria[5];
 		case 6:
-			return cliente.getCep();
+			return temporaria[6];
 		case 7:
-			return cliente.getCidade();
+			return temporaria[7];
 		case 8:
-			return cliente.getEstado();
+			return temporaria[8];
 		case 9:
-			return cliente.getEmail();
+			return temporaria[9];
 		case 10:
-			return cliente.getCelular();
+			return temporaria[10];
 		case 11:
-			return cliente.getTelefone();
+			return temporaria[11];
 		default:
 			throw new IndexOutOfBoundsException("columnIndex out of bounds");
 
@@ -90,34 +94,35 @@ public class ClienteTableModel extends AbstractTableModel {
 	// modifica linha especificada
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		Cliente cliente = linhas.get(rowIndex);// carrega o item da linha que
-												// deve ser modificado
+		String temporaria[] = linhas.get(rowIndex);// carrega o item da linha
+													// que
+													// deve ser modificado
 
 		switch (columnIndex) {// seta o valor do campo respectivo
 		case 0:
-			cliente.setId(Long.parseLong(aValue.toString()));
+			temporaria[0] = aValue.toString();
 		case 1:
-			cliente.setNome(aValue.toString());
+			temporaria[1] = aValue.toString();
 		case 2:
-			cliente.setDataNasc(aValue.toString());
+			temporaria[2] = aValue.toString();
 		case 3:
-			cliente.setCpf(aValue.toString());
+			temporaria[3] = aValue.toString();
 		case 4:
-			cliente.setEndereco(aValue.toString());
+			temporaria[4] = aValue.toString();
 		case 5:
-			cliente.setBairro(aValue.toString());
+			temporaria[5] = aValue.toString();
 		case 6:
-			cliente.setCep(aValue.toString());
+			temporaria[6] = aValue.toString();
 		case 7:
-			cliente.setCidade(aValue.toString());
+			temporaria[7] = aValue.toString();
 		case 8:
-			cliente.setEstado(aValue.toString());
+			temporaria[8] = aValue.toString();
 		case 9:
-			cliente.setEmail(aValue.toString());
+			temporaria[9] = aValue.toString();
 		case 10:
-			cliente.setCelular(aValue.toString());
+			temporaria[10] = aValue.toString();
 		case 11:
-			cliente.setTelefone(aValue.toString());
+			temporaria[11] = aValue.toString();
 		default:
 
 		}
@@ -126,21 +131,23 @@ public class ClienteTableModel extends AbstractTableModel {
 	}
 
 	// modifica linha especificada
-	public void setValueAt(Cliente aValue, int rowIndex) {
-		Cliente cliente = linhas.get(rowIndex);
+	public void setValueAt(String[] aValue, int rowIndex) {
+		String temporaria[] = linhas.get(rowIndex);
+		
+		temporaria[0] = aValue[0];
+		temporaria[1] = aValue[1];
+		temporaria[2] = aValue[2];
+		temporaria[3] = aValue[3];
+		temporaria[4] = aValue[4];
+		temporaria[5] = aValue[5];
+		temporaria[6] = aValue[6];
+		temporaria[7] = aValue[7];
+		temporaria[8] = aValue[8];
+		temporaria[9] = aValue[9];
+		temporaria[10] = aValue[10];
+		temporaria[11] = aValue[11];
+	
 
-		cliente.setId(Long.parseLong(aValue.toString()));
-		cliente.setNome(aValue.toString());
-		cliente.setDataNasc(aValue.toString());
-		cliente.setCpf(aValue.toString());
-		cliente.setEndereco(aValue.toString());
-		cliente.setBairro(aValue.toString());
-		cliente.setCep(aValue.toString());
-		cliente.setCidade(aValue.toString());
-		cliente.setEstado(aValue.toString());
-		cliente.setEmail(aValue.toString());
-		cliente.setCelular(aValue.toString());
-		cliente.setTelefone(aValue.toString());
 
 		fireTableCellUpdated(rowIndex, 0);
 		fireTableCellUpdated(rowIndex, 1);
@@ -157,11 +164,11 @@ public class ClienteTableModel extends AbstractTableModel {
 
 	}
 
-	public Cliente getCliente(int rowIndex) {
+	public String[] getCliente(int rowIndex) {
 		return linhas.get(rowIndex);
 	}
 
-	public void addCliente(Cliente cliente) {
+	public void addCliente(String[] cliente) {
 		// adiciona o registro
 		this.linhas.add(cliente);
 		this.fireTableDataChanged();
@@ -175,7 +182,7 @@ public class ClienteTableModel extends AbstractTableModel {
 	}
 
 	/* adiciona uma lista de cliente ao final dos registros */
-	public void addLista(List<Cliente> cliente) {
+	public void addLista(List<String[]> cliente) {
 		// pega o tamanho antigo da tabela
 		int tamanhoAntigo = getRowCount();
 

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Contato {
 	private String email;
@@ -31,7 +31,7 @@ public class Contato {
 	public void setCelular(String celular) {
 		this.celular = celular;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

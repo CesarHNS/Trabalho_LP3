@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Fornecedor {
 	private long id;
@@ -104,7 +104,5 @@ public class Fornecedor {
 				.append(", contato=").append(contato).append(", endereco=").append(endereco).append("]");
 		return builder.toString();
 	}
-	
-	
 
 }

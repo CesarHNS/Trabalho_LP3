@@ -1,12 +1,10 @@
-package View;
+package view;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,11 +15,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class TelaProdutos extends JFrame {
-	
+
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField tfNomeProduto;
-	private JTextField tfDigitePesquisa;	
+	private JTextField tfDigitePesquisa;
 	private JTextField tfCodigoProduto;
 	private JTextField tfDescricaoProduto;
 	private JTextField tfPrecoProduto;
@@ -56,101 +54,103 @@ public class TelaProdutos extends JFrame {
 		});
 		setTitle("Tela de cadastro de produtos");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//fecha apenas a janela onde estou quando clico no X
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
+															// janela onde estou
+															// quando clico no X
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		tfNomeProduto = new JTextField();
 		tfNomeProduto.setBounds(54, 33, 296, 23);
 		contentPane.add(tfNomeProduto);
 		tfNomeProduto.setColumns(10);
-			
+
 		JLabel lblNomeProduto = new JLabel("Nome do Produto:");
 		lblNomeProduto.setBounds(54, 17, 127, 14);
 		contentPane.add(lblNomeProduto);
-		
+
 		JComboBox<?> cbFiltros = new JComboBox<Object>();
 		cbFiltros.setToolTipText("Escolha o filtro de sua pesquisa");
 		cbFiltros.setBounds(475, 119, 190, 23);
 		contentPane.add(cbFiltros);
-		
+
 		JLabel lblFiltrarPor = new JLabel("Filtra por:");
 		lblFiltrarPor.setBounds(475, 104, 114, 14);
 		contentPane.add(lblFiltrarPor);
-		
+
 		tfDigitePesquisa = new JTextField();
 		tfDigitePesquisa.setBounds(675, 119, 238, 23);
 		tfDigitePesquisa.setColumns(10);
 		contentPane.add(tfDigitePesquisa);
-		
+
 		JLabel lblPesquisar = new JLabel("Digite sua pesquisa aqui:");
 		lblPesquisar.setBounds(675, 104, 151, 14);
 		contentPane.add(lblPesquisar);
-		
+
 		JButton btnPesquisarProduto = new JButton("Pesquisar");
 		btnPesquisarProduto.setBackground(SystemColor.controlShadow);
 		btnPesquisarProduto.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarProduto);
-		
+
 		table = new JTable();
 		table.setToolTipText("");
 		table.setBounds(10, 153, 1019, 457);
 		contentPane.add(table);
-		
+
 		JButton btnAdicionarProduto = new JButton("Adicionar");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
 		btnAdicionarProduto.setToolTipText("Adicionar um novo produto");
 		btnAdicionarProduto.setBounds(10, 107, 127, 35);
 		contentPane.add(btnAdicionarProduto);
-		
+
 		JButton btnRemoverProduto = new JButton("Remover");
 		btnRemoverProduto.setBackground(SystemColor.controlShadow);
 		btnRemoverProduto.setToolTipText("Remover um produto");
 		btnRemoverProduto.setBounds(158, 107, 127, 35);
 		contentPane.add(btnRemoverProduto);
-		
+
 		JButton btnModificarProduto = new JButton("Modificar");
 		btnModificarProduto.setBackground(SystemColor.controlShadow);
 		btnModificarProduto.setToolTipText("Modificar um produto");
 		btnModificarProduto.setBounds(303, 107, 127, 35);
 		contentPane.add(btnModificarProduto);
-	
+
 		JLabel lblCodigoProduto = new JLabel("C\u00F3digo:");
 		lblCodigoProduto.setBounds(10, 17, 57, 14);
 		contentPane.add(lblCodigoProduto);
-		
+
 		tfCodigoProduto = new JTextField();
 		tfCodigoProduto.setBounds(10, 33, 38, 23);
 		contentPane.add(tfCodigoProduto);
 		tfCodigoProduto.setColumns(10);
-		
+
 		tfDescricaoProduto = new JTextField();
 		tfDescricaoProduto.setColumns(10);
 		tfDescricaoProduto.setBounds(356, 33, 296, 23);
 		contentPane.add(tfDescricaoProduto);
-		
+
 		JLabel lblDescricaoProduto = new JLabel("Descri\u00E7\u00E3o do Produto:");
 		lblDescricaoProduto.setBounds(356, 17, 127, 14);
 		contentPane.add(lblDescricaoProduto);
-		
+
 		tfPrecoProduto = new JTextField();
 		tfPrecoProduto.setColumns(10);
 		tfPrecoProduto.setBounds(658, 33, 38, 23);
 		contentPane.add(tfPrecoProduto);
-		
+
 		JLabel lblPrecoProduto = new JLabel("Pre\u00E7o:");
 		lblPrecoProduto.setBounds(658, 17, 57, 14);
 		contentPane.add(lblPrecoProduto);
-		
+
 		tfQuantidadeProduto = new JTextField();
 		tfQuantidadeProduto.setColumns(10);
 		tfQuantidadeProduto.setBounds(702, 33, 38, 23);
 		contentPane.add(tfQuantidadeProduto);
-		
+
 		JLabel lblQuantidadeProduto = new JLabel("Quantidade");
 		lblQuantidadeProduto.setBounds(702, 17, 76, 14);
 		contentPane.add(lblQuantidadeProduto);

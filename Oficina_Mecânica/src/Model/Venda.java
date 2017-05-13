@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public class Venda {
 	private String codigo;
@@ -98,5 +98,5 @@ public class Venda {
 				.append(quantidade).append(", funcionario=").append(funcionario).append("]");
 		return builder.toString();
 	}
-	
+
 }

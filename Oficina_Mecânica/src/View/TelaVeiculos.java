@@ -1,6 +1,5 @@
-package View;
+package view;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;

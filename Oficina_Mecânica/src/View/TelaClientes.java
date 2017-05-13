@@ -1,42 +1,33 @@
-package View;
+package view;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.MaskFormatter;
-
-import Dao.ClienteDAO;
-
-import java.awt.Rectangle;
-import java.awt.SystemColor;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JButton;
-import javax.swing.JTable;
 import java.awt.ComponentOrientation;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.awt.EventQueue;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
-
-import Model.Cliente;
-import Model.ClienteTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.ParseException;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
+
+import control.ClienteControl;
+import model.Cliente;
+import tableModel.ClienteTableModel;
 
 //User Interface UI = view
 
@@ -280,12 +271,23 @@ public class TelaClientes extends JFrame {
 
 		JComboBox<String> cbEstado = new JComboBox<String>();
 		cbEstado.setBounds(951, 33, 63, 23);
-		cbEstado.setModel(new DefaultComboBoxModel<String>(new String[] { "AC \t", "AL \t", "AP \t", "AM \t", "BA \t",
-				"CE \t", "DF \t", "ES \t", "GO\t ", "MA \t ", "MT \t ", "MS\t ", "MG \t ", "PA \t ", "PB \t ", "PN \t ",
-				"PE \t ", "PI\t ", "RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t",
-				"SP \t ", "SE \t ", "TO \t" }));
+		cbEstado.setModel(new DefaultComboBoxModel<String>(
+				new String[] { "AC \t", "AL \t", "AP \t", "AM \t", "BA \t", "CE \t", "DF \t", "ES \t", "GO\t ",
+						"MA \t ", "MT \t ", "MS\t ", "MG \t ", "PA \t ", "PB \t ", "PN \t ", "PE \t ", "PI\t ",
+						"RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t", "SP \t ", "SE \t ", "TO \t" }));
 		contentPane.add(cbEstado);
-
+		
+		/********************************************************************
+		 * Método responsável por ler a tabela de clientes
+		 * *****************************************************************/
+		
+		public void LoadTable(){
+			modelo = new ClienteTableModel();
+			jtClientes.setModel(modelo);
+			
+			
+		}
+		
 		/***********************************************************************
 		 * Botão que adiciona os clientes
 		 **********************************************************************/
@@ -294,27 +296,24 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				tfCodigoCliente.setEnabled(true);
+			
+				try{
+				if (ClienteControl.SalvarAluno(Long.parseLong(tfCodigoCliente.getText()), tfNomeCliente.getText(),
+						tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
+						tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
+						cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfCelularCliente.getText(),
+						tfTelefoneCliente.getText())) {
+					this.LoadTable();
+					JOptionPane.showMessageDialog(null, "Aluno adicionado com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(null, "Erro ao adicionar o aluno");
+				}
 
-				Cliente cliente = new Cliente();
-
-				cliente.setBairro(tfBairroCliente.getText());
-				cliente.setId(Long.parseLong(tfCodigoCliente.getText()));
-				cliente.setNome(tfNomeCliente.getText());
-				cliente.setDataNasc(tfDataNascimento.getText());
-				cliente.setCpf(tfCpfCliente.getText());
-				cliente.setEndereco(tfEnderecoCliente.getText());
-				cliente.setBairro(tfBairroCliente.getText());
-				cliente.setCep(tfCepCliente.getText());
-				cliente.setCidade(tfCidadeCliente.getText());
-				cliente.setEstado(cbEstado.getSelectedItem().toString());
-				cliente.setEmail(tfEmailCliente.getText());
-				cliente.setCelular(tfCelularCliente.getText());
-				cliente.setTelefone(tfTelefoneCliente.getText());
-
-				modelo.addCliente(cliente);
-				LimparTela();
-				JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
-
+				}catch(NumberFormatException e){
+					
+					JOptionPane.showMessageDialog(null, "Erro no campo do código: " +e);
+					
+				}
 			}
 
 		});
@@ -349,22 +348,27 @@ public class TelaClientes extends JFrame {
 				// para que o usuário não modifique o código
 				tfCodigoCliente.setEnabled(false);
 				// verificando se existe linha selecionada
-				if (jtClientes.getSelectedRow() != -1) {
-
-					tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
-					tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
-					tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
-					tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
-					tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
-					tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
-					tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
-					tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
-					cbEstado.setSelectedItem(jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString());
-					tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
-					tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
-					tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
-
+		
+				int index = jtClientes.getSelectedRow();
+				if(index>=0 && index<modelo.getRowCount()){
+					String temp[] = modelo.getCliente(index);
+					
+					tfCodigoCliente.setText(temp[0]);
+					tfNomeCliente.setText(temp[0]);
+					tfDataNascimento.setText(temp[0]);
+					tfCpfCliente.setText(temp[0]);
+					tfEnderecoCliente.setText(temp[0]);
+					tfBairroCliente.setText(temp[0]);
+					tfCepCliente.setText(temp[0]);
+					tfCidadeCliente.setText(temp[0]);
+					cbEstado.setSelectedItem(temp[0]);
+					tfEmailCliente.setText(temp[0]);
+					tfCelularCliente.setText(temp[0]);
+					tfTelefoneCliente.setText(temp[0]);
+					
+					
 				}
+				
 			}
 		});
 
