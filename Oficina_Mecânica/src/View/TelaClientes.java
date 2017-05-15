@@ -24,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+import java.sql.*;
+import dal.ModuloConexao;
 
 import control.ClienteControl;
 import model.Cliente;
@@ -33,6 +35,9 @@ import tableModel.ClienteTableModel;
 
 public class TelaClientes extends JFrame {
 	ClienteTableModel modelo;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/**
 	 *  
@@ -85,6 +90,7 @@ public class TelaClientes extends JFrame {
 				TelaClientes frame = null;
 				try {
 					frame = new TelaClientes();
+
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -98,6 +104,9 @@ public class TelaClientes extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
+
+		//conexao = ModuloConexao.conector();
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -276,18 +285,18 @@ public class TelaClientes extends JFrame {
 						"MA \t ", "MT \t ", "MS\t ", "MG \t ", "PA \t ", "PB \t ", "PN \t ", "PE \t ", "PI\t ",
 						"RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t", "SP \t ", "SE \t ", "TO \t" }));
 		contentPane.add(cbEstado);
-		
+
 		/********************************************************************
 		 * Método responsável por ler a tabela de clientes
-		 * *****************************************************************/
-		
-		public void LoadTable(){
-			modelo = new ClienteTableModel();
-			jtClientes.setModel(modelo);
-			
-			
-		}
-		
+		 * *****************************************************************
+		 * 
+		 * public void LoadTable(){ modelo = new ClienteTableModel();
+		 * jtClientes.setModel(modelo);
+		 * 
+		 * 
+		 * }
+		 */
+
 		/***********************************************************************
 		 * Botão que adiciona os clientes
 		 **********************************************************************/
@@ -296,23 +305,23 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				tfCodigoCliente.setEnabled(true);
-			
-				try{
-				if (ClienteControl.SalvarAluno(Long.parseLong(tfCodigoCliente.getText()), tfNomeCliente.getText(),
-						tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
-						tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
-						cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfCelularCliente.getText(),
-						tfTelefoneCliente.getText())) {
-					this.LoadTable();
-					JOptionPane.showMessageDialog(null, "Aluno adicionado com sucesso");
-				} else {
-					JOptionPane.showMessageDialog(null, "Erro ao adicionar o aluno");
-				}
 
-				}catch(NumberFormatException e){
-					
-					JOptionPane.showMessageDialog(null, "Erro no campo do código: " +e);
-					
+				try {
+					if (ClienteControl.SalvarAluno(Long.parseLong(tfCodigoCliente.getText()), tfNomeCliente.getText(),
+							tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
+							tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
+							cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfCelularCliente.getText(),
+							tfTelefoneCliente.getText())) {
+						// this.LoadTable();
+						JOptionPane.showMessageDialog(null, "Aluno adicionado com sucesso");
+					} else {
+						JOptionPane.showMessageDialog(null, "Erro ao adicionar o aluno");
+					}
+
+				} catch (NumberFormatException e) {
+
+					JOptionPane.showMessageDialog(null, "Erro no campo do código: " + e);
+
 				}
 			}
 
@@ -348,11 +357,11 @@ public class TelaClientes extends JFrame {
 				// para que o usuário não modifique o código
 				tfCodigoCliente.setEnabled(false);
 				// verificando se existe linha selecionada
-		
+
 				int index = jtClientes.getSelectedRow();
-				if(index>=0 && index<modelo.getRowCount()){
+				if (index >= 0 && index < modelo.getRowCount()) {
 					String temp[] = modelo.getCliente(index);
-					
+
 					tfCodigoCliente.setText(temp[0]);
 					tfNomeCliente.setText(temp[0]);
 					tfDataNascimento.setText(temp[0]);
@@ -365,10 +374,9 @@ public class TelaClientes extends JFrame {
 					tfEmailCliente.setText(temp[0]);
 					tfCelularCliente.setText(temp[0]);
 					tfTelefoneCliente.setText(temp[0]);
-					
-					
+
 				}
-				
+
 			}
 		});
 

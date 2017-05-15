@@ -10,10 +10,17 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import java.sql.*;
+import dal.ModuloConexao;
+import javax.swing.ImageIcon;
+
+import view.TelaControle;
 
 public class TelaLogin extends JFrame {
 
@@ -24,11 +31,46 @@ public class TelaLogin extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtLogin;
 	private JPasswordField txtPassword;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+
+	/************************************************************************
+	 * Este método procura o Usuário no banco e faz o login se encotrá-lo
+	 ***********************************************************************/
+	public void logar() {
+		String sql = "select * from funcionarios where login_func=? and senha_func =?";
+		try {
+			// as linhas abaixo preparam a consulta ao banco em
+			// função do que foi digitado nas caixas de texto
+			// o ? é substituido pelo conteúdo das variáveis.
+			pst = conexao.prepareStatement(sql);
+			pst.setString(1, txtLogin.getText());
+			pst.setString(2, txtPassword.getText());
+			// a linha abaixo executa a query(consulta a banco de dados)
+			rs = pst.executeQuery();
+			// se existir usuário e senha correspondente
+			if (rs.next() && txtLogin.getText() != "admin") {
+
+				TelaControle ObjTelaControle = new TelaControle();
+				ObjTelaControle.setVisible(true);
+				// fecha a tela de login quando a tela de controle é aberta
+				this.dispose();
+				conexao.close();
+			} else {
+				JOptionPane.showMessageDialog(null, "Usuário e/ou senha inválido(s)");
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+	}
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -87,22 +129,29 @@ public class TelaLogin extends JFrame {
 		lblNewLabel.setBounds(23, 31, 46, 14);
 		panel.add(lblNewLabel);
 
-		btnNewButton.addActionListener(new ActionListener() {
+		JLabel lblStatus = new JLabel("");
+		lblStatus.setIcon(new ImageIcon(TelaLogin.class.getResource("/icones/dbOk.png")));
+		lblStatus.setBounds(184, 241, 38, 38);
+		panel.add(lblStatus);
 
+		conexao = ModuloConexao.conector();
+		if (conexao != null) {
+			lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/dbOk.png")));
+		} else {
+			lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/dbError.png")));
+
+		}
+
+		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// if( txtLogin.getText().equals("admin") &&
-				// txtPassword.getText().equals("123")){
-				TelaControle ObjTelaControle = new TelaControle();
-				ObjTelaControle.setVisible(true);
-
-				/*
-				 * }else{ JOptionPane.showMessageDialog(null,
-				 * "Sua senha ou seu login estão incorretos"); }
-				 */
+				// utilizando o metódo logar ao clicar no botão "Entrar"
+				logar();
 
 			}
 
 		});
+
 	}
+
 }

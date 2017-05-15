@@ -26,12 +26,13 @@ public class TelaFuncionarios extends JFrame {
 	private JTextField tfCodigoFuncionario;
 	private JTextField tfCelular;
 	private JTextField tfCPF;
-	private JTextField tfSenha;
+	private JTextField tfLogin;
 	private JTextField tfCargo;
 	private JTextField tfEndereco;
 	private JTextField tfBairro;
 	private JTextField tfCidade;
 	private JTextField textField_6;
+	private JTextField tfSenha;
 
 	/**
 	 * Launch the application.
@@ -136,11 +137,11 @@ public class TelaFuncionarios extends JFrame {
 
 		tfEmail = new JTextField();
 		tfEmail.setColumns(10);
-		tfEmail.setBounds(485, 72, 296, 23);
+		tfEmail.setBounds(527, 72, 254, 23);
 		contentPane.add(tfEmail);
 
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setBounds(485, 56, 127, 14);
+		lblEmail.setBounds(527, 56, 127, 14);
 		contentPane.add(lblEmail);
 
 		tfCodigoFuncionario = new JTextField();
@@ -170,22 +171,22 @@ public class TelaFuncionarios extends JFrame {
 		lblCPF.setBounds(10, 56, 74, 14);
 		contentPane.add(lblCPF);
 
-		tfSenha = new JTextField();
-		tfSenha.setColumns(10);
-		tfSenha.setBounds(130, 72, 114, 23);
-		contentPane.add(tfSenha);
+		tfLogin = new JTextField();
+		tfLogin.setColumns(10);
+		tfLogin.setBounds(130, 72, 74, 23);
+		contentPane.add(tfLogin);
 
-		JLabel lblSenha = new JLabel("Senha");
-		lblSenha.setBounds(130, 56, 74, 14);
-		contentPane.add(lblSenha);
+		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setBounds(130, 56, 74, 14);
+		contentPane.add(lblLogin);
 
 		tfCargo = new JTextField();
 		tfCargo.setColumns(10);
-		tfCargo.setBounds(250, 72, 225, 23);
+		tfCargo.setBounds(292, 72, 225, 23);
 		contentPane.add(tfCargo);
 
 		JLabel lblCargo = new JLabel("Cargo:");
-		lblCargo.setBounds(250, 56, 74, 14);
+		lblCargo.setBounds(292, 56, 74, 14);
 		contentPane.add(lblCargo);
 
 		tfEndereco = new JTextField();
@@ -232,6 +233,15 @@ public class TelaFuncionarios extends JFrame {
 						"RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RR \t ", "SC \t ", "SP \t ", "SE \t ", "TO" }));
 		comboBox_1.setBounds(963, 32, 66, 23);
 		contentPane.add(comboBox_1);
+		
+		JLabel lblSenha = new JLabel("Senha");
+		lblSenha.setBounds(214, 56, 74, 14);
+		contentPane.add(lblSenha);
+		
+		tfSenha = new JTextField();
+		tfSenha.setColumns(10);
+		tfSenha.setBounds(211, 72, 74, 23);
+		contentPane.add(tfSenha);
 	}
 
 	private static class __Tmp {
