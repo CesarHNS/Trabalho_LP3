@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
+import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -23,13 +24,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 import java.sql.*;
 import dal.ModuloConexao;
 
-import control.ClienteControl;
 import model.Cliente;
-import tableModel.ClienteTableModel;
+import model.ClienteTableModel;
+import model.dao.ClienteDAO;
 
 //User Interface UI = view
 
@@ -105,7 +108,7 @@ public class TelaClientes extends JFrame {
 															// janela onde estou
 															// quando clico no X
 
-		//conexao = ModuloConexao.conector();
+		conexao = ModuloConexao.conector();
 
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
@@ -271,8 +274,11 @@ public class TelaClientes extends JFrame {
 
 		scrollPane.setViewportView(jtClientes);
 		jtClientes.setToolTipText("");
-		modelo = new ClienteTableModel();
-		jtClientes.setModel(modelo);
+		//modelo = new ClienteTableModel();
+		//jtClientes.setModel(modelo);
+		DefaultTableModel modelo = (DefaultTableModel) jtClientes.getModel();
+		jtClientes.setRowSorter(new TableRowSorter(modelo));
+		
 
 		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
 		cbFiltrosCliente.setBounds(475, 119, 190, 23);
@@ -305,24 +311,25 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				tfCodigoCliente.setEnabled(true);
+				Cliente c = new Cliente();
+				ClienteDAO dao = new ClienteDAO();
 
-				try {
-					if (ClienteControl.SalvarAluno(Long.parseLong(tfCodigoCliente.getText()), tfNomeCliente.getText(),
-							tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
-							tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
-							cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfCelularCliente.getText(),
-							tfTelefoneCliente.getText())) {
-						// this.LoadTable();
-						JOptionPane.showMessageDialog(null, "Aluno adicionado com sucesso");
-					} else {
-						JOptionPane.showMessageDialog(null, "Erro ao adicionar o aluno");
-					}
+				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				c.setNome(tfNomeCliente.getText());
+				c.setDataNasc(tfDataNascimento.getText());
+				c.setCpf(tfCpfCliente.getText());
+				c.setEndereco(tfEnderecoCliente.getText());
+				c.setBairro(tfBairroCliente.getText());
+				c.setCep(tfCepCliente.getText());
+				c.setCidade(tfCidadeCliente.getText());
+				c.setEstado(cbEstado.getSelectedItem().toString());
+				c.setEmail(tfEmailCliente.getText());
+				c.setTelefone(tfTelefoneCliente.getText());
+				c.setCelular(tfCelularCliente.getText());
+				
+				//salvando o cliente na classe dao
+				dao.create(c);
 
-				} catch (NumberFormatException e) {
-
-					JOptionPane.showMessageDialog(null, "Erro no campo do código: " + e);
-
-				}
 			}
 
 		});
@@ -335,15 +342,12 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				tfCodigoCliente.setEnabled(true);
-
-				// verificando se existe linha selecionada
-				if (jtClientes.getSelectedRow() != -1) {
-					modelo.removeCliente(jtClientes.getSelectedRow());
-					LimparTela();
-					JOptionPane.showMessageDialog(null, "Cliente removido com sucesso");
-				} else {
-					JOptionPane.showMessageDialog(null, "Selecione um cliente");
-				}
+				Cliente c = new Cliente();
+				ClienteDAO dao = new ClienteDAO();
+				
+				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				
+				dao.delete(c);
 			}
 		});
 
@@ -357,7 +361,7 @@ public class TelaClientes extends JFrame {
 				// para que o usuário não modifique o código
 				tfCodigoCliente.setEnabled(false);
 				// verificando se existe linha selecionada
-
+/*
 				int index = jtClientes.getSelectedRow();
 				if (index >= 0 && index < modelo.getRowCount()) {
 					String temp[] = modelo.getCliente(index);
@@ -376,7 +380,7 @@ public class TelaClientes extends JFrame {
 					tfTelefoneCliente.setText(temp[0]);
 
 				}
-
+*/
 			}
 		});
 
@@ -412,6 +416,33 @@ public class TelaClientes extends JFrame {
 			}
 		});
 
+	}
+
+	/**********************************************************************
+	 * Método para fazer consultas no banco de dados
+	 *********************************************************************/
+	private void readJTable() {
+		DefaultTableModel modelo = (DefaultTableModel) jtClientes.getModel();
+		modelo.setNumRows(0);
+		ClienteDAO cdao = new ClienteDAO();
+		
+		
+		for(Cliente c: cdao.read())
+		{
+			modelo.addRow((Vector) new Object());
+			c.getId();
+			c.getNome();
+			c.getDataNasc();
+			c.getCpf();
+			c.getEndereco();
+			c.getBairro();
+			c.getCep();
+			c.getCidade();
+			c.getEstado();
+			c.getEmail();
+			c.getTelefone();
+			c.getCelular();
+		}
 	}
 
 	/***********************************************************************

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Cliente {
 
-	private long id;
+	private short id;
 
 	private String nome;
 	private String dataNasc;
@@ -17,12 +17,12 @@ public class Cliente {
 	private String email;
 	private String telefone;
 	private String celular;
-
+	
 	public Cliente() {
 		super();
 	}
 
-	public Cliente(long id, String nome, String dataNasc, String cpf, String endereco, String bairro, String cep,
+	public Cliente(short id, String nome, String dataNasc, String cpf, String endereco, String bairro, String cep,
 			String cidade, String estado, String email, String telefone, String celular) {
 		super();
 		this.id = id;
@@ -39,84 +39,12 @@ public class Cliente {
 		this.celular = celular;
 	}
 
-	public String getCelular() {
-		return celular;
+	public short getId() {
+		return id;
 	}
 
-	public void setCelular(String celular) {
-		this.celular = celular;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getDataNasc() {
-		return dataNasc;
-	}
-
-	public void setDataNasc(String dataNasc) {
-		this.dataNasc = dataNasc;
+	public void setId(short id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -127,23 +55,84 @@ public class Cliente {
 		this.nome = nome;
 	}
 
-	public long getId() {
-		return id;
+	public String getDataNasc() {
+		return dataNasc;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setDataNasc(String dataNasc) {
+		this.dataNasc = dataNasc;
 	}
 
-	// O método persistir salva o cliente na base de dados
-	public boolean Persistir() {
-		return true;
+	public String getCpf() {
+		return cpf;
 	}
 
-	// Dentro do model posso retornar um ArrayList de Clientes
-	public static ArrayList<Cliente> getClientes() {
-		ArrayList<Cliente> clientes = new ArrayList<>();
-		return clientes;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getCelular() {
+		return celular;
+	}
+
+	public void setCelular(String celular) {
+		this.celular = celular;
 	}
 
 	@Override
@@ -159,7 +148,7 @@ public class Cliente {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
 		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + id;
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
 		return result;
@@ -240,5 +229,8 @@ public class Cliente {
 				+ endereco + ", bairro=" + bairro + ", cep=" + cep + ", cidade=" + cidade + ", estado=" + estado
 				+ ", email=" + email + ", telefone=" + telefone + ", celular=" + celular + "]";
 	}
+
+	
+
 
 }

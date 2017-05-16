@@ -1,14 +1,10 @@
-package tableModel;
+package model;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-
-import model.Cliente;
-import model.Funcionario;
-import model.Item;
 
 /*********************************************************************
  * 
