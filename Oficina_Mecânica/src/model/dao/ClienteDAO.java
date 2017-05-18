@@ -33,7 +33,7 @@ public class ClienteDAO {
 			pst.setString(9, c.getEstado());
 			pst.setString(10, c.getEmail());
 			pst.setString(11, c.getTelefone());
-			pst.setString(12, c.getCelular());
+			pst.setString(12, c.getCelular());					
 			
 			pst.executeUpdate();
 			
@@ -54,7 +54,7 @@ public class ClienteDAO {
 		try {
 			pst = conexao.prepareStatement(sql);
 			
-			pst.setLong(1, c.getId());			
+			pst.setShort(1, c.getId());			
 			
 			pst.executeUpdate();
 			
@@ -66,12 +66,12 @@ public class ClienteDAO {
 		}
 	}
 
-	public List<Cliente> read(){
+	public List<Cliente> read(Cliente c){
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		
-		List<Cliente> clientes = new ArrayList();
+		List<Cliente> clientes = new ArrayList<Cliente>();
 		
 		String sql = "select * from clientes";
 		
@@ -80,7 +80,7 @@ public class ClienteDAO {
 			rs = pst.executeQuery();
 			//enquanto existir um valor ele vai guardar no objeto
 			while(rs.next()){
-				Cliente c = new Cliente();
+				c = new Cliente();
 				
 				c.setId(rs.getShort("codigo_cliente"));
 				c.setNome(rs.getString("nome_cliente"));
@@ -93,7 +93,9 @@ public class ClienteDAO {
 				c.setEstado(rs.getString("estado_cliente"));
 				c.setEmail(rs.getString("email_cliente"));
 				c.setTelefone(rs.getString("telefone_cliente"));
-				c.setCelular(rs.getString("celular_cliente"));				
+				c.setCelular(rs.getString("celular_cliente"));		
+				
+				clientes.add(c);
 			
 			}
 			
