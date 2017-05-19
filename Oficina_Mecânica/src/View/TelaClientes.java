@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -62,6 +63,7 @@ public class TelaClientes extends JFrame {
 	private JTextField tfCepCliente;
 	private JTextField tfCpfCliente;
 	private JTextField tfDataNascimento;
+	private JComboBox<String> cbEstado;
 
 	/***************************************************************
 	 * Launch the application.
@@ -133,6 +135,7 @@ public class TelaClientes extends JFrame {
 		tfCodigoCliente.setBounds(10, 33, 46, 23);
 		tfCodigoCliente.setColumns(10);
 		contentPane.add(tfCodigoCliente);
+		tfCodigoCliente.setEnabled(true);
 
 		MaskFormatter fmtCelular = new MaskFormatter("(##)9####-####");
 		tfCelularCliente = new JFormattedTextField(fmtCelular);
@@ -288,13 +291,13 @@ public class TelaClientes extends JFrame {
 		cbFiltrosCliente.setBounds(475, 119, 190, 23);
 		contentPane.add(cbFiltrosCliente);
 
-		JComboBox<String> cbEstado = new JComboBox<String>();
+		cbEstado = new JComboBox<String>();
 		cbEstado.setBounds(951, 33, 63, 23);
 		cbEstado.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "AC \t", "AL \t", "AP \t", "AM \t", "BA \t", "CE \t", "DF \t", "ES \t", "GO\t ",
 						"MA \t ", "MT \t ", "MS\t ", "MG \t ", "PA \t ", "PB \t ", "PN \t ", "PE \t ", "PI\t ",
 						"RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t", "SP \t ", "SE \t ", "TO \t" }));
-		contentPane.add(cbEstado);	
+		contentPane.add(cbEstado);
 
 		/***********************************************************************
 		 * Botão que adiciona os clientes
@@ -302,7 +305,6 @@ public class TelaClientes extends JFrame {
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				tfCodigoCliente.setEnabled(true);
 				Cliente c = new Cliente();
 				ClienteDAO dao = new ClienteDAO();
 
@@ -321,6 +323,7 @@ public class TelaClientes extends JFrame {
 
 				// salvando o cliente na classe dao
 				dao.create(c);
+				LimparTela();
 				atualizar();
 
 			}
@@ -333,13 +336,12 @@ public class TelaClientes extends JFrame {
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				tfCodigoCliente.setEnabled(true);
-				Cliente c = new Cliente();
 				ClienteDAO dao = new ClienteDAO();
 
-				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				short id = Short.parseShort(tfCodigoCliente.getText());
 
-				dao.delete(c);
+				dao.delete(id);
+				LimparTela();
 				atualizar();
 			}
 		});
@@ -350,12 +352,8 @@ public class TelaClientes extends JFrame {
 		jtClientes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-		
-				 Cliente c = new Cliente();
-				 ClienteDAO dao = new ClienteDAO();
-				 
-				 dao.read(c);
-				 
+
+				PreencheTextField();
 			}
 		});
 
@@ -365,29 +363,27 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				tfCodigoCliente.setEnabled(true);
+				
+				Cliente c = new Cliente();
+				ClienteDAO dao = new ClienteDAO();
+							
+				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				c.setNome(tfNomeCliente.getText());
+				c.setDataNasc(tfDataNascimento.getText());
+				c.setCpf(tfCpfCliente.getText());
+				c.setEndereco(tfEnderecoCliente.getText());
+				c.setBairro(tfBairroCliente.getText());
+				c.setCep(tfCepCliente.getText());
+				c.setCidade(tfCidadeCliente.getText());
+				c.setEstado(cbEstado.getSelectedItem().toString());
+				c.setEmail(tfEmailCliente.getText());
+				c.setTelefone(tfTelefoneCliente.getText());
+				c.setCelular(tfCelularCliente.getText());
 
-				// verificando se existe linha selecionada
-				if (jtClientes.getSelectedRow() != -1) {
+				dao.alterar(c);
+				LimparTela();
+				atualizar();
 
-					jtClientes.setValueAt(tfNomeCliente.getText(), jtClientes.getSelectedRow(), 1);
-					jtClientes.setValueAt(tfDataNascimento.getText(), jtClientes.getSelectedRow(), 2);
-					jtClientes.setValueAt(tfCpfCliente.getText(), jtClientes.getSelectedRow(), 3);
-					jtClientes.setValueAt(tfEnderecoCliente.getText(), jtClientes.getSelectedRow(), 4);
-					jtClientes.setValueAt(tfBairroCliente.getText(), jtClientes.getSelectedRow(), 5);
-					jtClientes.setValueAt(tfCepCliente.getText(), jtClientes.getSelectedRow(), 6);
-					jtClientes.setValueAt(tfCidadeCliente.getText(), jtClientes.getSelectedRow(), 7);
-					jtClientes.setValueAt(cbEstado.getSelectedItem(), jtClientes.getSelectedRow(), 8);
-					jtClientes.setValueAt(tfEmailCliente.getText(), jtClientes.getSelectedRow(), 9);
-					jtClientes.setValueAt(tfCelularCliente.getText(), jtClientes.getSelectedRow(), 10);
-					jtClientes.setValueAt(tfTelefoneCliente.getText(), jtClientes.getSelectedRow(), 11);
-
-					LimparTela();
-					JOptionPane.showMessageDialog(null, "Cliente modificado com sucesso");
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Selecione um cliente");
-				}
 			}
 		});
 
@@ -400,7 +396,7 @@ public class TelaClientes extends JFrame {
 		try {
 			/* Criação do modelo */
 			Cliente d = new Cliente();
-			d.setNome(tfPesquisaCliente.getText());
+			//d.setNome(tfPesquisaCliente.getText());
 
 			/* Criação do DAO */
 			ClienteDAO ddao = new ClienteDAO();
@@ -419,6 +415,29 @@ public class TelaClientes extends JFrame {
 	}
 
 	/***********************************************************************
+	 * Método para preencher os TextFields após selecionar uma linha
+	 **********************************************************************/
+	private void PreencheTextField() {
+		if (jtClientes.getSelectedRow() != -1) {
+			tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
+			tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
+			tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
+			tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
+			tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
+			tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
+			tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
+			tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
+			cbEstado.setSelectedItem((jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString()));
+			tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
+			tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
+			tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
+
+		} else {
+			JOptionPane.showMessageDialog(null, "Selecione um cliente");
+		}
+	}
+
+	/***********************************************************************
 	 * Método para limpar os TextFields após o cadastramento dos clientes
 	 **********************************************************************/
 	private void LimparTela() {
@@ -431,6 +450,7 @@ public class TelaClientes extends JFrame {
 		tfCepCliente.setText("");
 		tfCidadeCliente.setText("");
 		tfEmailCliente.setText("");
+		cbEstado.setSelectedIndex(0);
 		tfCelularCliente.setText("");
 		tfTelefoneCliente.setText("");
 
