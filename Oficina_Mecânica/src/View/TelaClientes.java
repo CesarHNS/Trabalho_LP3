@@ -29,6 +29,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
+
+import control.ClienteControl;
+
 import java.sql.*;
 import dal.ModuloConexao;
 
@@ -304,25 +307,25 @@ public class TelaClientes extends JFrame {
 		 **********************************************************************/
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				ClienteControl cControl = new ClienteControl();		
 
-				Cliente c = new Cliente();
-				ClienteDAO dao = new ClienteDAO();
-
-				c.setId(Short.parseShort(tfCodigoCliente.getText()));
-				c.setNome(tfNomeCliente.getText());
-				c.setDataNasc(tfDataNascimento.getText());
-				c.setCpf(tfCpfCliente.getText());
-				c.setEndereco(tfEnderecoCliente.getText());
-				c.setBairro(tfBairroCliente.getText());
-				c.setCep(tfCepCliente.getText());
-				c.setCidade(tfCidadeCliente.getText());
-				c.setEstado(cbEstado.getSelectedItem().toString());
-				c.setEmail(tfEmailCliente.getText());
-				c.setTelefone(tfTelefoneCliente.getText());
-				c.setCelular(tfCelularCliente.getText());
-
-				// salvando o cliente na classe dao
-				dao.create(c);
+				// salvando o cliente utilizando a classe ClienteControl
+				cControl.salvarCliente
+				(
+						Short.parseShort(tfCodigoCliente.getText()),
+						tfNomeCliente.getText(),
+						tfDataNascimento.getText(),
+						tfCpfCliente.getText(),
+						tfEnderecoCliente.getText(),
+						tfBairroCliente.getText(),
+						tfCepCliente.getText(),
+						tfCidadeCliente.getText(),
+						cbEstado.getSelectedItem().toString(),
+						tfEmailCliente.getText(),
+						tfTelefoneCliente.getText(),
+						tfCelularCliente.getText()
+				);
 				LimparTela();
 				atualizar();
 
@@ -365,6 +368,7 @@ public class TelaClientes extends JFrame {
 
 				Cliente c = new Cliente();
 				ClienteDAO dao = new ClienteDAO();
+			
 
 				c.setId(Short.parseShort(tfCodigoCliente.getText()));
 				c.setNome(tfNomeCliente.getText());
@@ -379,7 +383,7 @@ public class TelaClientes extends JFrame {
 				c.setTelefone(tfTelefoneCliente.getText());
 				c.setCelular(tfCelularCliente.getText());
 
-				dao.alterar(c);
+				dao.alterar(c);				
 				atualizar();				
 				LimparTela();
 			}
