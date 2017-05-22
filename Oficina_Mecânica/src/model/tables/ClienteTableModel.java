@@ -1,4 +1,4 @@
-package model;
+package model.tables;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+import model.Cliente;
 
 /*********************************************************************
  * 

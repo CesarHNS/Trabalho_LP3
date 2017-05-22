@@ -4,16 +4,32 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import dal.ModuloConexao;
+import model.Fornecedor;
+import model.dao.ClienteDAO;
+import model.dao.FornecedorDAO;
+import model.tables.FornecedorTableModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TelaFornecedores extends JFrame {
 
@@ -21,7 +37,7 @@ public class TelaFornecedores extends JFrame {
 	private JTextField tfNomeFornecedor;
 	private JTextField tfTelefoneFornecedor;
 	private JTextField tfDigitePesquisa;
-	private JTable table;
+	private JTable jtFornecedor;
 	private JTextField tfEmailFornecedor;
 	private JTextField tfCodigoFornecedor;
 	private JTextField tfCelularFornecedor;
@@ -30,6 +46,11 @@ public class TelaFornecedores extends JFrame {
 	private JTextField tfBairroFornecedor;
 	private JTextField tfCidadeFornecedor;
 	private JTextField tfCepFornecedor;
+	private JComboBox cbEstadoFornecedor;
+	FornecedorTableModel modelo;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/**
 	 * Launch the application.
@@ -63,6 +84,8 @@ public class TelaFornecedores extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
+		conexao = ModuloConexao.conector();
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -111,24 +134,35 @@ public class TelaFornecedores extends JFrame {
 		btnPesquisarFornecedor.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarFornecedor);
 
-		table = new JTable();
-		table.setToolTipText("");
-		table.setBounds(10, 153, 1019, 457);
-		contentPane.add(table);
+		JScrollPane scrollPane = new JScrollPane();
+
+		scrollPane.setBounds(10, 153, 1019, 457);
+		contentPane.add(scrollPane);
+
+		jtFornecedor = new JTable();
+
+		scrollPane.setViewportView(jtFornecedor);
+		jtFornecedor.setToolTipText("");
+		modelo = new FornecedorTableModel();
+		jtFornecedor.setModel(modelo);
+		atualizar();
 
 		JButton btnAdicionarFornecedor = new JButton("Adicionar");
+
 		btnAdicionarFornecedor.setBackground(SystemColor.controlShadow);
 		btnAdicionarFornecedor.setToolTipText("Adicionar um novo fornecedor");
 		btnAdicionarFornecedor.setBounds(10, 107, 127, 35);
 		contentPane.add(btnAdicionarFornecedor);
 
 		JButton btnRemoverFornecedor = new JButton("Remover");
+
 		btnRemoverFornecedor.setBackground(SystemColor.controlShadow);
 		btnRemoverFornecedor.setToolTipText("Remover um fornecedor");
 		btnRemoverFornecedor.setBounds(158, 107, 127, 35);
 		contentPane.add(btnRemoverFornecedor);
 
 		JButton btnModificarFornecedor = new JButton("Modificar");
+
 		btnModificarFornecedor.setBackground(SystemColor.controlShadow);
 		btnModificarFornecedor.setToolTipText("Modificar um fornecedor");
 		btnModificarFornecedor.setBounds(303, 107, 127, 35);
@@ -207,7 +241,7 @@ public class TelaFornecedores extends JFrame {
 		lblCepFornecedor.setBounds(839, 17, 74, 14);
 		contentPane.add(lblCepFornecedor);
 
-		JComboBox cbEstadoFornecedor = new JComboBox();
+		cbEstadoFornecedor = new JComboBox();
 		cbEstadoFornecedor.setModel(new DefaultComboBoxModel(
 				new String[] { "AC \t ", "AL \t ", "AP \t ", "AM \t ", "BA \t ", "CE \t ", "DF \t ", "ES \t ", "GO \t ",
 						"MA \t ", "MT \t ", "MS \t ", "MG \t ", "PA \t ", "PB \t ", "PR \t ", "PE \t ", "PI \t ",
@@ -218,6 +252,142 @@ public class TelaFornecedores extends JFrame {
 		JLabel lblEstadoFornecedor = new JLabel("Estado:");
 		lblEstadoFornecedor.setBounds(963, 17, 74, 14);
 		contentPane.add(lblEstadoFornecedor);
+
+		btnAdicionarFornecedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Fornecedor f = new Fornecedor();
+				FornecedorDAO dao = new FornecedorDAO();
+
+				f.setId(Short.parseShort(tfCodigoFornecedor.getText()));
+				f.setNome(tfNomeFornecedor.getText());
+				f.setTelefone(tfTelefoneFornecedor.getText());
+				f.setEmail(tfEmailFornecedor.getText());
+				f.setCelular(tfCelularFornecedor.getText());
+				f.setCnpj(tfCNPJ.getText());
+				f.setEndereco(tfEnderecoFornecedor.getText());
+				f.setBairro(tfBairroFornecedor.getText());
+				f.setCep(tfCepFornecedor.getText());
+				f.setCidade(tfCidadeFornecedor.getText());
+				f.setEstado(cbEstadoFornecedor.getSelectedItem().toString());
+
+				// salvando o fornecedor na classe dao
+				dao.create(f);
+				LimparTela();
+				atualizar();
+			}
+		});
+
+		btnRemoverFornecedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FornecedorDAO dao = new FornecedorDAO();
+
+				short id = Short.parseShort(tfCodigoFornecedor.getText());
+
+				dao.delete(id);
+				LimparTela();
+				atualizar();
+			}
+		});
+
+		btnModificarFornecedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Fornecedor f = new Fornecedor();
+				FornecedorDAO dao = new FornecedorDAO();
+
+				f.setId(Short.parseShort(tfCodigoFornecedor.getText()));
+				f.setNome(tfNomeFornecedor.getText());
+				f.setTelefone(tfTelefoneFornecedor.getText());
+				f.setEmail(tfEmailFornecedor.getText());
+				f.setCelular(tfCelularFornecedor.getText());
+				f.setCnpj(tfCNPJ.getText());
+				f.setEndereco(tfEnderecoFornecedor.getText());
+				f.setBairro(tfBairroFornecedor.getText());
+				f.setCep(tfCepFornecedor.getText());
+				f.setCidade(tfCidadeFornecedor.getText());
+				f.setEstado(cbEstadoFornecedor.getSelectedItem().toString());
+
+				// modificando o fornecedor na classe dao
+				dao.alterar(f);
+				LimparTela();
+				atualizar();
+			}
+		});
+
+		jtFornecedor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PreencheTextField();
+			}
+		});
+
+	}
+
+	/**********************************************************************
+	 * Método para fazer consultas no banco de dados
+	 *********************************************************************/
+	public void atualizar() {
+		try {
+			/* Criação do modelo */
+			Fornecedor f = new Fornecedor();
+			// d.setNome(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			FornecedorDAO fdao = new FornecedorDAO();
+			List<Fornecedor> lista = fdao.read(f);
+
+			/* Captura o modelo da tabela */
+			FornecedorTableModel modelo = (FornecedorTableModel) jtFornecedor.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um fornecedor");
+		}
+	}
+
+	/***********************************************************************
+	 * Método para preencher os TextFields após selecionar uma linha
+	 **********************************************************************/
+	private void PreencheTextField() {
+
+		LimparTela();
+
+		if (jtFornecedor.getSelectedRow() != -1) {
+			tfCodigoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 0).toString());
+			tfNomeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 1).toString());
+			tfTelefoneFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 2).toString());
+			tfEmailFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 3).toString());
+			tfCelularFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 4).toString());
+			tfCNPJ.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 5).toString());
+			tfEnderecoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 6).toString());
+			tfBairroFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 7).toString());
+			tfCepFornecedor.setText((jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 8).toString()));
+			tfCidadeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 9).toString());
+			cbEstadoFornecedor.setSelectedItem(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 10).toString());
+
+		} else {
+			JOptionPane.showMessageDialog(null, "Selecione um fornecedor");
+		}
+	}
+
+	/***********************************************************************
+	 * Método para limpar os TextFields após o cadastramento dos fornecedores
+	 **********************************************************************/
+	private void LimparTela() {
+		tfCodigoFornecedor.setText("");
+		tfNomeFornecedor.setText("");
+		tfTelefoneFornecedor.setText("");
+		tfEmailFornecedor.setText("");
+		tfCelularFornecedor.setText("");
+		tfCNPJ.setText("");
+		tfEnderecoFornecedor.setText("");
+		tfBairroFornecedor.setText("");
+		tfCepFornecedor.setText("");
+		tfCidadeFornecedor.setText("");
+		cbEstadoFornecedor.setSelectedIndex(0);
+
 	}
 
 	private static class __Tmp {

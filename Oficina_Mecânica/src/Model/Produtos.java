@@ -1,30 +1,33 @@
 package model;
 
 public class Produtos {
-	private String codigo;
+	private short codigo;
 	private String descricao;
-	private double preco;
+	private double precoCompra;
+	private double precoVenda;
 	private int quantidade;
-
-	// constructors
+	private String fornecedor;
+	
 	public Produtos() {
 		super();
 	}
-
-	public Produtos(String codigo, String descricao, double preco, int quantidade) {
+	
+	public Produtos(short codigo, String descricao, double precoCompra, double precoVenda, int quantidade,
+			String fornecedor) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
-		this.preco = preco;
+		this.precoCompra = precoCompra;
+		this.precoVenda = precoVenda;
 		this.quantidade = quantidade;
+		this.fornecedor = fornecedor;
 	}
 
-	// getters and setters
-	public String getCodigo() {
+	public short getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(short codigo) {
 		this.codigo = codigo;
 	}
 
@@ -36,12 +39,20 @@ public class Produtos {
 		this.descricao = descricao;
 	}
 
-	public double getPreco() {
-		return preco;
+	public double getPrecoCompra() {
+		return precoCompra;
 	}
 
-	public void setPreco(double preco) {
-		this.preco = preco;
+	public void setPrecoCompra(double precoCompra) {
+		this.precoCompra = precoCompra;
+	}
+
+	public double getPrecoVenda() {
+		return precoVenda;
+	}
+
+	public void setPrecoVenda(double precoVenda) {
+		this.precoVenda = precoVenda;
 	}
 
 	public int getQuantidade() {
@@ -52,14 +63,25 @@ public class Produtos {
 		this.quantidade = quantidade;
 	}
 
+	public String getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(String fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + codigo;
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
 		long temp;
-		temp = Double.doubleToLongBits(preco);
+		temp = Double.doubleToLongBits(precoCompra);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(precoVenda);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + quantidade;
 		return result;
@@ -74,17 +96,21 @@ public class Produtos {
 		if (getClass() != obj.getClass())
 			return false;
 		Produtos other = (Produtos) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
+		if (codigo != other.codigo)
 			return false;
 		if (descricao == null) {
 			if (other.descricao != null)
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (Double.doubleToLongBits(preco) != Double.doubleToLongBits(other.preco))
+		if (fornecedor == null) {
+			if (other.fornecedor != null)
+				return false;
+		} else if (!fornecedor.equals(other.fornecedor))
+			return false;
+		if (Double.doubleToLongBits(precoCompra) != Double.doubleToLongBits(other.precoCompra))
+			return false;
+		if (Double.doubleToLongBits(precoVenda) != Double.doubleToLongBits(other.precoVenda))
 			return false;
 		if (quantidade != other.quantidade)
 			return false;
@@ -93,10 +119,8 @@ public class Produtos {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Produtos [codigo=").append(codigo).append(", descricao=").append(descricao).append(", preco=")
-				.append(preco).append(", quantidade=").append(quantidade).append("]");
-		return builder.toString();
-	}
-
+		return "Produtos [codigo=" + codigo + ", descricao=" + descricao + ", precoCompra=" + precoCompra
+				+ ", precoVenda=" + precoVenda + ", quantidade=" + quantidade + ", fornecedor=" + fornecedor + "]";
+	}	
+	
 }

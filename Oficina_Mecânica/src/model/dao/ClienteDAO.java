@@ -70,8 +70,8 @@ public class ClienteDAO {
 			pst.setShort(13, c.getId());
 
 			pst.executeUpdate();
-
 			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
+			
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao modificar: " + e);
 		} finally {

@@ -29,7 +29,7 @@ public class ModuloConexao {
 			return conexao;
 
 		} catch (ClassNotFoundException | SQLException e) {
-			throw new RuntimeException("Erro na conexão: ", e);
+			return null;
 
 		}
 	}

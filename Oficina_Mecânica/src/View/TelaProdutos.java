@@ -13,17 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
 public class TelaProdutos extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable jtCadProduto;
 	private JTextField tfNomeProduto;
 	private JTextField tfDigitePesquisa;
 	private JTextField tfCodigoProduto;
 	private JTextField tfDescricaoProduto;
 	private JTextField tfPrecoProduto;
 	private JTextField tfQuantidadeProduto;
+	private JTextField textField;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application.
@@ -95,11 +98,14 @@ public class TelaProdutos extends JFrame {
 		btnPesquisarProduto.setBackground(SystemColor.controlShadow);
 		btnPesquisarProduto.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarProduto);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 153, 1019, 457);
+		contentPane.add(scrollPane);
 
-		table = new JTable();
-		table.setToolTipText("");
-		table.setBounds(10, 153, 1019, 457);
-		contentPane.add(table);
+		jtCadProduto = new JTable();
+		scrollPane.setViewportView(jtCadProduto);
+		jtCadProduto.setToolTipText("");
 
 		JButton btnAdicionarProduto = new JButton("Adicionar");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
@@ -139,21 +145,39 @@ public class TelaProdutos extends JFrame {
 
 		tfPrecoProduto = new JTextField();
 		tfPrecoProduto.setColumns(10);
-		tfPrecoProduto.setBounds(658, 33, 38, 23);
+		tfPrecoProduto.setBounds(662, 33, 86, 23);
 		contentPane.add(tfPrecoProduto);
 
-		JLabel lblPrecoProduto = new JLabel("Pre\u00E7o:");
-		lblPrecoProduto.setBounds(658, 17, 57, 14);
+		JLabel lblPrecoProduto = new JLabel("Pre\u00E7o de Compra:");
+		lblPrecoProduto.setBounds(662, 17, 98, 14);
 		contentPane.add(lblPrecoProduto);
 
 		tfQuantidadeProduto = new JTextField();
 		tfQuantidadeProduto.setColumns(10);
-		tfQuantidadeProduto.setBounds(702, 33, 38, 23);
+		tfQuantidadeProduto.setBounds(854, 33, 57, 23);
 		contentPane.add(tfQuantidadeProduto);
 
 		JLabel lblQuantidadeProduto = new JLabel("Quantidade");
-		lblQuantidadeProduto.setBounds(702, 17, 76, 14);
+		lblQuantidadeProduto.setBounds(854, 17, 76, 14);
 		contentPane.add(lblQuantidadeProduto);
+		
+		JLabel lblPreoDeVenda = new JLabel("Pre\u00E7o de Venda:");
+		lblPreoDeVenda.setBounds(762, 17, 98, 14);
+		contentPane.add(lblPreoDeVenda);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(758, 33, 86, 23);
+		contentPane.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(10, 73, 38, 23);
+		contentPane.add(textField_1);
+		
+		JLabel lblCdigoFornecedor = new JLabel("C\u00F3digo Fornecedor:");
+		lblCdigoFornecedor.setBounds(10, 57, 106, 14);
+		contentPane.add(lblCdigoFornecedor);
 	}
 
 	private static class __Tmp {

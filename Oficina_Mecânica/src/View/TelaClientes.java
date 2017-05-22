@@ -33,8 +33,8 @@ import java.sql.*;
 import dal.ModuloConexao;
 
 import model.Cliente;
-import model.ClienteTableModel;
 import model.dao.ClienteDAO;
+import model.tables.ClienteTableModel;
 
 //User Interface UI = view
 
@@ -363,10 +363,9 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				
 				Cliente c = new Cliente();
 				ClienteDAO dao = new ClienteDAO();
-							
+
 				c.setId(Short.parseShort(tfCodigoCliente.getText()));
 				c.setNome(tfNomeCliente.getText());
 				c.setDataNasc(tfDataNascimento.getText());
@@ -381,9 +380,8 @@ public class TelaClientes extends JFrame {
 				c.setCelular(tfCelularCliente.getText());
 
 				dao.alterar(c);
+				atualizar();				
 				LimparTela();
-				atualizar();
-
 			}
 		});
 
@@ -396,7 +394,7 @@ public class TelaClientes extends JFrame {
 		try {
 			/* Criação do modelo */
 			Cliente d = new Cliente();
-			//d.setNome(tfPesquisaCliente.getText());
+			// d.setNome(tfPesquisaCliente.getText());
 
 			/* Criação do DAO */
 			ClienteDAO ddao = new ClienteDAO();
@@ -418,6 +416,9 @@ public class TelaClientes extends JFrame {
 	 * Método para preencher os TextFields após selecionar uma linha
 	 **********************************************************************/
 	private void PreencheTextField() {
+		
+		LimparTela();
+		
 		if (jtClientes.getSelectedRow() != -1) {
 			tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
 			tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());

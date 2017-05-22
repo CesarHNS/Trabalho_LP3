@@ -18,21 +18,23 @@ public class TelaVendas extends JFrame {
 	private JPanel contentPane;
 	private JTable tablePesquisa;
 	private JTextField tfNomeProduto;
-	private JTextField tfDescricaoProduto;
+	private JTextField tfNomeCliente;
 	private JTable tableVendas;
-	private JTextField textField;
+	private JTextField tfQuantProd;
 	private JTextField tfDataVenda;
 	private JButton btnRealizarCompra;
 	private JButton btnCancelarCompra;
-	private JTextField textField_3;
+	private JTextField tfValorTotal;
 	private JLabel lblNewLabel;
 	private JLabel lblPesquisa;
 	private JButton btnPesquisar;
 	private JButton button;
 	private JLabel lblData;
 	private JLabel lblQuantidade;
-	private JTextField textField_1;
+	private JTextField tfPrecoProd;
 	private JLabel lblPreo;
+	private JTextField tfCodigoVenda;
+	private JLabel lblCdigo;
 
 	/**
 	 * Launch the application.
@@ -74,12 +76,12 @@ public class TelaVendas extends JFrame {
 		contentPane.setLayout(null);
 
 		tfNomeProduto = new JTextField();
-		tfNomeProduto.setBounds(10, 33, 296, 23);
+		tfNomeProduto.setBounds(81, 33, 296, 23);
 		contentPane.add(tfNomeProduto);
 		tfNomeProduto.setColumns(10);
 
 		JLabel lblNomeProduto = new JLabel("Nome do Produto:");
-		lblNomeProduto.setBounds(10, 17, 127, 14);
+		lblNomeProduto.setBounds(81, 17, 127, 14);
 		contentPane.add(lblNomeProduto);
 
 		tablePesquisa = new JTable();
@@ -90,16 +92,16 @@ public class TelaVendas extends JFrame {
 		JButton btnAdicionarProduto = new JButton("Adicionar Item");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
 		btnAdicionarProduto.setToolTipText("Adicionar um novo produto");
-		btnAdicionarProduto.setBounds(326, 73, 127, 35);
+		btnAdicionarProduto.setBounds(397, 73, 127, 35);
 		contentPane.add(btnAdicionarProduto);
 
-		tfDescricaoProduto = new JTextField();
-		tfDescricaoProduto.setColumns(10);
-		tfDescricaoProduto.setBounds(479, 33, 296, 23);
-		contentPane.add(tfDescricaoProduto);
+		tfNomeCliente = new JTextField();
+		tfNomeCliente.setColumns(10);
+		tfNomeCliente.setBounds(550, 33, 296, 23);
+		contentPane.add(tfNomeCliente);
 
 		JLabel lblDescricaoProduto = new JLabel("Nome Cliente");
-		lblDescricaoProduto.setBounds(479, 17, 127, 14);
+		lblDescricaoProduto.setBounds(550, 17, 127, 14);
 		contentPane.add(lblDescricaoProduto);
 
 		tableVendas = new JTable();
@@ -111,14 +113,14 @@ public class TelaVendas extends JFrame {
 		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
 		contentPane.add(lblTabelaDeVendas);
 
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 85, 103, 23);
-		contentPane.add(textField);
+		tfQuantProd = new JTextField();
+		tfQuantProd.setColumns(10);
+		tfQuantProd.setBounds(81, 85, 103, 23);
+		contentPane.add(tfQuantProd);
 
 		tfDataVenda = new JTextField();
 		tfDataVenda.setColumns(10);
-		tfDataVenda.setBounds(479, 85, 103, 23);
+		tfDataVenda.setBounds(550, 85, 103, 23);
 		contentPane.add(tfDataVenda);
 
 		btnRealizarCompra = new JButton("Realizar Venda");
@@ -133,10 +135,10 @@ public class TelaVendas extends JFrame {
 		btnCancelarCompra.setBounds(506, 579, 127, 35);
 		contentPane.add(btnCancelarCompra);
 
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(764, 591, 103, 23);
-		contentPane.add(textField_3);
+		tfValorTotal = new JTextField();
+		tfValorTotal.setColumns(10);
+		tfValorTotal.setBounds(764, 591, 103, 23);
+		contentPane.add(tfValorTotal);
 
 		lblNewLabel = new JLabel("Valor Total:");
 		lblNewLabel.setBounds(686, 591, 68, 23);
@@ -149,31 +151,40 @@ public class TelaVendas extends JFrame {
 		btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.setToolTipText("Adicionar um novo produto");
 		btnPesquisar.setBackground(SystemColor.controlShadow);
-		btnPesquisar.setBounds(326, 21, 127, 35);
+		btnPesquisar.setBounds(397, 21, 127, 35);
 		contentPane.add(btnPesquisar);
 
 		button = new JButton("Pesquisar");
 		button.setToolTipText("Adicionar um novo produto");
 		button.setBackground(SystemColor.controlShadow);
-		button.setBounds(807, 21, 127, 35);
+		button.setBounds(878, 21, 127, 35);
 		contentPane.add(button);
 
 		lblData = new JLabel("Data:");
-		lblData.setBounds(479, 65, 127, 14);
+		lblData.setBounds(550, 65, 127, 14);
 		contentPane.add(lblData);
 
 		lblQuantidade = new JLabel("Quantidade:");
-		lblQuantidade.setBounds(10, 65, 103, 14);
+		lblQuantidade.setBounds(81, 65, 103, 14);
 		contentPane.add(lblQuantidade);
 
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(133, 85, 103, 23);
-		contentPane.add(textField_1);
+		tfPrecoProd = new JTextField();
+		tfPrecoProd.setColumns(10);
+		tfPrecoProd.setBounds(204, 85, 103, 23);
+		contentPane.add(tfPrecoProd);
 
 		lblPreo = new JLabel("Pre\u00E7o");
-		lblPreo.setBounds(133, 65, 103, 14);
+		lblPreo.setBounds(204, 65, 103, 14);
 		contentPane.add(lblPreo);
+		
+		tfCodigoVenda = new JTextField();
+		tfCodigoVenda.setColumns(10);
+		tfCodigoVenda.setBounds(10, 33, 55, 23);
+		contentPane.add(tfCodigoVenda);
+		
+		lblCdigo = new JLabel("C\u00F3digo:");
+		lblCdigo.setBounds(10, 17, 55, 14);
+		contentPane.add(lblCdigo);
 	}
 
 	private static class __Tmp {
