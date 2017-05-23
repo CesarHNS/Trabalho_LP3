@@ -310,8 +310,8 @@ public class TelaClientes extends JFrame {
 				
 				ClienteControl cControl = new ClienteControl();		
 
-				// salvando o cliente utilizando a classe ClienteControl
-				cControl.salvarCliente
+				// salvando o cliente utilizando o método SalvarCliente da classe ClienteControl
+				cControl.SalvarCliente
 				(
 						Short.parseShort(tfCodigoCliente.getText()),
 						tfNomeCliente.getText(),
@@ -339,11 +339,8 @@ public class TelaClientes extends JFrame {
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				ClienteDAO dao = new ClienteDAO();
-
-				short id = Short.parseShort(tfCodigoCliente.getText());
-
-				dao.delete(id);
+				ClienteControl CControl = new ClienteControl();
+				CControl.RemoverCliente(Short.parseShort(tfCodigoCliente.getText()));			
 				LimparTela();
 				atualizar();
 			}
@@ -365,27 +362,26 @@ public class TelaClientes extends JFrame {
 		 **********************************************************************/
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ClienteControl cControl = new ClienteControl();		
 
-				Cliente c = new Cliente();
-				ClienteDAO dao = new ClienteDAO();
-			
-
-				c.setId(Short.parseShort(tfCodigoCliente.getText()));
-				c.setNome(tfNomeCliente.getText());
-				c.setDataNasc(tfDataNascimento.getText());
-				c.setCpf(tfCpfCliente.getText());
-				c.setEndereco(tfEnderecoCliente.getText());
-				c.setBairro(tfBairroCliente.getText());
-				c.setCep(tfCepCliente.getText());
-				c.setCidade(tfCidadeCliente.getText());
-				c.setEstado(cbEstado.getSelectedItem().toString());
-				c.setEmail(tfEmailCliente.getText());
-				c.setTelefone(tfTelefoneCliente.getText());
-				c.setCelular(tfCelularCliente.getText());
-
-				dao.alterar(c);				
-				atualizar();				
+				// salvando o cliente utilizando o método SalvarCliente da classe ClienteControl
+				cControl.ModificarCliente
+				(
+						Short.parseShort(tfCodigoCliente.getText()),
+						tfNomeCliente.getText(),
+						tfDataNascimento.getText(),
+						tfCpfCliente.getText(),
+						tfEnderecoCliente.getText(),
+						tfBairroCliente.getText(),
+						tfCepCliente.getText(),
+						tfCidadeCliente.getText(),
+						cbEstado.getSelectedItem().toString(),
+						tfEmailCliente.getText(),
+						tfTelefoneCliente.getText(),
+						tfCelularCliente.getText()
+				);
 				LimparTela();
+				atualizar();
 			}
 		});
 

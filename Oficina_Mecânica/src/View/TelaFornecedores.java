@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import control.FornecedorControl;
 import dal.ModuloConexao;
 import model.Fornecedor;
 import model.dao.ClienteDAO;
@@ -145,7 +146,8 @@ public class TelaFornecedores extends JFrame {
 		jtFornecedor.setToolTipText("");
 		modelo = new FornecedorTableModel();
 		jtFornecedor.setModel(modelo);
-		atualizar();
+		//usando o FornecedorControl para atualizar a tabela ao abrir a TelaFornecedores
+		new FornecedorControl().atualizar(modelo);
 
 		JButton btnAdicionarFornecedor = new JButton("Adicionar");
 
@@ -253,63 +255,66 @@ public class TelaFornecedores extends JFrame {
 		lblEstadoFornecedor.setBounds(963, 17, 74, 14);
 		contentPane.add(lblEstadoFornecedor);
 
+		////////////////////////BOTÃO PARA ADICIONAR OS FORNECEDORES////////////////////////
 		btnAdicionarFornecedor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Fornecedor f = new Fornecedor();
-				FornecedorDAO dao = new FornecedorDAO();
+				/* Captura o modelo da tabela */
+				FornecedorTableModel modelo = (FornecedorTableModel) jtFornecedor.getModel();
+				FornecedorControl FControl = new FornecedorControl();
 
-				f.setId(Short.parseShort(tfCodigoFornecedor.getText()));
-				f.setNome(tfNomeFornecedor.getText());
-				f.setTelefone(tfTelefoneFornecedor.getText());
-				f.setEmail(tfEmailFornecedor.getText());
-				f.setCelular(tfCelularFornecedor.getText());
-				f.setCnpj(tfCNPJ.getText());
-				f.setEndereco(tfEnderecoFornecedor.getText());
-				f.setBairro(tfBairroFornecedor.getText());
-				f.setCep(tfCepFornecedor.getText());
-				f.setCidade(tfCidadeFornecedor.getText());
-				f.setEstado(cbEstadoFornecedor.getSelectedItem().toString());
+				FControl.SalvarFornecedor(Short.parseShort(tfCodigoFornecedor.getText()), tfNomeFornecedor.getText(),
+						tfTelefoneFornecedor.getText(), tfEmailFornecedor.getText(), tfCelularFornecedor.getText(),
+						tfCNPJ.getText(), tfEnderecoFornecedor.getText(), tfBairroFornecedor.getText(),
+						tfCepFornecedor.getText(), tfCidadeFornecedor.getText(),
+						cbEstadoFornecedor.getSelectedItem().toString());
 
-				// salvando o fornecedor na classe dao
-				dao.create(f);
 				LimparTela();
-				atualizar();
+				//passando o modelo da tabela para o método atualizar do control
+				FControl.atualizar(modelo);
 			}
 		});
 
+		//////////////////////BOTÃO PARA REMOVER OS FORNECEDORES///////////////////////////
 		btnRemoverFornecedor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FornecedorDAO dao = new FornecedorDAO();
+				/* Captura o modelo da tabela */
+				FornecedorTableModel modelo = (FornecedorTableModel) jtFornecedor.getModel();
+				FornecedorControl FControl = new FornecedorControl();
+				
+				// verificando se uma linha foi selecionada
+				if (jtFornecedor.getSelectedRow() != -1) {
+					FControl.RemoverFornecedor(Short.parseShort(tfCodigoFornecedor.getText()));
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um fornecedor");
+				}
 
-				short id = Short.parseShort(tfCodigoFornecedor.getText());
-
-				dao.delete(id);
 				LimparTela();
-				atualizar();
+				//passando o modelo da tabela para o método atualizar do control
+				FControl.atualizar(modelo);
 			}
 		});
-
+		
+		/////////////////////BOTÃO PARA MODIFICAR OS FORNECEDORES//////////////////////////
 		btnModificarFornecedor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Fornecedor f = new Fornecedor();
-				FornecedorDAO dao = new FornecedorDAO();
+				/* Captura o modelo da tabela */
+				FornecedorTableModel modelo = (FornecedorTableModel) jtFornecedor.getModel();
+				FornecedorControl FControl = new FornecedorControl();
+				
+				// verificando se uma linha foi selecionada
+				if (jtFornecedor.getSelectedRow() != -1) {
+					FControl.ModificarFornecedor(Short.parseShort(tfCodigoFornecedor.getText()),
+							tfNomeFornecedor.getText(), tfTelefoneFornecedor.getText(), tfEmailFornecedor.getText(),
+							tfCelularFornecedor.getText(), tfCNPJ.getText(), tfEnderecoFornecedor.getText(),
+							tfBairroFornecedor.getText(), tfCepFornecedor.getText(), tfCidadeFornecedor.getText(),
+							cbEstadoFornecedor.getSelectedItem().toString());
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um fornecedor");
+				}
 
-				f.setId(Short.parseShort(tfCodigoFornecedor.getText()));
-				f.setNome(tfNomeFornecedor.getText());
-				f.setTelefone(tfTelefoneFornecedor.getText());
-				f.setEmail(tfEmailFornecedor.getText());
-				f.setCelular(tfCelularFornecedor.getText());
-				f.setCnpj(tfCNPJ.getText());
-				f.setEndereco(tfEnderecoFornecedor.getText());
-				f.setBairro(tfBairroFornecedor.getText());
-				f.setCep(tfCepFornecedor.getText());
-				f.setCidade(tfCidadeFornecedor.getText());
-				f.setEstado(cbEstadoFornecedor.getSelectedItem().toString());
-
-				// modificando o fornecedor na classe dao
-				dao.alterar(f);
 				LimparTela();
-				atualizar();
+				//passando o modelo da tabela para o método atualizar do control
+				FControl.atualizar(modelo);
 			}
 		});
 
@@ -322,54 +327,22 @@ public class TelaFornecedores extends JFrame {
 
 	}
 
-	/**********************************************************************
-	 * Método para fazer consultas no banco de dados
-	 *********************************************************************/
-	public void atualizar() {
-		try {
-			/* Criação do modelo */
-			Fornecedor f = new Fornecedor();
-			// d.setNome(tfPesquisaCliente.getText());
-
-			/* Criação do DAO */
-			FornecedorDAO fdao = new FornecedorDAO();
-			List<Fornecedor> lista = fdao.read(f);
-
-			/* Captura o modelo da tabela */
-			FornecedorTableModel modelo = (FornecedorTableModel) jtFornecedor.getModel();
-
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um fornecedor");
-		}
-	}
-
-	/***********************************************************************
-	 * Método para preencher os TextFields após selecionar uma linha
-	 **********************************************************************/
 	private void PreencheTextField() {
 
 		LimparTela();
 
-		if (jtFornecedor.getSelectedRow() != -1) {
-			tfCodigoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 0).toString());
-			tfNomeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 1).toString());
-			tfTelefoneFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 2).toString());
-			tfEmailFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 3).toString());
-			tfCelularFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 4).toString());
-			tfCNPJ.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 5).toString());
-			tfEnderecoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 6).toString());
-			tfBairroFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 7).toString());
-			tfCepFornecedor.setText((jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 8).toString()));
-			tfCidadeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 9).toString());
-			cbEstadoFornecedor.setSelectedItem(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 10).toString());
+		tfCodigoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 0).toString());
+		tfNomeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 1).toString());
+		tfTelefoneFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 2).toString());
+		tfEmailFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 3).toString());
+		tfCelularFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 4).toString());
+		tfCNPJ.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 5).toString());
+		tfEnderecoFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 6).toString());
+		tfBairroFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 7).toString());
+		tfCepFornecedor.setText((jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 8).toString()));
+		tfCidadeFornecedor.setText(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 9).toString());
+		cbEstadoFornecedor.setSelectedItem(jtFornecedor.getValueAt(jtFornecedor.getSelectedRow(), 10).toString());
 
-		} else {
-			JOptionPane.showMessageDialog(null, "Selecione um fornecedor");
-		}
 	}
 
 	/***********************************************************************

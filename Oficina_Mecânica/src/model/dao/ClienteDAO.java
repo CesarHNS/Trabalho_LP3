@@ -46,7 +46,7 @@ public class ClienteDAO {
 
 	}
 
-	public void alterar(Cliente c) {
+	public void update(Cliente c) {
 
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;

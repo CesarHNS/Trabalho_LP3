@@ -46,7 +46,7 @@ public class FornecedorDAO {
 
 	}
 
-	public void alterar(Fornecedor f) {
+	public void update(Fornecedor f) {
 
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
@@ -66,6 +66,7 @@ public class FornecedorDAO {
 			pst.setString(9, f.getCep());
 			pst.setString(10, f.getCidade());
 			pst.setString(11, f.getEstado());
+			pst.setShort(12, f.getId());
 
 			pst.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
