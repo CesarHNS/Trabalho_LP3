@@ -25,8 +25,8 @@ public class TelaProdutos extends JFrame {
 	private JTextField tfDescricaoProduto;
 	private JTextField tfPrecoProduto;
 	private JTextField tfQuantidadeProduto;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField tfPrecoVenda;
+	private JComboBox cbFornecedor;
 
 	/**
 	 * Launch the application.
@@ -75,15 +75,6 @@ public class TelaProdutos extends JFrame {
 		JLabel lblNomeProduto = new JLabel("Nome do Produto:");
 		lblNomeProduto.setBounds(54, 17, 127, 14);
 		contentPane.add(lblNomeProduto);
-
-		JComboBox<?> cbFiltros = new JComboBox<Object>();
-		cbFiltros.setToolTipText("Escolha o filtro de sua pesquisa");
-		cbFiltros.setBounds(475, 119, 190, 23);
-		contentPane.add(cbFiltros);
-
-		JLabel lblFiltrarPor = new JLabel("Filtra por:");
-		lblFiltrarPor.setBounds(475, 104, 114, 14);
-		contentPane.add(lblFiltrarPor);
 
 		tfDigitePesquisa = new JTextField();
 		tfDigitePesquisa.setBounds(675, 119, 238, 23);
@@ -165,19 +156,18 @@ public class TelaProdutos extends JFrame {
 		lblPreoDeVenda.setBounds(762, 17, 98, 14);
 		contentPane.add(lblPreoDeVenda);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(758, 33, 86, 23);
-		contentPane.add(textField);
+		tfPrecoVenda = new JTextField();
+		tfPrecoVenda.setColumns(10);
+		tfPrecoVenda.setBounds(758, 33, 86, 23);
+		contentPane.add(tfPrecoVenda);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 73, 38, 23);
-		contentPane.add(textField_1);
+		cbFornecedor = new JComboBox();
+		cbFornecedor.setBounds(10, 73, 340, 23);
+		contentPane.add(cbFornecedor);
 		
-		JLabel lblCdigoFornecedor = new JLabel("C\u00F3digo Fornecedor:");
-		lblCdigoFornecedor.setBounds(10, 57, 106, 14);
-		contentPane.add(lblCdigoFornecedor);
+		JLabel label = new JLabel("Fornecedor:");
+		label.setBounds(10, 60, 106, 14);
+		contentPane.add(label);
 	}
 
 	private static class __Tmp {
