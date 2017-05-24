@@ -2,20 +2,22 @@ package model;
 
 public class Produtos {
 	private short codigo;
+	private String nome;
 	private String descricao;
 	private double precoCompra;
 	private double precoVenda;
 	private int quantidade;
-	private String fornecedor;
+	private short fornecedor;
 	
 	public Produtos() {
 		super();
 	}
-	
-	public Produtos(short codigo, String descricao, double precoCompra, double precoVenda, int quantidade,
-			String fornecedor) {
+
+	public Produtos(short codigo, String nome, String descricao, double precoCompra, double precoVenda, int quantidade,
+			short fornecedor) {
 		super();
 		this.codigo = codigo;
+		this.nome = nome;
 		this.descricao = descricao;
 		this.precoCompra = precoCompra;
 		this.precoVenda = precoVenda;
@@ -29,6 +31,14 @@ public class Produtos {
 
 	public void setCodigo(short codigo) {
 		this.codigo = codigo;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getDescricao() {
@@ -63,11 +73,11 @@ public class Produtos {
 		this.quantidade = quantidade;
 	}
 
-	public String getFornecedor() {
+	public short getFornecedor() {
 		return fornecedor;
 	}
 
-	public void setFornecedor(String fornecedor) {
+	public void setFornecedor(short fornecedor) {
 		this.fornecedor = fornecedor;
 	}
 
@@ -77,7 +87,8 @@ public class Produtos {
 		int result = 1;
 		result = prime * result + codigo;
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
+		result = prime * result + fornecedor;
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(precoCompra);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -103,10 +114,12 @@ public class Produtos {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (fornecedor == null) {
-			if (other.fornecedor != null)
+		if (fornecedor != other.fornecedor)
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
 				return false;
-		} else if (!fornecedor.equals(other.fornecedor))
+		} else if (!nome.equals(other.nome))
 			return false;
 		if (Double.doubleToLongBits(precoCompra) != Double.doubleToLongBits(other.precoCompra))
 			return false;
@@ -119,8 +132,9 @@ public class Produtos {
 
 	@Override
 	public String toString() {
-		return "Produtos [codigo=" + codigo + ", descricao=" + descricao + ", precoCompra=" + precoCompra
-				+ ", precoVenda=" + precoVenda + ", quantidade=" + quantidade + ", fornecedor=" + fornecedor + "]";
-	}	
-	
+		return "Produtos [codigo=" + codigo + ", nome=" + nome + ", descricao=" + descricao + ", precoCompra="
+				+ precoCompra + ", precoVenda=" + precoVenda + ", quantidade=" + quantidade + ", fornecedor="
+				+ fornecedor + "]";
+	}
+		
 }

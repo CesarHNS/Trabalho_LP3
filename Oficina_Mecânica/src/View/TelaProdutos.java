@@ -4,16 +4,35 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import control.FornecedorControl;
+import control.ProdutoControl;
+import dal.ModuloConexao;
+import model.Produtos;
+import model.dao.ProdutoDAO;
+import model.tables.ClienteTableModel;
+import model.tables.FornecedorTableModel;
+import model.tables.ProdutoTableModel;
+
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class TelaProdutos extends JFrame {
 
@@ -23,10 +42,14 @@ public class TelaProdutos extends JFrame {
 	private JTextField tfDigitePesquisa;
 	private JTextField tfCodigoProduto;
 	private JTextField tfDescricaoProduto;
-	private JTextField tfPrecoProduto;
+	private JTextField tfPrecoCompra;
 	private JTextField tfQuantidadeProduto;
 	private JTextField tfPrecoVenda;
 	private JComboBox cbFornecedor;
+	ProdutoTableModel modelo;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/**
 	 * Launch the application.
@@ -60,6 +83,8 @@ public class TelaProdutos extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
+		conexao = ModuloConexao.conector();
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -89,7 +114,7 @@ public class TelaProdutos extends JFrame {
 		btnPesquisarProduto.setBackground(SystemColor.controlShadow);
 		btnPesquisarProduto.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarProduto);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 153, 1019, 457);
 		contentPane.add(scrollPane);
@@ -97,6 +122,8 @@ public class TelaProdutos extends JFrame {
 		jtCadProduto = new JTable();
 		scrollPane.setViewportView(jtCadProduto);
 		jtCadProduto.setToolTipText("");
+		modelo = new ProdutoTableModel();
+		jtCadProduto.setModel(modelo);
 
 		JButton btnAdicionarProduto = new JButton("Adicionar");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
@@ -134,10 +161,10 @@ public class TelaProdutos extends JFrame {
 		lblDescricaoProduto.setBounds(356, 17, 127, 14);
 		contentPane.add(lblDescricaoProduto);
 
-		tfPrecoProduto = new JTextField();
-		tfPrecoProduto.setColumns(10);
-		tfPrecoProduto.setBounds(662, 33, 86, 23);
-		contentPane.add(tfPrecoProduto);
+		tfPrecoCompra = new JTextField();
+		tfPrecoCompra.setColumns(10);
+		tfPrecoCompra.setBounds(662, 33, 86, 23);
+		contentPane.add(tfPrecoCompra);
 
 		JLabel lblPrecoProduto = new JLabel("Pre\u00E7o de Compra:");
 		lblPrecoProduto.setBounds(662, 17, 98, 14);
@@ -151,23 +178,94 @@ public class TelaProdutos extends JFrame {
 		JLabel lblQuantidadeProduto = new JLabel("Quantidade");
 		lblQuantidadeProduto.setBounds(854, 17, 76, 14);
 		contentPane.add(lblQuantidadeProduto);
-		
+
 		JLabel lblPreoDeVenda = new JLabel("Pre\u00E7o de Venda:");
 		lblPreoDeVenda.setBounds(762, 17, 98, 14);
 		contentPane.add(lblPreoDeVenda);
-		
+
 		tfPrecoVenda = new JTextField();
 		tfPrecoVenda.setColumns(10);
 		tfPrecoVenda.setBounds(758, 33, 86, 23);
 		contentPane.add(tfPrecoVenda);
-		
+
 		cbFornecedor = new JComboBox();
+		cbFornecedor.setModel(new DefaultComboBoxModel(new String[] { "Teste" }));
 		cbFornecedor.setBounds(10, 73, 340, 23);
 		contentPane.add(cbFornecedor);
-		
+		preecherCombo();
+
 		JLabel label = new JLabel("Fornecedor:");
 		label.setBounds(10, 60, 106, 14);
 		contentPane.add(label);
+
+		// BOTÃO PARA ADICIONAR PRODUTOS
+		btnAdicionarProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
+				ProdutoControl PControl = new ProdutoControl();
+
+				PControl.SalvarProduto(Short.parseShort(tfCodigoProduto.getText()), tfNomeProduto.getText(),
+						tfDescricaoProduto.getText(), Double.parseDouble(tfPrecoCompra.getText()),
+						Double.parseDouble(tfPrecoVenda.getText()), Integer.parseInt(tfQuantidadeProduto.getText()),
+						Short.parseShort(cbFornecedor.getSelectedItem().toString()));
+
+				LimparTela();
+				// passando o modelo da tabela para o método atualizar do
+				// control
+				PControl.atualizar(modelo);
+			}
+		});
+	}
+
+	public void preecherCombo() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;		
+
+		String sql = "select * from fornecedores order by nome_forn";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			cbFornecedor.removeAllItems();
+			while (rs.next()) {
+				cbFornecedor.addItem(rs.getString("nome_forn"));				
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+
+	}
+
+	/***********************************************************************
+	 * Método para preencher os TextFields
+	 **********************************************************************/
+	private void PreencheTextField() {
+
+		LimparTela();
+
+		tfCodigoProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 0).toString());
+		tfNomeProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 1).toString());
+		tfDescricaoProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 2).toString());
+		tfPrecoCompra.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 3).toString());
+		tfPrecoVenda.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 4).toString());
+		tfQuantidadeProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 5).toString());
+		cbFornecedor.setSelectedItem(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 6).toString());
+
+	}
+
+	/***********************************************************************
+	 * Método para limpar os TextFields após o cadastramento dos fornecedores
+	 **********************************************************************/
+	private void LimparTela() {
+		tfCodigoProduto.setText("");
+		tfNomeProduto.setText("");
+		tfDescricaoProduto.setText("");
+		tfPrecoCompra.setText("");
+		tfPrecoVenda.setText("");
+		tfQuantidadeProduto.setText("");
+		cbFornecedor.setSelectedIndex(0);
+
 	}
 
 	private static class __Tmp {

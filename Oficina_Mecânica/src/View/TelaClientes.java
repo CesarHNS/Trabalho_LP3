@@ -31,6 +31,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
 import control.ClienteControl;
+import control.FornecedorControl;
 
 import java.sql.*;
 import dal.ModuloConexao;
@@ -255,10 +256,6 @@ public class TelaClientes extends JFrame {
 		scrollPane.setBounds(10, 153, 1019, 457);
 		contentPane.add(scrollPane);
 
-		jtClientes = new JTable();
-		jtClientes.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Id", "Nome", "Data de Nascimento",
-				"Cpf", "Endere\u00E7o", "Bairro", "Cep", "Cidade", "Estado", "Email", "Celular", "Telefone" }));
-
 		JLabel lblTelefoneCliente = new JLabel("Telefone:");
 		lblTelefoneCliente.setBounds(443, 56, 74, 14);
 		contentPane.add(lblTelefoneCliente);
@@ -285,10 +282,9 @@ public class TelaClientes extends JFrame {
 		jtClientes.setToolTipText("");
 		modelo = new ClienteTableModel();
 		jtClientes.setModel(modelo);
-		// DefaultTableModel modelo = (DefaultTableModel) jtClientes.getModel();
-		// jtClientes.setRowSorter(new
-		// TableRowSorter<DefaultTableModel>(modelo));
-		atualizar();
+		// usando o ClienteControl para atualizar a tabela ao abrir a
+		// TelaClientes
+		new ClienteControl().atualizar(modelo);
 
 		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
 		cbFiltrosCliente.setBounds(475, 119, 190, 23);
@@ -307,27 +303,18 @@ public class TelaClientes extends JFrame {
 		 **********************************************************************/
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				ClienteControl cControl = new ClienteControl();		
+				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
+				ClienteControl CControl = new ClienteControl();
 
-				// salvando o cliente utilizando o método SalvarCliente da classe ClienteControl
-				cControl.SalvarCliente
-				(
-						Short.parseShort(tfCodigoCliente.getText()),
-						tfNomeCliente.getText(),
-						tfDataNascimento.getText(),
-						tfCpfCliente.getText(),
-						tfEnderecoCliente.getText(),
-						tfBairroCliente.getText(),
-						tfCepCliente.getText(),
-						tfCidadeCliente.getText(),
-						cbEstado.getSelectedItem().toString(),
-						tfEmailCliente.getText(),
-						tfTelefoneCliente.getText(),
-						tfCelularCliente.getText()
-				);
+				// salvando o cliente utilizando o método SalvarCliente da
+				// classe ClienteControl
+				CControl.SalvarCliente(Short.parseShort(tfCodigoCliente.getText()), tfNomeCliente.getText(),
+						tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
+						tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
+						cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfTelefoneCliente.getText(),
+						tfCelularCliente.getText());
 				LimparTela();
-				atualizar();
+				CControl.atualizar(modelo);
 
 			}
 
@@ -338,11 +325,17 @@ public class TelaClientes extends JFrame {
 		 **********************************************************************/
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
 				ClienteControl CControl = new ClienteControl();
-				CControl.RemoverCliente(Short.parseShort(tfCodigoCliente.getText()));			
+
+				if (jtClientes.getSelectedRow() != -1) {
+					CControl.RemoverCliente(Short.parseShort(tfCodigoCliente.getText()));
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um cliente");
+				}
+
 				LimparTela();
-				atualizar();
+				CControl.atualizar(modelo);
 			}
 		});
 
@@ -362,80 +355,48 @@ public class TelaClientes extends JFrame {
 		 **********************************************************************/
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ClienteControl cControl = new ClienteControl();		
+				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
+				ClienteControl CControl = new ClienteControl();
 
-				// salvando o cliente utilizando o método SalvarCliente da classe ClienteControl
-				cControl.ModificarCliente
-				(
-						Short.parseShort(tfCodigoCliente.getText()),
-						tfNomeCliente.getText(),
-						tfDataNascimento.getText(),
-						tfCpfCliente.getText(),
-						tfEnderecoCliente.getText(),
-						tfBairroCliente.getText(),
-						tfCepCliente.getText(),
-						tfCidadeCliente.getText(),
-						cbEstado.getSelectedItem().toString(),
-						tfEmailCliente.getText(),
-						tfTelefoneCliente.getText(),
-						tfCelularCliente.getText()
-				);
+				// salvando o cliente utilizando o método SalvarCliente da
+				// classe ClienteControl
+				if (jtClientes.getSelectedRow() != -1) {
+					CControl.ModificarCliente(Short.parseShort(tfCodigoCliente.getText()), tfNomeCliente.getText(),
+							tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
+							tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
+							cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(),
+							tfTelefoneCliente.getText(), tfCelularCliente.getText());
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um cliente");
+				}
+
 				LimparTela();
-				atualizar();
+				CControl.atualizar(modelo);
 			}
 		});
 
-	}
-
-	/**********************************************************************
-	 * Método para fazer consultas no banco de dados
-	 *********************************************************************/
-	public void atualizar() {
-		try {
-			/* Criação do modelo */
-			Cliente d = new Cliente();
-			// d.setNome(tfPesquisaCliente.getText());
-
-			/* Criação do DAO */
-			ClienteDAO ddao = new ClienteDAO();
-			List<Cliente> lista = ddao.read(d);
-
-			/* Captura o modelo da tabela */
-			ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
-
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um Cliente");
-		}
 	}
 
 	/***********************************************************************
 	 * Método para preencher os TextFields após selecionar uma linha
 	 **********************************************************************/
 	private void PreencheTextField() {
-		
-		LimparTela();
-		
-		if (jtClientes.getSelectedRow() != -1) {
-			tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
-			tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
-			tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
-			tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
-			tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
-			tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
-			tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
-			tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
-			cbEstado.setSelectedItem((jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString()));
-			tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
-			tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
-			tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
 
-		} else {
-			JOptionPane.showMessageDialog(null, "Selecione um cliente");
-		}
+		LimparTela();
+
+		tfCodigoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 0).toString());
+		tfNomeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 1).toString());
+		tfDataNascimento.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 2).toString());
+		tfCpfCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 3).toString());
+		tfEnderecoCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 4).toString());
+		tfBairroCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 5).toString());
+		tfCepCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 6).toString());
+		tfCidadeCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 7).toString());
+		cbEstado.setSelectedItem((jtClientes.getValueAt(jtClientes.getSelectedRow(), 8).toString()));
+		tfEmailCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 9).toString());
+		tfTelefoneCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 10).toString());
+		tfCelularCliente.setText(jtClientes.getValueAt(jtClientes.getSelectedRow(), 11).toString());
+
 	}
 
 	/***********************************************************************

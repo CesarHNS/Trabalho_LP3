@@ -79,8 +79,6 @@ public class FornecedorControl {
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um fornecedor");
 		}
 	}
-
-	
 	
 
 }
