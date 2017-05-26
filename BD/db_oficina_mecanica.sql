@@ -36,7 +36,7 @@ CREATE TABLE `clientes` (
   `telefone_cliente` varchar(50) NOT NULL,
   `celular_cliente` varchar(50) NOT NULL,
   PRIMARY KEY (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222');
+INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','asdfasdfsfafs','(  )    -    ','(22)92222-2222'),(3,'Testando Cliente control','  /  /    ','111.111.111-11','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +69,7 @@ CREATE TABLE `fornecedores` (
   `cidade_forn` varchar(50) NOT NULL,
   `estado_forn` varchar(50) NOT NULL,
   PRIMARY KEY (`codigo_forn`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `fornecedores` (
 
 LOCK TABLES `fornecedores` WRITE;
 /*!40000 ALTER TABLE `fornecedores` DISABLE KEYS */;
-INSERT INTO `fornecedores` VALUES (1,'adfasdfsf','','','','','sdfsdf','sdfsdfsadf','','','SC 	 ');
+INSERT INTO `fornecedores` VALUES (1,'adfasdfsf','222222222222222','hhhhhhhhhhhhhhhhhhhhhhh','2222222222','','sdfsdf','sdfsdfsadf','','','SC 	 '),(2,'gggggggggggggggggggggggg','2222222222222','hhhhhhhhhhhhhhhhhhhhhhh','','','hhhhhhhhhhhhhhhh','lllllllllllllllllllllllllllll','','','SP 	 ');
 /*!40000 ALTER TABLE `fornecedores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,4 +211,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-21 21:01:09
+-- Dump completed on 2017-05-26  7:33:34
