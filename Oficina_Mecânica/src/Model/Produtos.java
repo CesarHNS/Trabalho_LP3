@@ -7,14 +7,15 @@ public class Produtos {
 	private double precoCompra;
 	private double precoVenda;
 	private int quantidade;
-	private short fornecedor;
-	
+	private String fornecedor;
+	private String pesquisa;
+
 	public Produtos() {
 		super();
 	}
 
 	public Produtos(short codigo, String nome, String descricao, double precoCompra, double precoVenda, int quantidade,
-			short fornecedor) {
+			String fornecedor) {
 		super();
 		this.codigo = codigo;
 		this.nome = nome;
@@ -73,11 +74,11 @@ public class Produtos {
 		this.quantidade = quantidade;
 	}
 
-	public short getFornecedor() {
+	public String getFornecedor() {
 		return fornecedor;
 	}
 
-	public void setFornecedor(short fornecedor) {
+	public void setFornecedor(String fornecedor) {
 		this.fornecedor = fornecedor;
 	}
 
@@ -87,7 +88,7 @@ public class Produtos {
 		int result = 1;
 		result = prime * result + codigo;
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + fornecedor;
+		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(precoCompra);
@@ -114,7 +115,10 @@ public class Produtos {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (fornecedor != other.fornecedor)
+		if (fornecedor == null) {
+			if (other.fornecedor != null)
+				return false;
+		} else if (!fornecedor.equals(other.fornecedor))
 			return false;
 		if (nome == null) {
 			if (other.nome != null)
@@ -136,5 +140,13 @@ public class Produtos {
 				+ precoCompra + ", precoVenda=" + precoVenda + ", quantidade=" + quantidade + ", fornecedor="
 				+ fornecedor + "]";
 	}
-		
+
+	public String getPesquisa() {
+		return pesquisa;
+	}
+
+	public void setPesquisa(String pesquisa) {
+		this.pesquisa = pesquisa;
+	}
+
 }

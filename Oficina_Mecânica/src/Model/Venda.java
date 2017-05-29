@@ -1,66 +1,64 @@
 package model;
 
 public class Venda {
-	private String codigo;
-	private double valor;
-	private int quantidade;
-	private Funcionario funcionario;
+	private short codigoVenda;
+	private double valorVenda;
+	private String dataVenda;
+	private short codigoCliente;
 
-	// constructors
 	public Venda() {
 		super();
 	}
 
-	public Venda(String codigo, double valor, int quantidade, Funcionario funcionario) {
+	public Venda(short codigoVenda, double valorVenda, String dataVenda, short codigoCliente) {
 		super();
-		this.codigo = codigo;
-		this.valor = valor;
-		this.quantidade = quantidade;
-		this.funcionario = funcionario;
+		this.codigoVenda = codigoVenda;
+		this.valorVenda = valorVenda;
+		this.dataVenda = dataVenda;
+		this.codigoCliente = codigoCliente;
 	}
 
-	// getters and setters
-	public String getCodigo() {
-		return codigo;
+	public short getCodigoVenda() {
+		return codigoVenda;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setCodigoVenda(short codigoVenda) {
+		this.codigoVenda = codigoVenda;
 	}
 
-	public double getValor() {
-		return valor;
+	public double getValorVenda() {
+		return valorVenda;
 	}
 
-	public void setValor(double valor) {
-		this.valor = valor;
+	public void setValorVenda(double valorVenda) {
+		this.valorVenda = valorVenda;
 	}
 
-	public int getQuantidade() {
-		return quantidade;
+	public String getDataVenda() {
+		return dataVenda;
 	}
 
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
+	public void setDataVenda(String dataVenda) {
+		this.dataVenda = dataVenda;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public short getCodigoCliente() {
+		return codigoCliente;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setCodigoCliente(short codigoCliente) {
+		this.codigoCliente = codigoCliente;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((funcionario == null) ? 0 : funcionario.hashCode());
-		result = prime * result + quantidade;
+		result = prime * result + codigoCliente;
+		result = prime * result + codigoVenda;
+		result = prime * result + ((dataVenda == null) ? 0 : dataVenda.hashCode());
 		long temp;
-		temp = Double.doubleToLongBits(valor);
+		temp = Double.doubleToLongBits(valorVenda);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -74,29 +72,24 @@ public class Venda {
 		if (getClass() != obj.getClass())
 			return false;
 		Venda other = (Venda) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
+		if (codigoCliente != other.codigoCliente)
+			return false;
+		if (codigoVenda != other.codigoVenda)
+			return false;
+		if (dataVenda == null) {
+			if (other.dataVenda != null)
 				return false;
-		} else if (!codigo.equals(other.codigo))
+		} else if (!dataVenda.equals(other.dataVenda))
 			return false;
-		if (funcionario == null) {
-			if (other.funcionario != null)
-				return false;
-		} else if (!funcionario.equals(other.funcionario))
-			return false;
-		if (quantidade != other.quantidade)
-			return false;
-		if (Double.doubleToLongBits(valor) != Double.doubleToLongBits(other.valor))
+		if (Double.doubleToLongBits(valorVenda) != Double.doubleToLongBits(other.valorVenda))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Venda [codigo=").append(codigo).append(", valor=").append(valor).append(", quantidade=")
-				.append(quantidade).append(", funcionario=").append(funcionario).append("]");
-		return builder.toString();
+		return "Venda [codigoVenda=" + codigoVenda + ", valorVenda=" + valorVenda + ", dataVenda=" + dataVenda
+				+ ", codigoCliente=" + codigoCliente + "]";
 	}
 
 }

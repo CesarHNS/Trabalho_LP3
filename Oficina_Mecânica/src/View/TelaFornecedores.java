@@ -25,6 +25,7 @@ import dal.ModuloConexao;
 import model.Fornecedor;
 import model.dao.ClienteDAO;
 import model.dao.FornecedorDAO;
+import model.dao.ProdutoDAO;
 import model.tables.FornecedorTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -268,9 +269,10 @@ public class TelaFornecedores extends JFrame {
 						tfCepFornecedor.getText(), tfCidadeFornecedor.getText(),
 						cbEstadoFornecedor.getSelectedItem().toString());
 
-				LimparTela();
+				LimparTela();			
 				//passando o modelo da tabela para o método atualizar do control
 				FControl.atualizar(modelo);
+				
 			}
 		});
 

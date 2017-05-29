@@ -21,8 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import control.FornecedorControl;
-import control.ProdutoControl;
 import dal.ModuloConexao;
+import model.Funcionario;
 import model.Produtos;
 import model.dao.ProdutoDAO;
 import model.tables.ClienteTableModel;
@@ -33,6 +33,8 @@ import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TelaProdutos extends JFrame {
 
@@ -50,6 +52,7 @@ public class TelaProdutos extends JFrame {
 	Connection conexao = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
+	private JTextField tfCodFornecedor;
 
 	/**
 	 * Launch the application.
@@ -87,6 +90,7 @@ public class TelaProdutos extends JFrame {
 
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
+		contentPane.setToolTipText("Adicionar Fornecedor");
 		contentPane.setBackground(SystemColor.scrollbar);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -118,12 +122,6 @@ public class TelaProdutos extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 153, 1019, 457);
 		contentPane.add(scrollPane);
-
-		jtCadProduto = new JTable();
-		scrollPane.setViewportView(jtCadProduto);
-		jtCadProduto.setToolTipText("");
-		modelo = new ProdutoTableModel();
-		jtCadProduto.setModel(modelo);
 
 		JButton btnAdicionarProduto = new JButton("Adicionar");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
@@ -188,31 +186,128 @@ public class TelaProdutos extends JFrame {
 		tfPrecoVenda.setBounds(758, 33, 86, 23);
 		contentPane.add(tfPrecoVenda);
 
+		JLabel label = new JLabel("Fornecedor:");
+		label.setBounds(10, 56, 106, 14);
+		contentPane.add(label);
+
+		JButton btnAddFornecedor = new JButton("+");
+
+		btnAddFornecedor.setBounds(360, 69, 41, 23);
+		contentPane.add(btnAddFornecedor);
+
 		cbFornecedor = new JComboBox();
 		cbFornecedor.setModel(new DefaultComboBoxModel(new String[] { "Teste" }));
-		cbFornecedor.setBounds(10, 73, 340, 23);
+		cbFornecedor.setBounds(10, 69, 340, 23);
 		contentPane.add(cbFornecedor);
 		preecherCombo();
 
-		JLabel label = new JLabel("Fornecedor:");
-		label.setBounds(10, 60, 106, 14);
-		contentPane.add(label);
+		jtCadProduto = new JTable();
+		scrollPane.setViewportView(jtCadProduto);
+		jtCadProduto.setToolTipText("");
+		modelo = new ProdutoTableModel();
+		jtCadProduto.setModel(modelo);
+		
+		tfCodFornecedor = new JTextField();
+		tfCodFornecedor.setColumns(10);
+		tfCodFornecedor.setBounds(410, 69, 38, 23);
+		contentPane.add(tfCodFornecedor);
+		
+		JLabel label_1 = new JLabel("C\u00F3digo:");
+		label_1.setBounds(410, 53, 57, 14);
+		contentPane.add(label_1);
+		// atualizando a JTable ao abrir a tela de cadastro de produtos
+		atualizarTabela();
 
 		// BOTÃO PARA ADICIONAR PRODUTOS
 		btnAdicionarProduto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
-				ProdutoControl PControl = new ProdutoControl();
+				Produtos p = new Produtos();
 
-				PControl.SalvarProduto(Short.parseShort(tfCodigoProduto.getText()), tfNomeProduto.getText(),
-						tfDescricaoProduto.getText(), Double.parseDouble(tfPrecoCompra.getText()),
-						Double.parseDouble(tfPrecoVenda.getText()), Integer.parseInt(tfQuantidadeProduto.getText()),
-						Short.parseShort(cbFornecedor.getSelectedItem().toString()));
+				p.setCodigo(Short.parseShort(tfCodigoProduto.getText()));
+				p.setNome(tfNomeProduto.getText());
+				p.setDescricao(tfDescricaoProduto.getText());
+				p.setPrecoCompra(Double.parseDouble(tfPrecoCompra.getText()));
+				p.setPrecoVenda(Double.parseDouble(tfPrecoVenda.getText()));
+				p.setQuantidade(Integer.parseInt(tfQuantidadeProduto.getText()));
+				p.setFornecedor(cbFornecedor.getSelectedItem().toString());
+
+				try {
+					new ProdutoDAO().create(p);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e);
+				}
+				LimparTela();
+				atualizarTabela();
+			}
+		});
+
+		btnRemoverProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
+				Produtos p = new Produtos();
+
+				if (jtCadProduto.getSelectedRow() != -1) {
+					new ProdutoDAO().delete(Short.parseShort(tfCodigoProduto.getText()));
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um produto");
+				}
 
 				LimparTela();
-				// passando o modelo da tabela para o método atualizar do
-				// control
-				PControl.atualizar(modelo);
+				atualizarTabela();
+			}
+		});
+
+		btnModificarProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Produtos p = new Produtos();
+
+				if (jtCadProduto.getSelectedRow() != -1) {
+
+					p.setCodigo(Short.parseShort(tfCodigoProduto.getText()));
+					p.setNome(tfNomeProduto.getText());
+					p.setDescricao(tfDescricaoProduto.getText());
+					p.setPrecoCompra(Double.parseDouble(tfPrecoCompra.getText()));
+					p.setPrecoVenda(Double.parseDouble(tfPrecoVenda.getText()));
+					p.setQuantidade(Integer.parseInt(tfQuantidadeProduto.getText()));
+					p.setFornecedor(cbFornecedor.getSelectedItem().toString());
+
+					new ProdutoDAO().updateProduto(p);
+
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione um produto");
+				}
+
+				LimparTela();
+				atualizarTabela();
+			}
+		});
+
+		btnAddFornecedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaFornecedores telaForn = new TelaFornecedores();
+				// ProdutoControl PControl = new ProdutoControl();
+
+				// mostra a tela de fornecedores
+				telaForn.setVisible(true);
+				// fecha a tela de produtos
+				dispose();
+				preecherCombo();
+			}
+		});
+
+		jtCadProduto.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				PreencheTextField();
+				new ProdutoDAO().buscaNomeFornecedor(Short.parseShort(tfCodFornecedor.getText()));
+			}
+		});
+
+		btnPesquisarProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				atualizarTabelaPorBusca();
 			}
 		});
 	}
@@ -220,7 +315,7 @@ public class TelaProdutos extends JFrame {
 	public void preecherCombo() {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
-		ResultSet rs = null;		
+		ResultSet rs = null;
 
 		String sql = "select * from fornecedores order by nome_forn";
 
@@ -229,10 +324,11 @@ public class TelaProdutos extends JFrame {
 			rs = pst.executeQuery();
 			cbFornecedor.removeAllItems();
 			while (rs.next()) {
-				cbFornecedor.addItem(rs.getString("nome_forn"));				
+				cbFornecedor.addItem(rs.getString("nome_forn"));
 			}
+			new ModuloConexao().closeConnection(conexao);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e);
+			JOptionPane.showMessageDialog(null, "Erro ao preecher combobox\nERRO:" + e);
 		}
 
 	}
@@ -251,6 +347,7 @@ public class TelaProdutos extends JFrame {
 		tfPrecoVenda.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 4).toString());
 		tfQuantidadeProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 5).toString());
 		cbFornecedor.setSelectedItem(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 6).toString());
+		tfCodFornecedor.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 7).toString());
 
 	}
 
@@ -264,8 +361,55 @@ public class TelaProdutos extends JFrame {
 		tfPrecoCompra.setText("");
 		tfPrecoVenda.setText("");
 		tfQuantidadeProduto.setText("");
-		cbFornecedor.setSelectedIndex(0);
+		// cbFornecedor.setSelectedIndex(0);
 
+	}
+
+	public void atualizarTabela() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Produtos p = new Produtos();
+			// d.setNome(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			ProdutoDAO Pdao = new ProdutoDAO();
+
+			// inserindo produtos na lista usando o método read
+			List<Produtos> lista = Pdao.read(p);
+			ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+		}
+	}
+
+	public void atualizarTabelaPorBusca() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Produtos p = new Produtos();
+			// d.setNome(tfPesquisaCliente.getText());
+			p.setPesquisa(tfDigitePesquisa.getText());
+
+			/* Criação do DAO */
+			ProdutoDAO Pdao = new ProdutoDAO();
+
+			// inserindo produtos na lista usando o método read
+			List<Produtos> lista = Pdao.buscaProduto(p);
+			ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+		}
 	}
 
 	private static class __Tmp {

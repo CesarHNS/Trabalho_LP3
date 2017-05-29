@@ -278,6 +278,7 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.setToolTipText("Modificar um cliente ");
 		contentPane.add(btnModificarCliente);
 
+		jtClientes = new JTable();		
 		scrollPane.setViewportView(jtClientes);
 		jtClientes.setToolTipText("");
 		modelo = new ClienteTableModel();

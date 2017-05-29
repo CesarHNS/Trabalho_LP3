@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
 public class TelaVendas extends JFrame {
 
@@ -35,6 +36,7 @@ public class TelaVendas extends JFrame {
 	private JLabel lblPreo;
 	private JTextField tfCodigoVenda;
 	private JLabel lblCdigo;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -103,11 +105,14 @@ public class TelaVendas extends JFrame {
 		JLabel lblDescricaoProduto = new JLabel("Nome Cliente");
 		lblDescricaoProduto.setBounds(550, 17, 127, 14);
 		contentPane.add(lblDescricaoProduto);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 375, 1019, 193);
+		contentPane.add(scrollPane);
 
 		tableVendas = new JTable();
+		scrollPane.setViewportView(tableVendas);
 		tableVendas.setToolTipText("");
-		tableVendas.setBounds(10, 375, 1019, 193);
-		contentPane.add(tableVendas);
 
 		JLabel lblTabelaDeVendas = new JLabel("Itens da Venda:");
 		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
