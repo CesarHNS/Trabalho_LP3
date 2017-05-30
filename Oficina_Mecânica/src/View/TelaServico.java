@@ -21,7 +21,6 @@ public class TelaServico extends JFrame {
 	private JTextField tfNomeServico;
 	private JTextField tfDigitePesquisaServico;
 	private JTextField tfCodigoServico;
-	private JTextField tfDescricaoServico;
 	private JTextField tfPrecoServico;
 	private JTextField tfQuantidadeServico;
 
@@ -125,31 +124,22 @@ public class TelaServico extends JFrame {
 		contentPane.add(tfCodigoServico);
 		tfCodigoServico.setColumns(10);
 
-		tfDescricaoServico = new JTextField();
-		tfDescricaoServico.setColumns(10);
-		tfDescricaoServico.setBounds(356, 33, 296, 23);
-		contentPane.add(tfDescricaoServico);
-
-		JLabel lblDescricaoProduto = new JLabel("Descri\u00E7\u00E3o do Produto:");
-		lblDescricaoProduto.setBounds(356, 17, 127, 14);
-		contentPane.add(lblDescricaoProduto);
-
 		tfPrecoServico = new JTextField();
 		tfPrecoServico.setColumns(10);
-		tfPrecoServico.setBounds(658, 33, 38, 23);
+		tfPrecoServico.setBounds(360, 33, 38, 23);
 		contentPane.add(tfPrecoServico);
 
 		JLabel lblPrecoServico = new JLabel("Pre\u00E7o:");
-		lblPrecoServico.setBounds(658, 17, 57, 14);
+		lblPrecoServico.setBounds(360, 17, 57, 14);
 		contentPane.add(lblPrecoServico);
 
 		tfQuantidadeServico = new JTextField();
 		tfQuantidadeServico.setColumns(10);
-		tfQuantidadeServico.setBounds(702, 33, 38, 23);
+		tfQuantidadeServico.setBounds(404, 33, 38, 23);
 		contentPane.add(tfQuantidadeServico);
 
 		JLabel lblQuantidadeServico = new JLabel("Quantidade");
-		lblQuantidadeServico.setBounds(702, 17, 76, 14);
+		lblQuantidadeServico.setBounds(404, 17, 76, 14);
 		contentPane.add(lblQuantidadeServico);
 	}
 

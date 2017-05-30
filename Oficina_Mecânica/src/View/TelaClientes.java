@@ -32,26 +32,20 @@ import javax.swing.text.MaskFormatter;
 
 import control.ClienteControl;
 import control.FornecedorControl;
+import control.ProdutoControl;
 
 import java.sql.*;
 import dal.ModuloConexao;
 
 import model.Cliente;
-import model.dao.ClienteDAO;
+import model.Produtos;
 import model.tables.ClienteTableModel;
+import model.tables.ProdutoTableModel;
 
 //User Interface UI = view
 
 public class TelaClientes extends JFrame {
-	ClienteTableModel modelo;
-	Connection conexao = null;
-	PreparedStatement pst = null;
-	ResultSet rs = null;
-
-	/**
-	 *  
-	 */
-
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tfNomeCliente;
@@ -68,6 +62,10 @@ public class TelaClientes extends JFrame {
 	private JTextField tfCpfCliente;
 	private JTextField tfDataNascimento;
 	private JComboBox<String> cbEstado;
+	ClienteTableModel modelo;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/***************************************************************
 	 * Launch the application.
@@ -285,7 +283,7 @@ public class TelaClientes extends JFrame {
 		jtClientes.setModel(modelo);
 		// usando o ClienteControl para atualizar a tabela ao abrir a
 		// TelaClientes
-		new ClienteControl().atualizar(modelo);
+		atualizarTabela();
 
 		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
 		cbFiltrosCliente.setBounds(475, 119, 190, 23);
@@ -305,17 +303,29 @@ public class TelaClientes extends JFrame {
 		btnAdicionarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
-				ClienteControl CControl = new ClienteControl();
-
-				// salvando o cliente utilizando o método SalvarCliente da
-				// classe ClienteControl
-				CControl.SalvarCliente(Short.parseShort(tfCodigoCliente.getText()), tfNomeCliente.getText(),
-						tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
-						tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
-						cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(), tfTelefoneCliente.getText(),
-						tfCelularCliente.getText());
+				Cliente c = new Cliente();
+				
+				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				c.setNome(tfNomeCliente.getText());
+				c.setDataNasc(tfDataNascimento.getText());
+				c.setCpf(tfCpfCliente.getText());
+				c.setEndereco(tfEnderecoCliente.getText());
+				c.setBairro(tfBairroCliente.getText());
+				c.setCep(tfCepCliente.getText());
+				c.setCidade( tfCidadeCliente.getText());
+				c.setEstado(cbEstado.getSelectedItem().toString());
+				c.setEmail(tfEmailCliente.getText());
+				c.setTelefone(tfTelefoneCliente.getText());
+				c.setCelular(tfCelularCliente.getText());
+				
+				try {
+					new ClienteControl().create(c);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e);
+				}				
+			
 				LimparTela();
-				CControl.atualizar(modelo);
+				atualizarTabela();
 
 			}
 
@@ -327,16 +337,16 @@ public class TelaClientes extends JFrame {
 		btnRemoverCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
-				ClienteControl CControl = new ClienteControl();
-
-				if (jtClientes.getSelectedRow() != -1) {
-					CControl.RemoverCliente(Short.parseShort(tfCodigoCliente.getText()));
+				Cliente c = new Cliente();
+				
+				if (jtClientes.getSelectedRow() != -1) {					
+					new ClienteControl().delete(Short.parseShort(tfCodigoCliente.getText()));
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione um cliente");
 				}
 
 				LimparTela();
-				CControl.atualizar(modelo);
+				atualizarTabela();
 			}
 		});
 
@@ -357,22 +367,30 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
-				ClienteControl CControl = new ClienteControl();
-
-				// salvando o cliente utilizando o método SalvarCliente da
-				// classe ClienteControl
-				if (jtClientes.getSelectedRow() != -1) {
-					CControl.ModificarCliente(Short.parseShort(tfCodigoCliente.getText()), tfNomeCliente.getText(),
-							tfDataNascimento.getText(), tfCpfCliente.getText(), tfEnderecoCliente.getText(),
-							tfBairroCliente.getText(), tfCepCliente.getText(), tfCidadeCliente.getText(),
-							cbEstado.getSelectedItem().toString(), tfEmailCliente.getText(),
-							tfTelefoneCliente.getText(), tfCelularCliente.getText());
-				} else {
-					JOptionPane.showMessageDialog(null, "Selecione um cliente");
-				}
-
+				Cliente c = new Cliente();
+				
+				c.setId(Short.parseShort(tfCodigoCliente.getText()));
+				c.setNome(tfNomeCliente.getText());
+				c.setDataNasc(tfDataNascimento.getText());
+				c.setCpf(tfCpfCliente.getText());
+				c.setEndereco(tfEnderecoCliente.getText());
+				c.setBairro(tfBairroCliente.getText());
+				c.setCep(tfCepCliente.getText());
+				c.setCidade( tfCidadeCliente.getText());
+				c.setEstado(cbEstado.getSelectedItem().toString());
+				c.setEmail(tfEmailCliente.getText());
+				c.setTelefone(tfTelefoneCliente.getText());
+				c.setCelular(tfCelularCliente.getText());
+				
+				try {
+					new ClienteControl().update(c);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Erro: " + ex);
+				}				
+			
 				LimparTela();
-				CControl.atualizar(modelo);
+				atualizarTabela();
+
 			}
 		});
 
@@ -417,6 +435,29 @@ public class TelaClientes extends JFrame {
 		tfCelularCliente.setText("");
 		tfTelefoneCliente.setText("");
 
+	}
+	
+	public void atualizarTabela() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Cliente c = new Cliente();
+			// d.setNome(tfPesquisaCliente.getText());
+
+			/* Criação do Control */
+			ClienteControl CControl = new ClienteControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Cliente> lista = CControl.read(c);
+			ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+		}
 	}
 
 	@SuppressWarnings("unused")

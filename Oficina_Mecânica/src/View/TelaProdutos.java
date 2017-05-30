@@ -24,7 +24,7 @@ import control.FornecedorControl;
 import dal.ModuloConexao;
 import model.Funcionario;
 import model.Produtos;
-import model.dao.ProdutoDAO;
+import control.ProdutoControl;
 import model.tables.ClienteTableModel;
 import model.tables.FornecedorTableModel;
 import model.tables.ProdutoTableModel;
@@ -206,12 +206,12 @@ public class TelaProdutos extends JFrame {
 		jtCadProduto.setToolTipText("");
 		modelo = new ProdutoTableModel();
 		jtCadProduto.setModel(modelo);
-		
+
 		tfCodFornecedor = new JTextField();
 		tfCodFornecedor.setColumns(10);
 		tfCodFornecedor.setBounds(410, 69, 38, 23);
 		contentPane.add(tfCodFornecedor);
-		
+
 		JLabel label_1 = new JLabel("C\u00F3digo:");
 		label_1.setBounds(410, 53, 57, 14);
 		contentPane.add(label_1);
@@ -233,7 +233,7 @@ public class TelaProdutos extends JFrame {
 				p.setFornecedor(cbFornecedor.getSelectedItem().toString());
 
 				try {
-					new ProdutoDAO().create(p);
+					new ProdutoControl().create(p);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Erro: " + e);
 				}
@@ -245,10 +245,9 @@ public class TelaProdutos extends JFrame {
 		btnRemoverProduto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
-				Produtos p = new Produtos();
 
 				if (jtCadProduto.getSelectedRow() != -1) {
-					new ProdutoDAO().delete(Short.parseShort(tfCodigoProduto.getText()));
+					new ProdutoControl().delete(Short.parseShort(tfCodigoProduto.getText()));
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione um produto");
 				}
@@ -272,7 +271,7 @@ public class TelaProdutos extends JFrame {
 					p.setQuantidade(Integer.parseInt(tfQuantidadeProduto.getText()));
 					p.setFornecedor(cbFornecedor.getSelectedItem().toString());
 
-					new ProdutoDAO().updateProduto(p);
+					new ProdutoControl().updateProduto(p);
 
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione um produto");
@@ -300,7 +299,7 @@ public class TelaProdutos extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				PreencheTextField();
-				new ProdutoDAO().buscaNomeFornecedor(Short.parseShort(tfCodFornecedor.getText()));
+				new ProdutoControl().buscaNomeFornecedor(Short.parseShort(tfCodFornecedor.getText()));
 			}
 		});
 
@@ -373,7 +372,7 @@ public class TelaProdutos extends JFrame {
 			// d.setNome(tfPesquisaCliente.getText());
 
 			/* Criação do DAO */
-			ProdutoDAO Pdao = new ProdutoDAO();
+			ProdutoControl Pdao = new ProdutoControl();
 
 			// inserindo produtos na lista usando o método read
 			List<Produtos> lista = Pdao.read(p);
@@ -397,7 +396,7 @@ public class TelaProdutos extends JFrame {
 			p.setPesquisa(tfDigitePesquisa.getText());
 
 			/* Criação do DAO */
-			ProdutoDAO Pdao = new ProdutoDAO();
+			ProdutoControl Pdao = new ProdutoControl();
 
 			// inserindo produtos na lista usando o método read
 			List<Produtos> lista = Pdao.buscaProduto(p);

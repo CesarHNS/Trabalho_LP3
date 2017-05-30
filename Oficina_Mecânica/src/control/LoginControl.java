@@ -1,4 +1,4 @@
-package model.dao;
+package control;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +9,8 @@ import javax.swing.JOptionPane;
 import dal.ModuloConexao;
 import model.Login;
 import view.TelaControle;
-import view.TelaLogin;
 
-public class LoginDAO {
+public class LoginControl {	
 
 	/************************************************************************
 	 * Este método procura o Usuário no banco e faz o login se encotrá-lo
@@ -48,5 +47,6 @@ public class LoginDAO {
 			JOptionPane.showMessageDialog(null, e);
 		}
 	}
+
 
 }

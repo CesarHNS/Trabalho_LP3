@@ -6,8 +6,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import model.dao.ClienteDAO;
-
 public class ModuloConexao {
 
 	// a linha abaixo chama o driver

@@ -1,57 +1,44 @@
 package model;
 
 public class Servico {
-	private String codigo;
+	private Short codigo;
 	private String descricao;
 	private double preco;
 	private int quantidade;
-
-	// constructors
 	public Servico() {
 		super();
 	}
-
-	public Servico(String codigo, String descricao, double preco, int quantidade) {
+	public Servico(Short codigo, String descricao, double preco, int quantidade) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
 		this.preco = preco;
 		this.quantidade = quantidade;
 	}
-
-	// getters and setters
-	public String getCodigo() {
+	public Short getCodigo() {
 		return codigo;
 	}
-
-	public void setCodigo(String codigo) {
+	public void setCodigo(Short codigo) {
 		this.codigo = codigo;
 	}
-
 	public String getDescricao() {
 		return descricao;
 	}
-
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
 	public double getPreco() {
 		return preco;
 	}
-
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-
 	public int getQuantidade() {
 		return quantidade;
 	}
-
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -64,7 +51,6 @@ public class Servico {
 		result = prime * result + quantidade;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -90,13 +76,10 @@ public class Servico {
 			return false;
 		return true;
 	}
-
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Servico [codigo=").append(codigo).append(", descricao=").append(descricao).append(", preco=")
-				.append(preco).append(", quantidade=").append(quantidade).append("]");
-		return builder.toString();
-	}
+		return "Servico [codigo=" + codigo + ", descricao=" + descricao + ", preco=" + preco + ", quantidade="
+				+ quantidade + "]";
+	}	
 
 }

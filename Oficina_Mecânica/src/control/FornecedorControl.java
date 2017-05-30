@@ -1,84 +1,145 @@
 package control;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import dal.ModuloConexao;
 import model.Fornecedor;
-import model.dao.FornecedorDAO;
 import model.tables.FornecedorTableModel;
 
 public class FornecedorControl {
 
-	public void SalvarFornecedor(short id, String nome, String telefone, String email, String celular, String cnpj,
-			String endereco, String bairro, String cep,String cidade,String estado) {
+	public void create(Fornecedor f) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
 
-		Fornecedor f = new Fornecedor();
+		String sql = "insert into fornecedores (codigo_forn,nome_forn,telefone_forn,email_forn,celular_forn,cnpj_forn,endereco_forn,bairro_forn,cep_forn,cidade_forn,estado_forn) values(?,?,?,?,?,?,?,?,?,?,?)";
 
-		f.setId(id);
-		f.setNome(nome);
-		f.setTelefone(telefone);
-		f.setEmail(email);
-		f.setCelular(celular);
-		f.setCnpj(cnpj);
-		f.setEndereco(endereco);
-		f.setBairro(bairro);
-		f.setCep(cep);
-		f.setCidade(cidade);
-		f.setEstado(estado);
-		
-		new FornecedorDAO().create(f);
-	}
-	
-	public void RemoverFornecedor(short id){
-		
-		Fornecedor f = new Fornecedor();
-		f.setId(id);
-		new FornecedorDAO().delete(id);
-		
-	}
-	
-	public void ModificarFornecedor(short id, String nome, String telefone, String email, String celular, String cnpj,
-			String endereco, String bairro, String cep,String cidade,String estado) {
-
-		Fornecedor f = new Fornecedor();
-
-		f.setId(id);
-		f.setNome(nome);
-		f.setTelefone(telefone);
-		f.setEmail(email);
-		f.setCelular(celular);
-		f.setCnpj(cnpj);
-		f.setEndereco(endereco);
-		f.setBairro(bairro);
-		f.setCep(cep);
-		f.setCidade(cidade);
-		f.setEstado(estado);
-		
-		new FornecedorDAO().update(f);
-	}
-	
-	/**********************************************************************
-	 * Método para fazer consultas no banco de dados
-	 *********************************************************************/
-	public void atualizar(FornecedorTableModel modelo) {
 		try {
-			/* Criação do modelo */
-			Fornecedor f = new Fornecedor();
-			// d.setNome(tfPesquisaCliente.getText());
+			pst = conexao.prepareStatement(sql);
 
-			/* Criação do DAO */
-			FornecedorDAO fdao = new FornecedorDAO();
-			List<Fornecedor> lista = fdao.read(f);					
+			pst.setShort(1, f.getId());
+			pst.setString(2, f.getNome());
+			pst.setString(3, f.getTelefone());
+			pst.setString(4, f.getEmail());
+			pst.setString(5, f.getCelular());
+			pst.setString(6, f.getCnpj());
+			pst.setString(7, f.getEndereco());
+			pst.setString(8, f.getBairro());
+			pst.setString(9, f.getCep());
+			pst.setString(10, f.getCidade());
+			pst.setString(11, f.getEstado());			
 
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
+			pst.executeUpdate();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um fornecedor");
+			JOptionPane.showMessageDialog(null, "Salvo com sucesso");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
+		}
+
+	}
+
+	public void update(Fornecedor f) {
+
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+
+		String sql = "UPDATE fornecedores SET codigo_forn=?,nome_forn=?,telefone_forn=?,email_forn=?,celular_forn=?,cnpj_forn=?,endereco_forn=?,bairro_forn=?,cep_forn=?,cidade_forn=?,estado_forn=? WHERE codigo_forn=?";
+		try {
+			pst = conexao.prepareStatement(sql);
+
+			pst.setShort(1, f.getId());
+			pst.setString(2, f.getNome());
+			pst.setString(3, f.getTelefone());
+			pst.setString(4, f.getEmail());
+			pst.setString(5, f.getCelular());
+			pst.setString(6, f.getCnpj());
+			pst.setString(7, f.getEndereco());
+			pst.setString(8, f.getBairro());
+			pst.setString(9, f.getCep());
+			pst.setString(10, f.getCidade());
+			pst.setString(11, f.getEstado());
+			pst.setShort(12, f.getId());
+
+			pst.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao modificar: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
 		}
 	}
-	
+
+	public void delete(short id) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+
+		String sql = "delete from fornecedores where codigo_forn = ?";
+		try {
+			pst = conexao.prepareStatement(sql);
+
+			pst.setShort(1, id);
+
+			pst.executeUpdate();
+
+			JOptionPane.showMessageDialog(null, "Deletado com sucesso");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao deletar: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
+		}
+	}
+
+	// seleciona todos os clientes da classe clientes
+	public List<Fornecedor> read(Fornecedor f) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		List<Fornecedor> fornecedores = new ArrayList<Fornecedor>();
+
+		String sql = "select * from fornecedores";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			// enquanto existir um valor ele vai guardar no objeto
+			while (rs.next()) {
+				f = new Fornecedor();
+
+				f.setId(rs.getShort("codigo_forn"));
+				f.setNome(rs.getString("nome_forn"));
+				f.setTelefone(rs.getString("telefone_forn"));
+				f.setEmail(rs.getString("email_forn"));
+				f.setCelular(rs.getString("celular_forn"));
+				f.setCnpj(rs.getString("cnpj_forn"));
+				f.setEndereco(rs.getString("endereco_forn"));
+				f.setBairro(rs.getString("bairro_forn"));
+				f.setCep(rs.getString("cep_forn"));
+				f.setCidade(rs.getString("cidade_forn"));
+				f.setEstado(rs.getString("estado_forn"));
+				
+				fornecedores.add(f);
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+		}
+		return fornecedores;
+
+	}	
 
 }

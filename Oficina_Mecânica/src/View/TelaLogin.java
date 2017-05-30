@@ -18,7 +18,7 @@ import javax.swing.border.EmptyBorder;
 import java.sql.*;
 import dal.ModuloConexao;
 import model.Login;
-import model.dao.LoginDAO;
+import control.LoginControl;
 
 import javax.swing.ImageIcon;
 
@@ -114,14 +114,14 @@ public class TelaLogin extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// utilizando o metódo logar ao clicar no botão "Entrar"	
-				LoginDAO loginDAO = new LoginDAO();
+				LoginControl LoginControl = new LoginControl();
 				Login l = new Login();
 				
 				l.setLogin(txtLogin.getText());
 				l.setPassword(txtPassword.getText());
 				
-				//chamando o método da classe logar da classe LoginDAO
-				loginDAO.logar(l);
+				//chamando o método da classe logar da classe LoginControl
+				LoginControl.logar(l);
 				dispose();
 			}
 
