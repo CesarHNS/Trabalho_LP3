@@ -4,15 +4,31 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import control.ProdutoControl;
+import control.VendaControl;
+import dal.ModuloConexao;
+import model.Produtos;
+import model.Venda;
+import model.tables.ProdutoTableModel;
+import model.tables.VendaTableModel;
+
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TelaVendas extends JFrame {
 
@@ -32,11 +48,16 @@ public class TelaVendas extends JFrame {
 	private JButton button;
 	private JLabel lblData;
 	private JLabel lblQuantidade;
-	private JTextField tfPrecoProd;
-	private JLabel lblPreo;
+	private JTextField tfValorItem;
+	private JLabel lblValorItem;
 	private JTextField tfCodigoVenda;
 	private JLabel lblCdigo;
 	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
+	VendaTableModel modelo;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/**
 	 * Launch the application.
@@ -70,6 +91,9 @@ public class TelaVendas extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
+		conexao = ModuloConexao.conector();
+
+		
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -86,10 +110,16 @@ public class TelaVendas extends JFrame {
 		lblNomeProduto.setBounds(81, 17, 127, 14);
 		contentPane.add(lblNomeProduto);
 
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 153, 1019, 176);
+		contentPane.add(scrollPane_1);
+
 		tablePesquisa = new JTable();
+		scrollPane_1.setViewportView(tablePesquisa);
 		tablePesquisa.setToolTipText("");
-		tablePesquisa.setBounds(10, 153, 1019, 176);
-		contentPane.add(tablePesquisa);
+		modelo = new VendaTableModel();
+		tablePesquisa.setModel(modelo);
+		atualizarTabela();
 
 		JButton btnAdicionarProduto = new JButton("Adicionar Item");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
@@ -105,7 +135,7 @@ public class TelaVendas extends JFrame {
 		JLabel lblDescricaoProduto = new JLabel("Nome Cliente");
 		lblDescricaoProduto.setBounds(550, 17, 127, 14);
 		contentPane.add(lblDescricaoProduto);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 375, 1019, 193);
 		contentPane.add(scrollPane);
@@ -113,6 +143,7 @@ public class TelaVendas extends JFrame {
 		tableVendas = new JTable();
 		scrollPane.setViewportView(tableVendas);
 		tableVendas.setToolTipText("");
+		
 
 		JLabel lblTabelaDeVendas = new JLabel("Itens da Venda:");
 		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
@@ -173,23 +204,107 @@ public class TelaVendas extends JFrame {
 		lblQuantidade.setBounds(81, 65, 103, 14);
 		contentPane.add(lblQuantidade);
 
-		tfPrecoProd = new JTextField();
-		tfPrecoProd.setColumns(10);
-		tfPrecoProd.setBounds(204, 85, 103, 23);
-		contentPane.add(tfPrecoProd);
+		tfValorItem = new JTextField();
+		tfValorItem.setColumns(10);
+		tfValorItem.setBounds(204, 85, 103, 23);
+		contentPane.add(tfValorItem);
 
-		lblPreo = new JLabel("Pre\u00E7o");
-		lblPreo.setBounds(204, 65, 103, 14);
-		contentPane.add(lblPreo);
-		
+		lblValorItem = new JLabel("Valor por item:");
+		lblValorItem.setBounds(204, 65, 103, 14);
+		contentPane.add(lblValorItem);
+
 		tfCodigoVenda = new JTextField();
 		tfCodigoVenda.setColumns(10);
 		tfCodigoVenda.setBounds(10, 33, 55, 23);
 		contentPane.add(tfCodigoVenda);
-		
+
 		lblCdigo = new JLabel("C\u00F3digo:");
 		lblCdigo.setBounds(10, 17, 55, 14);
 		contentPane.add(lblCdigo);
+		
+		
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			
+				new TelaProdutos().atualizarTabelaPorBusca(); 				
+			}
+		});
+	}
+
+	/***********************************************************************
+	 * Método para preencher os TextFields
+	 **********************************************************************/
+	private void PreencheTextField() {
+
+		LimparTela();
+
+		tfCodigoVenda.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 0).toString());
+		tfDataVenda.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 3).toString());
+		tfValorItem.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 4).toString());
+		tfQuantProd.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 5).toString());
+		tfNomeProduto.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
+		tfNomeCliente.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 2).toString());
+	}
+
+	/***********************************************************************
+	 * Método para limpar os TextFields após o cadastramento dos fornecedores
+	 **********************************************************************/
+	private void LimparTela() {
+		tfCodigoVenda.setText("");
+		tfNomeCliente.setText("");
+		tfNomeProduto.setText("");
+		tfDataVenda.setText("");
+		tfValorItem.setText("");
+		tfQuantProd.setText("");
+
+	}
+
+	public void atualizarTabela() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Venda v = new Venda();
+			// d.setNome(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			VendaControl VControl = new VendaControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Venda> lista = VControl.read(v);
+			VendaTableModel modelo = (VendaTableModel) tablePesquisa.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+		}
+	}
+	
+	
+	public void atualizarTabelaPorBusca() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Produtos p = new Produtos();
+			// d.setNome(tfPesquisaCliente.getText());
+			p.setPesquisa(tfNomeProduto.getText());
+
+			/* Criação do DAO */
+			ProdutoControl Pdao = new ProdutoControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Produtos> lista = Pdao.buscaProduto(p);
+			ProdutoTableModel modelo = (ProdutoTableModel) tablePesquisa.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+		}
 	}
 
 	private static class __Tmp {
