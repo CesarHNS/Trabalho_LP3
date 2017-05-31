@@ -23,7 +23,7 @@ public class ProdutoControl {
 			Connection conexao = ModuloConexao.conector();
 			PreparedStatement pst = null;
 
-			String sql = "insert into produto (codigo,nome,descricao,preco_compra,preco_venda,quantidade,codigo_fornecedor) values(?,?,?,?,?,?,?)";
+			String sql = "insert into produto (codigo,nome,descricao,preco_compra,preco_venda,quantidade,fk_codigo_forn) values(?,?,?,?,?,?,?)";
 			try {
 				pst = conexao.prepareStatement(sql);
 
@@ -51,7 +51,7 @@ public class ProdutoControl {
 			Connection conexao = ModuloConexao.conector();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE produto SET nome=?,descricao=?,preco_compra=?,preco_venda=?,quantidade=? WHERE codigo=?";
+			String sql = "UPDATE produto SET nome=?,descricao=?,preco_compra=?,preco_venda=?,quantidade=?,fk_codigo_forn=? WHERE codigo=?";
 			try {
 				pst = conexao.prepareStatement(sql);
 
@@ -60,7 +60,8 @@ public class ProdutoControl {
 				pst.setDouble(3, p.getPrecoCompra());
 				pst.setDouble(4, p.getPrecoVenda());
 				pst.setLong(5, p.getQuantidade());
-				pst.setShort(6, p.getCodigo());
+				pst.setShort(6, codFornecedor);
+				pst.setShort(7, p.getCodigo());
 				
 				pst.executeUpdate();
 
@@ -119,7 +120,7 @@ public class ProdutoControl {
 					p.setPrecoCompra(rs.getDouble("preco_compra"));
 					p.setPrecoVenda(rs.getDouble("preco_venda"));
 					p.setQuantidade(rs.getInt("quantidade"));
-					p.setFornecedor(rs.getString("codigo_fornecedor"));
+					p.setFornecedor(rs.getString("fk_codigo_forn"));
 					// adiciona os objetos na lista de produtos
 					listaProd.add(p);
 
@@ -152,14 +153,13 @@ public class ProdutoControl {
 				while (rs.next()) {
 					p = new Produtos();
 
-					buscaCodigoFornecedor(rs.getString("codigo_fornecedor"));
 					p.setCodigo(rs.getShort("codigo"));
 					p.setNome(rs.getString("nome"));
 					p.setDescricao(rs.getString("descricao"));
 					p.setPrecoCompra(rs.getDouble("preco_compra"));
 					p.setPrecoVenda(rs.getDouble("preco_venda"));
 					p.setQuantidade(rs.getInt("quantidade"));
-					p.setFornecedor(rs.getString("nome_forn"));
+					p.setFornecedor(rs.getString("fk_codigo_forn"));
 
 					listaProd.add(p);
 
@@ -172,7 +172,6 @@ public class ProdutoControl {
 				ModuloConexao.closeConnection(conexao, pst, rs);
 			
 			}
-
 			return listaProd;
 
 		}
@@ -203,7 +202,7 @@ public class ProdutoControl {
 
 		}
 
-		public void buscaNomeFornecedor(short cod) {
+		public Object buscaNomeFornecedor(short cod) {
 
 			Connection conexaoForn = ModuloConexao.conector();
 			PreparedStatement pst = null;
@@ -227,7 +226,7 @@ public class ProdutoControl {
 			} finally {
 				ModuloConexao.closeConnection(conexaoForn, pst, rs);
 			}
-			System.out.println(nomeFornecedor);
+			return nomeFornecedor;
 		}
 
 

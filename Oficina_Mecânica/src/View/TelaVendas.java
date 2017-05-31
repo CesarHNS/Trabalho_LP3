@@ -55,6 +55,7 @@ public class TelaVendas extends JFrame {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	VendaTableModel modelo;
+	ProdutoTableModel modeloProduto;
 	Connection conexao = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -117,9 +118,9 @@ public class TelaVendas extends JFrame {
 		tablePesquisa = new JTable();
 		scrollPane_1.setViewportView(tablePesquisa);
 		tablePesquisa.setToolTipText("");
-		modelo = new VendaTableModel();
-		tablePesquisa.setModel(modelo);
-		atualizarTabela();
+		//modelo = new VendaTableModel();
+		//tableVenda.setModel(modelo);
+		//atualizarTabela();
 
 		JButton btnAdicionarProduto = new JButton("Adicionar Item");
 		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
@@ -225,8 +226,9 @@ public class TelaVendas extends JFrame {
 		
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			
-				new TelaProdutos().atualizarTabelaPorBusca(); 				
+				modeloProduto = new ProdutoTableModel();
+				tablePesquisa.setModel(modeloProduto);
+				atualizarTabelaPorBusca();
 			}
 		});
 	}
@@ -292,18 +294,20 @@ public class TelaVendas extends JFrame {
 			p.setPesquisa(tfNomeProduto.getText());
 
 			/* Criação do DAO */
-			ProdutoControl Pdao = new ProdutoControl();
+			ProdutoControl PControl = new ProdutoControl();
 
 			// inserindo produtos na lista usando o método read
-			List<Produtos> lista = Pdao.buscaProduto(p);
-			ProdutoTableModel modelo = (ProdutoTableModel) tablePesquisa.getModel();
+			List<Produtos> lista = PControl.buscaProduto(p);
+			//criando um modelo do tipo produto para a tabela
+			
+			ProdutoTableModel modeloProduto = (ProdutoTableModel) tablePesquisa.getModel();
 
 			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
+			modeloProduto.adicionar(lista);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto: "+ex);
 		}
 	}
 

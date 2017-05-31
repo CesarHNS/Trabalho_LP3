@@ -52,7 +52,6 @@ public class TelaProdutos extends JFrame {
 	Connection conexao = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
-	private JTextField tfCodFornecedor;
 
 	/**
 	 * Launch the application.
@@ -206,15 +205,6 @@ public class TelaProdutos extends JFrame {
 		jtCadProduto.setToolTipText("");
 		modelo = new ProdutoTableModel();
 		jtCadProduto.setModel(modelo);
-
-		tfCodFornecedor = new JTextField();
-		tfCodFornecedor.setColumns(10);
-		tfCodFornecedor.setBounds(410, 69, 38, 23);
-		contentPane.add(tfCodFornecedor);
-
-		JLabel label_1 = new JLabel("C\u00F3digo:");
-		label_1.setBounds(410, 53, 57, 14);
-		contentPane.add(label_1);
 		// atualizando a JTable ao abrir a tela de cadastro de produtos
 		atualizarTabela();
 
@@ -299,7 +289,6 @@ public class TelaProdutos extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				PreencheTextField();
-				new ProdutoControl().buscaNomeFornecedor(Short.parseShort(tfCodFornecedor.getText()));
 			}
 		});
 
@@ -346,7 +335,6 @@ public class TelaProdutos extends JFrame {
 		tfPrecoVenda.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 4).toString());
 		tfQuantidadeProduto.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 5).toString());
 		cbFornecedor.setSelectedItem(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 6).toString());
-		tfCodFornecedor.setText(jtCadProduto.getValueAt(jtCadProduto.getSelectedRow(), 7).toString());
 
 	}
 
