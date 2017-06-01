@@ -12,10 +12,13 @@ import javax.swing.JOptionPane;
 import dal.ModuloConexao;
 import model.Cliente;
 import model.Fornecedor;
+import model.Produtos;
 import model.tables.ClienteTableModel;
 import model.tables.FornecedorTableModel;
 
 public class ClienteControl {
+	String nomeCliente;
+	short codCliente;
 
 	public void create(Cliente c) {
 		Connection conexao = ModuloConexao.conector();
@@ -75,7 +78,7 @@ public class ClienteControl {
 
 			pst.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
-			
+
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao modificar: " + e);
 		} finally {
@@ -101,10 +104,6 @@ public class ClienteControl {
 		} finally {
 			ModuloConexao.closeConnection(conexao, pst);
 		}
-	}
-
-	public void select(Cliente c) {
-
 	}
 
 	// seleciona todos os clientes da classe clientes
@@ -151,5 +150,49 @@ public class ClienteControl {
 
 	}
 
+	public List<Cliente> buscaCliente(Cliente c) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		String sql = "select * from clientes where nome_cliente like '%" + c.getPesquisa() + "%'";
+
+		List<Cliente> listaCliente = new ArrayList<Cliente>();
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			// enquanto existir um valor ele vai guardar no objeto
+			while (rs.next()) {
+				c = new Cliente();
+
+				c.setId(rs.getShort("codigo_cliente"));
+				c.setNome(rs.getString("nome_cliente"));
+				c.setDataNasc(rs.getString("dataNasc_cliente"));
+				c.setCpf(rs.getString("cpf_cliente"));
+				c.setEndereco(rs.getString("endereco_cliente"));
+				c.setBairro(rs.getString("bairro_cliente"));
+				c.setCep(rs.getString("cep_cliente"));
+				c.setCidade(rs.getString("cidade_cliente"));
+				c.setEstado(rs.getString("estado_cliente"));
+				c.setEmail(rs.getString("email_cliente"));
+				c.setTelefone(rs.getString("telefone_cliente"));
+				c.setCelular(rs.getString("celular_cliente"));
+
+				listaCliente.add(c);
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+
+		}
+		return listaCliente;
+
+	}
 
 }

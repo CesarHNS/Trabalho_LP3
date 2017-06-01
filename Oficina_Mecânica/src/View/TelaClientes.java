@@ -227,10 +227,6 @@ public class TelaClientes extends JFrame {
 		lblCpfCliente.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		contentPane.add(lblCpfCliente);
 
-		JLabel lblFiltraPorCliente = new JLabel("Filtra por:");
-		lblFiltraPorCliente.setBounds(475, 101, 114, 14);
-		contentPane.add(lblFiltraPorCliente);
-
 		JLabel lblDigitePesquisaAqui = new JLabel("Digite sua pesquisa aqui:");
 		lblDigitePesquisaAqui.setBounds(675, 101, 151, 14);
 		contentPane.add(lblDigitePesquisaAqui);
@@ -284,10 +280,6 @@ public class TelaClientes extends JFrame {
 		// usando o ClienteControl para atualizar a tabela ao abrir a
 		// TelaClientes
 		atualizarTabela();
-
-		JComboBox<String> cbFiltrosCliente = new JComboBox<String>();
-		cbFiltrosCliente.setBounds(475, 119, 190, 23);
-		contentPane.add(cbFiltrosCliente);
 
 		cbEstado = new JComboBox<String>();
 		cbEstado.setBounds(951, 33, 63, 23);
@@ -393,6 +385,12 @@ public class TelaClientes extends JFrame {
 
 			}
 		});
+		
+		btnPesquisarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				atualizarTabelaPorBusca();
+			}
+		});
 
 	}
 
@@ -459,6 +457,32 @@ public class TelaClientes extends JFrame {
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
 		}
 	}
+	
+	public void atualizarTabelaPorBusca() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Cliente c = new Cliente();
+			// d.setNome(tfPesquisaCliente.getText());
+			c.setPesquisa(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			ClienteControl CControl = new ClienteControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Cliente> lista = CControl.buscaCliente(c);
+			ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um cliente");
+		}
+	}
+	
+	
 
 	@SuppressWarnings("unused")
 	private static class __Tmp {

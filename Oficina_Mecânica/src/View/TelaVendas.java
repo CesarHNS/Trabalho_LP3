@@ -18,11 +18,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import control.ClienteControl;
 import control.ProdutoControl;
 import control.VendaControl;
 import dal.ModuloConexao;
+import model.Cliente;
 import model.Produtos;
 import model.Venda;
+import model.tables.ClienteTableModel;
 import model.tables.ProdutoTableModel;
 import model.tables.VendaTableModel;
 
@@ -55,6 +58,7 @@ public class TelaVendas extends JFrame {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	VendaTableModel modelo;
+	ClienteTableModel modeloCliente;
 	ProdutoTableModel modeloProduto;
 	Connection conexao = null;
 	PreparedStatement pst = null;
@@ -228,7 +232,15 @@ public class TelaVendas extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				modeloProduto = new ProdutoTableModel();
 				tablePesquisa.setModel(modeloProduto);
-				atualizarTabelaPorBusca();
+				atualizarTabelaPorBuscaProduto();
+			}
+		});
+		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modeloCliente = new ClienteTableModel();
+				tablePesquisa.setModel(modeloCliente);
+				atualizarTabelaPorBuscaCliente();
 			}
 		});
 	}
@@ -285,7 +297,7 @@ public class TelaVendas extends JFrame {
 	}
 	
 	
-	public void atualizarTabelaPorBusca() {
+	public void atualizarTabelaPorBuscaProduto() {
 		// TODO Auto-generated method stub
 		try {
 			/* Criação do modelo */
@@ -304,6 +316,32 @@ public class TelaVendas extends JFrame {
 
 			/* Copia os dados da consulta para a tabela */
 			modeloProduto.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto: "+ex);
+		}
+	}
+	
+	public void atualizarTabelaPorBuscaCliente() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Cliente c = new Cliente();
+			// d.setNome(tfPesquisaCliente.getText());
+			c.setPesquisa(tfNomeCliente.getText());
+
+			/* Criação do DAO */
+			ClienteControl CControl = new ClienteControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Cliente> lista = CControl.buscaCliente(c);
+			//criando um modelo do tipo produto para a tabela
+			
+			ClienteTableModel modeloCliente = (ClienteTableModel) tablePesquisa.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modeloCliente.adicionar(lista);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

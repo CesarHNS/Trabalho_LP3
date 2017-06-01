@@ -120,7 +120,7 @@ public class ProdutoControl {
 					p.setPrecoCompra(rs.getDouble("preco_compra"));
 					p.setPrecoVenda(rs.getDouble("preco_venda"));
 					p.setQuantidade(rs.getInt("quantidade"));
-					p.setFornecedor(rs.getString("fk_codigo_forn"));
+					p.setFornecedor(rs.getString("codigo_fornecedor"));
 					// adiciona os objetos na lista de produtos
 					listaProd.add(p);
 
@@ -159,7 +159,7 @@ public class ProdutoControl {
 					p.setPrecoCompra(rs.getDouble("preco_compra"));
 					p.setPrecoVenda(rs.getDouble("preco_venda"));
 					p.setQuantidade(rs.getInt("quantidade"));
-					p.setFornecedor(rs.getString("fk_codigo_forn"));
+					p.setFornecedor(rs.getString("codigo_fornecedor"));
 
 					listaProd.add(p);
 

@@ -17,13 +17,14 @@ public class Cliente {
 	private String email;
 	private String telefone;
 	private String celular;
+	private String pesquisa;
 	
 	public Cliente() {
 		super();
 	}
-
+		
 	public Cliente(short id, String nome, String dataNasc, String cpf, String endereco, String bairro, String cep,
-			String cidade, String estado, String email, String telefone, String celular) {
+			String cidade, String estado, String email, String telefone, String celular, String pesquisa) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -37,6 +38,7 @@ public class Cliente {
 		this.email = email;
 		this.telefone = telefone;
 		this.celular = celular;
+		this.pesquisa = pesquisa;
 	}
 
 	public short getId() {
@@ -135,6 +137,14 @@ public class Cliente {
 		this.celular = celular;
 	}
 
+	public String getPesquisa() {
+		return pesquisa;
+	}
+
+	public void setPesquisa(String pesquisa) {
+		this.pesquisa = pesquisa;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -150,6 +160,7 @@ public class Cliente {
 		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((pesquisa == null) ? 0 : pesquisa.hashCode());
 		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
 		return result;
 	}
@@ -215,6 +226,11 @@ public class Cliente {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
+		if (pesquisa == null) {
+			if (other.pesquisa != null)
+				return false;
+		} else if (!pesquisa.equals(other.pesquisa))
+			return false;
 		if (telefone == null) {
 			if (other.telefone != null)
 				return false;
@@ -227,10 +243,8 @@ public class Cliente {
 	public String toString() {
 		return "Cliente [id=" + id + ", nome=" + nome + ", dataNasc=" + dataNasc + ", cpf=" + cpf + ", endereco="
 				+ endereco + ", bairro=" + bairro + ", cep=" + cep + ", cidade=" + cidade + ", estado=" + estado
-				+ ", email=" + email + ", telefone=" + telefone + ", celular=" + celular + "]";
-	}
-
-	
-
+				+ ", email=" + email + ", telefone=" + telefone + ", celular=" + celular + ", pesquisa=" + pesquisa
+				+ "]";
+	}	
 
 }
