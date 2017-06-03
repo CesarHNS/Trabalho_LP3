@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_oficina_mecanica
 -- ------------------------------------------------------
@@ -69,7 +69,7 @@ CREATE TABLE `fornecedores` (
   `cidade_forn` varchar(50) NOT NULL,
   `estado_forn` varchar(50) NOT NULL,
   PRIMARY KEY (`codigo_forn`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `fornecedores` (
 
 LOCK TABLES `fornecedores` WRITE;
 /*!40000 ALTER TABLE `fornecedores` DISABLE KEYS */;
-INSERT INTO `fornecedores` VALUES (1,'adfasdfsf','222222222222222','hhhhhhhhhhhhhhhhhhhhhhh','2222222222','','sdfsdf','sdfsdfsadf','','','SC 	 '),(2,'gggggggggggggggggggggggg','2222222222222','hhhhhhhhhhhhhhhhhhhhhhh','','','hhhhhhhhhhhhhhhh','lllllllllllllllllllllllllllll','','','SP 	 ');
+INSERT INTO `fornecedores` VALUES (1,'Alberto Ribeiro','3241234','fasdfsaf','2134124','12341234','adsfasdf','sdfasf','1312341241','asdfasf','AC 	 '),(2,'Roberto Dias','3241234','llllllllllllllllll','2134124','12341234','bghstat','dherassf','1312341241','ioçluyiyuj','AC 	 '),(3,'Fabio de Souza','3241234','fasdfsaf','2134124','12341234','adsfasdf','sdfasf','1312341241','asdfasf','AC 	 '),(4,'Bruno Correia','3343-4567','Bruno@hotmail.com','2134124','12341234','bghstat','dherassf','1312341241','ioçluyiyuj','AC 	 ');
 /*!40000 ALTER TABLE `fornecedores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,6 +146,32 @@ LOCK TABLES `itens_venda` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ordem_serv`
+--
+
+DROP TABLE IF EXISTS `ordem_serv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ordem_serv` (
+  `codigo_os` smallint(6) NOT NULL AUTO_INCREMENT,
+  `data_os` varchar(50) NOT NULL,
+  `valor_os` double NOT NULL,
+  `status_os` varchar(50) NOT NULL,
+  `fk_codigo_cliente` smallint(6) NOT NULL,
+  PRIMARY KEY (`codigo_os`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ordem_serv`
+--
+
+LOCK TABLES `ordem_serv` WRITE;
+/*!40000 ALTER TABLE `ordem_serv` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ordem_serv` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `produto`
 --
 
@@ -163,7 +189,7 @@ CREATE TABLE `produto` (
   PRIMARY KEY (`codigo`),
   KEY `fk_fornecedor` (`fk_codigo_forn`),
   CONSTRAINT `fk_fornecedor` FOREIGN KEY (`fk_codigo_forn`) REFERENCES `fornecedores` (`codigo_forn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +198,33 @@ CREATE TABLE `produto` (
 
 LOCK TABLES `produto` WRITE;
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (1,'Arruela','asdfsaf',1,3,5,1),(2,'Cabo de Vela','keijfkjsdf',20,32,10,3);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `serv`
+--
+
+DROP TABLE IF EXISTS `serv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `serv` (
+  `codigo_serv` smallint(6) NOT NULL AUTO_INCREMENT,
+  `nome_serv` varchar(50) NOT NULL,
+  `preco_serv` varchar(50) NOT NULL,
+  `quant_serv` varchar(50) NOT NULL,
+  PRIMARY KEY (`codigo_serv`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `serv`
+--
+
+LOCK TABLES `serv` WRITE;
+/*!40000 ALTER TABLE `serv` DISABLE KEYS */;
+/*!40000 ALTER TABLE `serv` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -211,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-26  7:33:34
+-- Dump completed on 2017-06-03 19:09:37
