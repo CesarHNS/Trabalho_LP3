@@ -4,26 +4,39 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import control.ServicoControl;
+import control.VendaControl;
+import model.Servico;
+import model.Venda;
+import model.tables.ServicoTableModel;
+import model.tables.VendaTableModel;
+
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TelaServico extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableServico;
 	private JTextField tfNomeServico;
 	private JTextField tfPesquisaServico;
 	private JTextField tfCodigoServico;
 	private JTextField tfPrecoServico;
 	private JTextField tfQuantidadeServico;
+	ServicoTableModel modelo;
 
 	/**
 	 * Launch the application.
@@ -83,14 +96,10 @@ public class TelaServico extends JFrame {
 		btnPesquisarServico.setBackground(SystemColor.controlShadow);
 		btnPesquisarServico.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarServico);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 153, 1019, 457);
 		contentPane.add(scrollPane);
-
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setToolTipText("");
 
 		JButton btnAdicionarServico = new JButton("Adicionar");
 		btnAdicionarServico.setBackground(SystemColor.controlShadow);
@@ -136,6 +145,67 @@ public class TelaServico extends JFrame {
 		JLabel lblQuantidadeServico = new JLabel("Quantidade");
 		lblQuantidadeServico.setBounds(404, 17, 76, 14);
 		contentPane.add(lblQuantidadeServico);
+
+		tableServico = new JTable();
+		scrollPane.setViewportView(tableServico);
+		tableServico.setToolTipText("");
+		modelo = new ServicoTableModel();
+		tableServico.setModel(modelo);
+
+		btnAdicionarServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// ServicoTableModel modelo = (ServicoTableModel)
+				// tableServico.getModel();
+				Servico s = new Servico();
+
+				s.setCodigo(Short.parseShort(tfCodigoServico.getText()));
+				s.setDescricao(tfNomeServico.getText());
+				s.setPreco(Double.parseDouble(tfPrecoServico.getText()));
+				s.setQuantidade(Integer.parseInt(tfQuantidadeServico.getText()));
+
+				try {
+					new ServicoControl().create(s);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e);
+				}
+
+				LimparTela();
+				atualizarTabela();
+
+			}
+		});
+
+	}
+
+	private void LimparTela() {
+		tfCodigoServico.setText("");
+		tfNomeServico.setText("");
+		tfPrecoServico.setText("");
+		tfQuantidadeServico.setText("");
+
+	}
+
+	public void atualizarTabela() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Servico s = new Servico();
+			// d.setNome(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			ServicoControl SControl = new ServicoControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Servico> lista = SControl.read(s);
+			ServicoTableModel modelo = (ServicoTableModel) tableServico.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um servico");
+		}
 	}
 
 	private static class __Tmp {

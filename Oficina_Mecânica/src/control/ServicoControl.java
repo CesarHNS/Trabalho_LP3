@@ -52,6 +52,7 @@ public class ServicoControl {
 			pst.setString(2, s.getDescricao());
 			pst.setDouble(3, s.getPreco());
 			pst.setInt(4, s.getQuantidade());
+			pst.setShort(5, s.getCodigo());
 
 			pst.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
