@@ -119,4 +119,41 @@ public class ServicoControl {
 
 	}
 
+	public List<Servico> buscaServico(Servico s) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		String sql = "select * from servico where nome like '%" + s.getPesquisa() + "%'";
+
+		List<Servico> listaServico = new ArrayList<Servico>();
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			// enquanto existir um valor ele vai guardar no objeto
+			while (rs.next()) {
+				s = new Servico();
+
+				s.setCodigo(rs.getShort("codigo"));
+				s.setDescricao(rs.getString("descricao"));
+				s.setPreco(rs.getShort("preco"));
+				s.setQuantidade(rs.getInt("quantidade"));
+
+				listaServico.add(s);
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+
+		}
+		return listaServico;
+
+	}
+
 }

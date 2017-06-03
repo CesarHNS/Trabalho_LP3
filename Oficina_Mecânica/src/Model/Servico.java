@@ -5,9 +5,12 @@ public class Servico {
 	private String descricao;
 	private double preco;
 	private int quantidade;
+	private String pesquisa;
+
 	public Servico() {
 		super();
 	}
+
 	public Servico(Short codigo, String descricao, double preco, int quantidade) {
 		super();
 		this.codigo = codigo;
@@ -15,30 +18,47 @@ public class Servico {
 		this.preco = preco;
 		this.quantidade = quantidade;
 	}
+
+	public String getPesquisa() {
+		return pesquisa;
+	}
+
+	public void setPesquisa(String pesquisa) {
+		this.pesquisa = pesquisa;
+	}
+
 	public Short getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(Short codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getDescricao() {
 		return descricao;
 	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
 	public double getPreco() {
 		return preco;
 	}
+
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
+
 	public int getQuantidade() {
 		return quantidade;
 	}
+
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -51,6 +71,7 @@ public class Servico {
 		result = prime * result + quantidade;
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -76,10 +97,11 @@ public class Servico {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "Servico [codigo=" + codigo + ", descricao=" + descricao + ", preco=" + preco + ", quantidade="
 				+ quantidade + "]";
-	}	
+	}
 
 }

@@ -13,13 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
 public class TelaServico extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField tfNomeServico;
-	private JTextField tfDigitePesquisaServico;
+	private JTextField tfPesquisaServico;
 	private JTextField tfCodigoServico;
 	private JTextField tfPrecoServico;
 	private JTextField tfQuantidadeServico;
@@ -69,19 +70,10 @@ public class TelaServico extends JFrame {
 		lblNomeServico.setBounds(64, 17, 127, 14);
 		contentPane.add(lblNomeServico);
 
-		JComboBox<?> cbFiltrosServico = new JComboBox<Object>();
-		cbFiltrosServico.setToolTipText("Escolha o filtro de sua pesquisa");
-		cbFiltrosServico.setBounds(475, 119, 190, 23);
-		contentPane.add(cbFiltrosServico);
-
-		JLabel lblFiltrarPor = new JLabel("Filtra por:");
-		lblFiltrarPor.setBounds(475, 104, 114, 14);
-		contentPane.add(lblFiltrarPor);
-
-		tfDigitePesquisaServico = new JTextField();
-		tfDigitePesquisaServico.setBounds(675, 119, 238, 23);
-		tfDigitePesquisaServico.setColumns(10);
-		contentPane.add(tfDigitePesquisaServico);
+		tfPesquisaServico = new JTextField();
+		tfPesquisaServico.setBounds(675, 119, 238, 23);
+		tfPesquisaServico.setColumns(10);
+		contentPane.add(tfPesquisaServico);
 
 		JLabel lblDigitePesquisaServico = new JLabel("Digite sua pesquisa aqui:");
 		lblDigitePesquisaServico.setBounds(675, 104, 151, 14);
@@ -91,11 +83,14 @@ public class TelaServico extends JFrame {
 		btnPesquisarServico.setBackground(SystemColor.controlShadow);
 		btnPesquisarServico.setBounds(923, 121, 106, 23);
 		contentPane.add(btnPesquisarServico);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 153, 1019, 457);
+		contentPane.add(scrollPane);
 
 		table = new JTable();
+		scrollPane.setViewportView(table);
 		table.setToolTipText("");
-		table.setBounds(10, 153, 1019, 457);
-		contentPane.add(table);
 
 		JButton btnAdicionarServico = new JButton("Adicionar");
 		btnAdicionarServico.setBackground(SystemColor.controlShadow);
