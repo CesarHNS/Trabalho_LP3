@@ -7,6 +7,8 @@ import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -23,9 +25,11 @@ import control.ProdutoControl;
 import control.VendaControl;
 import dal.ModuloConexao;
 import model.Cliente;
+import model.Item;
 import model.Produtos;
 import model.Venda;
 import model.tables.ClienteTableModel;
+import model.tables.ItemVendaTableModel;
 import model.tables.ProdutoTableModel;
 import model.tables.VendaTableModel;
 
@@ -61,7 +65,7 @@ public class TelaVendas extends JFrame {
 	private JLabel lblCdigo;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
-	VendaTableModel modelo;
+	ItemVendaTableModel modelo;
 	ClienteTableModel modeloCliente;
 	ProdutoTableModel modeloProduto;
 	Connection conexao = null;
@@ -102,10 +106,8 @@ public class TelaVendas extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
-		// Venda v = new Venda();
 		conexao = ModuloConexao.conector();
-		// new VendaControl().create(v);
-
+		
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -133,11 +135,11 @@ public class TelaVendas extends JFrame {
 		// tableVenda.setModel(modelo);
 		// atualizarTabela();
 
-		JButton btnAdicionarProduto = new JButton("Adicionar Item");
-		btnAdicionarProduto.setBackground(SystemColor.controlShadow);
-		btnAdicionarProduto.setToolTipText("Adicionar um novo produto");
-		btnAdicionarProduto.setBounds(397, 73, 127, 35);
-		contentPane.add(btnAdicionarProduto);
+		JButton btnAdicionarItem = new JButton("Adicionar Item");
+		btnAdicionarItem.setBackground(SystemColor.controlShadow);
+		btnAdicionarItem.setToolTipText("Adicionar um novo produto");
+		btnAdicionarItem.setBounds(397, 73, 127, 35);
+		contentPane.add(btnAdicionarItem);
 
 		tfNomeCliente = new JTextField();
 		tfNomeCliente.setColumns(10);
@@ -155,9 +157,7 @@ public class TelaVendas extends JFrame {
 		tableVendas = new JTable();
 		scrollPane.setViewportView(tableVendas);
 		tableVendas.setToolTipText("");
-		modelo = new VendaTableModel();
-		tableVendas.setModel(modelo);
-		
+
 		JLabel lblTabelaDeVendas = new JLabel("Itens da Venda:");
 		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
 		contentPane.add(lblTabelaDeVendas);
@@ -171,6 +171,11 @@ public class TelaVendas extends JFrame {
 		tfDataVenda.setColumns(10);
 		tfDataVenda.setBounds(236, 85, 103, 23);
 		contentPane.add(tfDataVenda);
+		Calendar c = Calendar.getInstance();
+		java.util.Date data = c.getTime();
+		// data no formato dd/mm/aaaa
+		DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		tfDataVenda.setText(f.format(data));
 
 		btnRealizarCompra = new JButton("Realizar Venda");
 		btnRealizarCompra.setToolTipText("Adicionar um novo produto");
@@ -239,6 +244,11 @@ public class TelaVendas extends JFrame {
 		btnPesquisarProduto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				flag = 1;
+
+				// ao abrir a tela de venda o código da venda é gerado
+				// automaticamente
+				new VendaControl().criandoVenda();
+
 				modeloProduto = new ProdutoTableModel();
 				tablePesquisa.setModel(modeloProduto);
 				atualizarTabelaPorBuscaProduto();
@@ -296,25 +306,35 @@ public class TelaVendas extends JFrame {
 			}
 		});
 
-		btnAdicionarProduto.addActionListener(new ActionListener() {
+		btnAdicionarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VendaTableModel modelo = (VendaTableModel) tableVendas.getModel();
-				Venda v = new Venda();
 
-				v.setCodigoVenda(Short.parseShort(tfCodigoVenda.getText()));
-				v.setDataVenda(tfDataVenda.getText());
-				v.setQuantidadeItem(Integer.parseInt(tfQuantProd.getText()));
-				v.setNomeProduto(tfNomeProduto.getText());
-				//v.setQuantidadeItem(tfQuantProd.getText());
+				Item itenVenda = new Item();
+				VendaControl vcontrol = new VendaControl();
+				// usando o método que busca o código da venda
+				short codVenda = vcontrol.buscaCodVenda();
+				short codProduto = vcontrol.buscaCodProduto(tfNomeProduto.getText());
+
+				itenVenda.setCodVenda(codVenda);
+				itenVenda.setCodProduto(codProduto);
+				itenVenda.setQuantidade(Integer.parseInt(tfQuantProd.getText()));
+
+		
+				// v.setNomeProduto(tfNomeProduto.getText());
+				// v.setNomeCliente(tfNomeCliente.getText());
+				// v.setQuantidadeItem(tfQuantProd.getText());
 
 				try {
-					new VendaControl().create(v);
+					// adiciona um item na tabela de vendas
+					new VendaControl().adicionaItem(itenVenda);
+					atualizarTabelaItensVenda();
+					LimparTela();
+					JOptionPane.showMessageDialog(null, "Produto adicionado!");
+
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Erro: " + e);
-				}				
-			
-				LimparTela();
-				atualizarTabela();
+				}
+
 			}
 		});
 	}
@@ -347,26 +367,34 @@ public class TelaVendas extends JFrame {
 
 	}
 
-	public void atualizarTabela() {
+	public void atualizarTabelaItensVenda() {
 		// TODO Auto-generated method stub
 		try {
 			/* Criação do modelo */
-			Venda v = new Venda();
-			// d.setNome(tfPesquisaCliente.getText());
+			Item itemVenda = new Item();
 
 			/* Criação do DAO */
 			VendaControl VControl = new VendaControl();
+			// VControl.buscaNomeProduto(Short.parseShort(tfCodigoVenda.getText()));
+
+			modelo = new ItemVendaTableModel();
+			tableVendas.setModel(modelo);
+			
+			//String a;
+			//a = new VendaControl().buscaNomeProduto(Short.parseShort(tfCodigoVenda.getText()));
+
+			//System.out.println(a);
 
 			// inserindo produtos na lista usando o método read
-			List<Venda> lista = VControl.read(v);
-			VendaTableModel modelo = (VendaTableModel) tableVendas.getModel();
+			List<Item> listaItem = VControl.readItem(itemVenda);
+			ItemVendaTableModel modelo = (ItemVendaTableModel) tableVendas.getModel();
 
 			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
+			modelo.adicionar(listaItem);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar vendas:");
 		}
 	}
 

@@ -6,10 +6,10 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import model.Cliente;
-import model.Venda;
+import model.Item;
+import model.Produtos;
 
-public class VendaTableModel extends AbstractTableModel {
-
+public class ItemVendaTableModel extends AbstractTableModel {
 	/* Lista para armazenar os cabeçalhos da tabela */
 
 	private Vector colunas;
@@ -17,18 +17,17 @@ public class VendaTableModel extends AbstractTableModel {
 	/* Lista para armazenar os dados da tabela */
 	private Vector linhas;
 
-	public VendaTableModel() {
-        /* Definição das colunas da tabela */
-        colunas = new Vector();
-        //colunas.add("Código");
-        colunas.add("Valor");
-        colunas.add("Data");
-        colunas.add("Cliente");
-      
+	public ItemVendaTableModel() {
+		/* Definição das colunas da tabela */
+		colunas = new Vector();		
+		colunas.add("Nome");
+		colunas.add("Descrição");
+	
+	
 
-        /* Definição dos dados da tabela */
-        linhas = new Vector();
-    }
+		/* Definição dos dados da tabela */
+		linhas = new Vector();
+	}
 
 	public int getRowCount() {
 		/* Captura o total de linhas da tabela */
@@ -65,20 +64,18 @@ public class VendaTableModel extends AbstractTableModel {
 		return dado;
 	}
 
-	public void adicionar(List<Venda> listaVendas) {
+	public void adicionar(List<Item> listaItem) {
 		/* Reinicializa os dados da tabela */
 		linhas = new Vector();
 
 		/* Percorre a lista copiando os dados para a tabela */
-		for (Venda v : listaVendas) {
+		for (Item i : listaItem) {
 
 			/* Cria uma linha da tabela */
-			Vector<Object> linha = new Vector();
-			//linha.add(v.getCodigoVenda());
-			linha.add(v.getValorVenda());
-			linha.add(v.getDataVenda());
-			linha.add(v.getNomeCliente());
-			
+			Vector<Object> linha = new Vector();			
+			linha.add(i.getCodProduto());
+			linha.add(i.getQuantidade());	
+
 			/* Adiciona a linha a tabela */
 			linhas.add(linha);
 		}

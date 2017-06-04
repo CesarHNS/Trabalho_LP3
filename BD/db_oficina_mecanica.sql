@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: db_oficina_mecanica
 -- ------------------------------------------------------
@@ -119,30 +119,31 @@ INSERT INTO `funcionarios` VALUES (1,'Paulo de Souza','345.459.540-50','Paulo123
 UNLOCK TABLES;
 
 --
--- Table structure for table `itens_venda`
+-- Table structure for table `itens_venda_produto`
 --
 
-DROP TABLE IF EXISTS `itens_venda`;
+DROP TABLE IF EXISTS `itens_venda_produto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `itens_venda` (
+CREATE TABLE `itens_venda_produto` (
   `codigo_venda` smallint(6) NOT NULL,
   `codigo_produto` smallint(6) NOT NULL,
   `quant_produto` int(11) NOT NULL,
   PRIMARY KEY (`codigo_venda`,`codigo_produto`),
   KEY `codigo_produto` (`codigo_produto`),
-  CONSTRAINT `itens_venda_ibfk_1` FOREIGN KEY (`codigo_venda`) REFERENCES `clientes` (`codigo_cliente`),
-  CONSTRAINT `itens_venda_ibfk_2` FOREIGN KEY (`codigo_produto`) REFERENCES `produto` (`codigo`)
+  CONSTRAINT `itens_venda_fk_1` FOREIGN KEY (`codigo_venda`) REFERENCES `venda` (`codigo_venda`),
+  CONSTRAINT `itens_venda_fk_2` FOREIGN KEY (`codigo_produto`) REFERENCES `produto` (`codigo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itens_venda`
+-- Dumping data for table `itens_venda_produto`
 --
 
-LOCK TABLES `itens_venda` WRITE;
-/*!40000 ALTER TABLE `itens_venda` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itens_venda` ENABLE KEYS */;
+LOCK TABLES `itens_venda_produto` WRITE;
+/*!40000 ALTER TABLE `itens_venda_produto` DISABLE KEYS */;
+INSERT INTO `itens_venda_produto` VALUES (26,1,1);
+/*!40000 ALTER TABLE `itens_venda_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -238,11 +239,11 @@ CREATE TABLE `venda` (
   `codigo_venda` smallint(6) NOT NULL AUTO_INCREMENT,
   `valor_venda` varchar(50) NOT NULL,
   `data_venda` varchar(50) NOT NULL,
-  `fk_codigo_cliente` smallint(6) NOT NULL,
+  `fk_cliente` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`codigo_venda`),
-  KEY `fk_codigo_cliente` (`fk_codigo_cliente`),
-  CONSTRAINT `venda_ibfk_1` FOREIGN KEY (`fk_codigo_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `cod_fk_cliente` (`fk_cliente`),
+  CONSTRAINT `cod_fk_cliente` FOREIGN KEY (`fk_cliente`) REFERENCES `clientes` (`codigo_cliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,6 +252,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
+INSERT INTO `venda` VALUES (24,'0.0','04/06/2017',NULL),(25,'0.0','04/06/2017',NULL),(26,'0.0','04/06/2017',NULL),(27,'0.0','04/06/2017',NULL);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -263,4 +265,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-03 19:09:37
+-- Dump completed on 2017-06-04  4:19:05

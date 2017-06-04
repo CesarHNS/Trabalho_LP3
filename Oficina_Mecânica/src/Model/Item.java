@@ -1,29 +1,28 @@
 package model;
 
 public class Item {
-	private String codigo;
+	private short codVenda;
 	private int quantidade;
-	private double valor;
+	private short codProduto;
+	private String nomeProduto;
 
-	// constructors
 	public Item() {
 		super();
 	}
 
-	public Item(String codigo, int quantidade, double valor) {
+	public Item(short codVenda, int quantidade, short codProduto) {
 		super();
-		this.codigo = codigo;
+		this.codVenda = codVenda;
 		this.quantidade = quantidade;
-		this.valor = valor;
+		this.codProduto = codProduto;
 	}
 
-	// setters and getters
-	public String getCodigo() {
-		return codigo;
+	public short getCodVenda() {
+		return codVenda;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setCodVenda(short codVenda) {
+		this.codVenda = codVenda;
 	}
 
 	public int getQuantidade() {
@@ -34,23 +33,21 @@ public class Item {
 		this.quantidade = quantidade;
 	}
 
-	public double getValor() {
-		return valor;
+	public short getCodProduto() {
+		return codProduto;
 	}
 
-	public void setValor(double valor) {
-		this.valor = valor;
+	public void setCodProduto(short codProduto) {
+		this.codProduto = codProduto;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + codProduto;
+		result = prime * result + codVenda;
 		result = prime * result + quantidade;
-		long temp;
-		temp = Double.doubleToLongBits(valor);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -63,24 +60,28 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
+		if (codProduto != other.codProduto)
+			return false;
+		if (codVenda != other.codVenda)
 			return false;
 		if (quantidade != other.quantidade)
-			return false;
-		if (Double.doubleToLongBits(valor) != Double.doubleToLongBits(other.valor))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Item [codigo=").append(codigo).append(", quantidade=").append(quantidade).append(", valor=")
-				.append(valor).append("]");
-		return builder.toString();
+		return "Item [codigo=" + codVenda + ", quantidade=" + quantidade + ", codProduto=" + codProduto + "]";
 	}
+
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
+	}
+
+	
 
 }
