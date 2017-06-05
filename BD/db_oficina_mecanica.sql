@@ -142,7 +142,7 @@ CREATE TABLE `itens_venda_produto` (
 
 LOCK TABLES `itens_venda_produto` WRITE;
 /*!40000 ALTER TABLE `itens_venda_produto` DISABLE KEYS */;
-INSERT INTO `itens_venda_produto` VALUES (26,1,1);
+INSERT INTO `itens_venda_produto` VALUES (118,1,1),(119,1,1),(119,2,1),(120,1,1),(122,1,1),(123,1,1);
 /*!40000 ALTER TABLE `itens_venda_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +243,7 @@ CREATE TABLE `venda` (
   PRIMARY KEY (`codigo_venda`),
   KEY `cod_fk_cliente` (`fk_cliente`),
   CONSTRAINT `cod_fk_cliente` FOREIGN KEY (`fk_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +252,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
-INSERT INTO `venda` VALUES (24,'0.0','04/06/2017',NULL),(25,'0.0','04/06/2017',NULL),(26,'0.0','04/06/2017',NULL),(27,'0.0','04/06/2017',NULL);
+INSERT INTO `venda` VALUES (108,'0.0','04/06/2017',NULL),(109,'0.0','04/06/2017',NULL),(110,'0.0','04/06/2017',NULL),(111,'0.0','04/06/2017',NULL),(112,'0.0','04/06/2017',NULL),(113,'0.0','04/06/2017',NULL),(114,'0.0','04/06/2017',NULL),(115,'0.0','04/06/2017',NULL),(116,'0.0','04/06/2017',NULL),(117,'0.0','04/06/2017',NULL),(118,'0.0','04/06/2017',NULL),(119,'0.0','04/06/2017',NULL),(120,'0.0','04/06/2017',NULL),(121,'0.0','04/06/2017',NULL),(122,'0.0','04/06/2017',NULL),(123,'0.0','04/06/2017',NULL),(124,'0.0','04/06/2017',NULL),(125,'0.0','04/06/2017',NULL),(126,'0.0','04/06/2017',NULL);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -265,4 +265,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-04  4:19:05
+-- Dump completed on 2017-06-04 23:52:43

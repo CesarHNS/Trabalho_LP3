@@ -7,7 +7,9 @@ import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import control.ClienteControl;
@@ -30,6 +33,7 @@ import model.Produtos;
 import model.Venda;
 import model.tables.ClienteTableModel;
 import model.tables.ItemVendaTableModel;
+import model.tables.ModeloTabela;
 import model.tables.ProdutoTableModel;
 import model.tables.VendaTableModel;
 
@@ -61,22 +65,22 @@ public class TelaVendas extends JFrame {
 	private JLabel lblQuantidade;
 	private JTextField tfValorItem;
 	private JLabel lblValorItem;
-	private JTextField tfCodigoVenda;
-	private JLabel lblCdigo;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
-	ItemVendaTableModel modelo;
+	ModeloTabela modelo;
 	ClienteTableModel modeloCliente;
 	ProdutoTableModel modeloProduto;
 	Connection conexao = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
 	int flag = 1;
-	double precoProduto;
+	double precoProduto, total = 0;
+	VendaControl vcontrol = new VendaControl();
+	Item itenVenda = new Item();
 
-	/**
+	/***********************************************************************
 	 * Launch the application.
-	 */
+	 ***********************************************************************/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -90,9 +94,9 @@ public class TelaVendas extends JFrame {
 		});
 	}
 
-	/**
+	/***********************************************************************
 	 * Create the frame.
-	 */
+	 ***********************************************************************/
 	public TelaVendas() {
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
@@ -107,7 +111,7 @@ public class TelaVendas extends JFrame {
 															// janela onde estou
 															// quando clico no X
 		conexao = ModuloConexao.conector();
-		
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -116,12 +120,12 @@ public class TelaVendas extends JFrame {
 		contentPane.setLayout(null);
 
 		tfNomeProduto = new JTextField();
-		tfNomeProduto.setBounds(75, 33, 302, 23);
+		tfNomeProduto.setBounds(10, 33, 367, 23);
 		contentPane.add(tfNomeProduto);
 		tfNomeProduto.setColumns(10);
 
 		JLabel lblNomeProduto = new JLabel("Nome do Produto:");
-		lblNomeProduto.setBounds(75, 17, 127, 14);
+		lblNomeProduto.setBounds(10, 17, 127, 14);
 		contentPane.add(lblNomeProduto);
 
 		scrollPane_1 = new JScrollPane();
@@ -131,9 +135,6 @@ public class TelaVendas extends JFrame {
 		tablePesquisa = new JTable();
 		scrollPane_1.setViewportView(tablePesquisa);
 		tablePesquisa.setToolTipText("");
-		// modelo = new VendaTableModel();
-		// tableVenda.setModel(modelo);
-		// atualizarTabela();
 
 		JButton btnAdicionarItem = new JButton("Adicionar Item");
 		btnAdicionarItem.setBackground(SystemColor.controlShadow);
@@ -231,21 +232,13 @@ public class TelaVendas extends JFrame {
 		lblValorItem.setBounds(123, 65, 103, 14);
 		contentPane.add(lblValorItem);
 
-		tfCodigoVenda = new JTextField();
-		tfCodigoVenda.setColumns(10);
-		tfCodigoVenda.setBounds(10, 33, 55, 23);
-		contentPane.add(tfCodigoVenda);
-
-		lblCdigo = new JLabel("C\u00F3digo:");
-		lblCdigo.setBounds(10, 17, 55, 14);
-		contentPane.add(lblCdigo);
-
-		// BOTÕES
+		/******************************************************************
+		 * EVENTOS DOS BOTÕES
+		 ******************************************************************/
 		btnPesquisarProduto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				flag = 1;
-
-				// ao abrir a tela de venda o código da venda é gerado
+				// ao clicar em pesquisar o código da venda é gerado
 				// automaticamente
 				new VendaControl().criandoVenda();
 
@@ -279,123 +272,94 @@ public class TelaVendas extends JFrame {
 			}
 		});
 
-		tfQuantProd.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				double valorTotal;
-				valorTotal = Double.parseDouble(tfValorItem.getText()) * Integer.parseInt(tfQuantProd.getText());
-				tfValorTotal.setText(String.valueOf("R$" + valorTotal));
-			}
-		});
-
-		tfDataVenda.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				double valorTotal;
-				valorTotal = Double.parseDouble(tfValorItem.getText()) * Integer.parseInt(tfQuantProd.getText());
-				tfValorTotal.setText(String.valueOf("R$" + valorTotal));
-			}
-		});
-
-		tfValorItem.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				double valorTotal;
-				valorTotal = Double.parseDouble(tfValorItem.getText()) * Integer.parseInt(tfQuantProd.getText());
-				tfValorTotal.setText(String.valueOf("R$" + valorTotal));
-			}
-		});
-
 		btnAdicionarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				Item itenVenda = new Item();
-				VendaControl vcontrol = new VendaControl();
+				Connection conexao = ModuloConexao.conector();
+				PreparedStatement pst = null;
+				ResultSet rs = null;
 				// usando o método que busca o código da venda
 				short codVenda = vcontrol.buscaCodVenda();
-				short codProduto = vcontrol.buscaCodProduto(tfNomeProduto.getText());
+				int quant = 0;
 
-				itenVenda.setCodVenda(codVenda);
-				itenVenda.setCodProduto(codProduto);
-				itenVenda.setQuantidade(Integer.parseInt(tfQuantProd.getText()));
-
-		
-				// v.setNomeProduto(tfNomeProduto.getText());
-				// v.setNomeCliente(tfNomeCliente.getText());
-				// v.setQuantidadeItem(tfQuantProd.getText());
+				String sql = "select * from produto where nome='" + tfNomeProduto.getText() + "'";
 
 				try {
-					// adiciona um item na tabela de vendas
-					new VendaControl().adicionaItem(itenVenda);
-					atualizarTabelaItensVenda();
-					LimparTela();
-					JOptionPane.showMessageDialog(null, "Produto adicionado!");
+					pst = conexao.prepareStatement(sql);
+					rs = pst.executeQuery();
+					quant = rs.getInt("quantidade");
+					rs.first();
+					// verificando a quantidade de produtos no banco
+					if (quant >= Integer.parseInt(tfQuantProd.getText())) {
+						itenVenda.setCodVenda(codVenda);
+						itenVenda.setNomeProduto(tfNomeProduto.getText());
+						itenVenda.setQuantidade(Integer.parseInt(tfQuantProd.getText()));
+						// adiciona um item na tabela de vendas
+						vcontrol.adicionaItem(itenVenda);
+						
+						atualizarTabelaItensVenda(
+								"SELECT * FROM produto INNER JOIN itens_venda_produto ON produto.codigo = itens_venda_produto.codigo_produto INNER JOIN venda ON venda.codigo_venda=itens_venda_produto.codigo_venda WHERE venda.codigo_venda="
+										+ codVenda);
+					} else {
+						JOptionPane.showMessageDialog(rootPane,
+								"A quantidade desejada não está disponível no estoque!");
+					}
 
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Erro: " + e);
+				} catch (SQLException ex) {
+					JOptionPane.showMessageDialog(rootPane, "Erro ao pesquisar a quantidade:\nERRO:" + ex);
 				}
-
 			}
 		});
 	}
 
-	/***********************************************************************
-	 * Método para preencher os TextFields
-	 **********************************************************************/
-	private void PreencheTextField() {
-
-		LimparTela();
-
-		tfCodigoVenda.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 0).toString());
-		tfDataVenda.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 3).toString());
-		tfValorItem.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 4).toString());
-		tfQuantProd.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 5).toString());
-		tfNomeProduto.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
-		tfNomeCliente.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 2).toString());
-	}
-
-	/***********************************************************************
-	 * Método para limpar os TextFields após o cadastramento dos fornecedores
-	 **********************************************************************/
+	// Método para limpar os TextFields após o cadastramento dos fornecedores
 	private void LimparTela() {
-		tfCodigoVenda.setText("");
 		tfNomeCliente.setText("");
 		tfNomeProduto.setText("");
-		tfDataVenda.setText("");
 		tfValorItem.setText("");
 		tfQuantProd.setText("");
 
 	}
 
-	public void atualizarTabelaItensVenda() {
-		// TODO Auto-generated method stub
+	public void atualizarTabelaItensVenda(String sql) {
+
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Descrição", "Quantidade", "Valor Total" };
+
 		try {
-			/* Criação do modelo */
-			Item itemVenda = new Item();
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			rs.first();
+			// enquanto o meu result set encontrar dados na tabela
+			do {
 
-			/* Criação do DAO */
-			VendaControl VControl = new VendaControl();
-			// VControl.buscaNomeProduto(Short.parseShort(tfCodigoVenda.getText()));
+				// variaveis para calcular o valor total da venda
+				float valorProduto = rs.getFloat("preco_venda");
+				int quantVend = rs.getInt("quant_produto");
 
-			modelo = new ItemVendaTableModel();
-			tableVendas.setModel(modelo);
-			
-			//String a;
-			//a = new VendaControl().buscaNomeProduto(Short.parseShort(tfCodigoVenda.getText()));
+				dados.add(new Object[] { rs.getString("nome"), rs.getInt("quant_produto"), valorProduto * quantVend });
 
-			//System.out.println(a);
-
-			// inserindo produtos na lista usando o método read
-			List<Item> listaItem = VControl.readItem(itemVenda);
-			ItemVendaTableModel modelo = (ItemVendaTableModel) tableVendas.getModel();
-
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(listaItem);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar vendas:");
+			} while (rs.next());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		modelo = new ModeloTabela(dados, colunas);
+		tableVendas.setModel(modelo);
+		tableVendas.getColumnModel().getColumn(0).setPreferredWidth(500);
+		tableVendas.getColumnModel().getColumn(0).setResizable(false);
+		tableVendas.getColumnModel().getColumn(1).setPreferredWidth(250);
+		tableVendas.getColumnModel().getColumn(1).setResizable(false);
+		tableVendas.getColumnModel().getColumn(2).setPreferredWidth(250);
+		tableVendas.getColumnModel().getColumn(2).setResizable(false);
+		tableVendas.getTableHeader().setReorderingAllowed(false);
+		tableVendas.setAutoResizeMode(tableVendas.AUTO_RESIZE_OFF);
+		tableVendas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela */
+		modelo.fireTableDataChanged();
+		SomaProduto();
 	}
 
 	public void atualizarTabelaPorBuscaProduto() {
@@ -403,7 +367,7 @@ public class TelaVendas extends JFrame {
 		try {
 			/* Criação do modelo */
 			Produtos p = new Produtos();
-			// d.setNome(tfPesquisaCliente.getText());
+			// seta o campo de prequisa do produto
 			p.setPesquisa(tfNomeProduto.getText());
 
 			/* Criação do DAO */
@@ -448,6 +412,37 @@ public class TelaVendas extends JFrame {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto: " + ex);
 		}
+	}
+
+	public void SomaProduto() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		total = 0;
+		int qtd = 0;
+		double valor = 0;
+		// usando o método que busca o código da venda
+		short codVenda = vcontrol.buscaCodVenda();
+		String sql = "select * from itens_venda_produto inner join produto on itens_venda_produto.codigo_produto = produto.codigo where codigo_venda="
+				+ codVenda;
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			// rs.first();
+			while (rs.next()) {
+				qtd = rs.getInt("quant_produto");
+				valor = rs.getDouble("preco_venda");
+				// calculando o valor total da venda
+				total += (valor * qtd);
+
+			}
+			tfValorTotal.setText(String.valueOf(total));
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro na soma do total da venda: " + e);
+
+		}
+
 	}
 
 	private static class __Tmp {

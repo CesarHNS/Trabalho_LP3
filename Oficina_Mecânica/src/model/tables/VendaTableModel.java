@@ -75,9 +75,9 @@ public class VendaTableModel extends AbstractTableModel {
 			/* Cria uma linha da tabela */
 			Vector<Object> linha = new Vector();
 			//linha.add(v.getCodigoVenda());
+			linha.add(v.getNomeProduto());
+			linha.add(v.getQuantidadeItem());
 			linha.add(v.getValorVenda());
-			linha.add(v.getDataVenda());
-			linha.add(v.getNomeCliente());
 			
 			/* Adiciona a linha a tabela */
 			linhas.add(linha);

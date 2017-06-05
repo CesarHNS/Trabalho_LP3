@@ -19,11 +19,9 @@ public class ItemVendaTableModel extends AbstractTableModel {
 
 	public ItemVendaTableModel() {
 		/* Definição das colunas da tabela */
-		colunas = new Vector();		
+		colunas = new Vector();
 		colunas.add("Nome");
-		colunas.add("Descrição");
-	
-	
+		colunas.add("Quantidade");
 
 		/* Definição dos dados da tabela */
 		linhas = new Vector();
@@ -72,9 +70,9 @@ public class ItemVendaTableModel extends AbstractTableModel {
 		for (Item i : listaItem) {
 
 			/* Cria uma linha da tabela */
-			Vector<Object> linha = new Vector();			
-			linha.add(i.getCodProduto());
-			linha.add(i.getQuantidade());	
+			Vector<Object> linha = new Vector();
+			linha.add(i.getNomeProduto());
+			linha.add(i.getQuantidade());
 
 			/* Adiciona a linha a tabela */
 			linhas.add(linha);
