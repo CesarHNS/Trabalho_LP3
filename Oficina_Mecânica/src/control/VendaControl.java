@@ -77,21 +77,27 @@ public class VendaControl {
 			pst.setShort(1, itemVenda.getCodVenda());
 			pst.setShort(2, codProduto);
 			pst.setInt(3, itemVenda.getQuantidade());
-			
+
 			pst.executeUpdate();
-			
-			/*baixa no estoque
-			int quant = 0,resul=0;
-			pst = conexao.prepareStatement("select * from produto where nome="+itemVenda.getNomeProduto());
-			//rs.first();
+
+			// baixa no estoque
+			int quant = 0, resul = 0;
+
+			pst = conexao.prepareStatement("select * from produto where codigo=?");
+			pst.setShort(1, codProduto);
+			rs = pst.executeQuery();
+			rs.first();
+
 			quant = rs.getInt("quantidade");
 			resul = quant - itemVenda.getQuantidade();
-			pst = conexao.prepareStatement("uptade produto set quantidade=? where nome=?");
+
+			pst = conexao.prepareStatement("update produto set quantidade=? where nome=?");
 			pst.setInt(1, resul);
 			pst.setString(2, itemVenda.getNomeProduto());
-			pst.executeUpdate(); */
+			pst.executeUpdate();
+
 			JOptionPane.showMessageDialog(null, "Produto adicionado!");
-			
+
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao salvar o produto\nERRO: " + e);
 		}
@@ -102,46 +108,72 @@ public class VendaControl {
 
 	}
 
-	/*
-	 * public void updateVenda(Venda v) { buscaCodCliente(v.getNomeCliente());
-	 * buscaCodProduto(v.getNomeProduto()); Connection conexao =
-	 * ModuloConexao.conector(); PreparedStatement pst = null;
-	 * 
-	 * String sql =
-	 * "UPDATE venda SET codigo_venda=?,valor_venda=?,data_venda=?,fk_cliente=? WHERE codigo_venda=?"
-	 * ; try { pst = conexao.prepareStatement(sql);
-	 * 
-	 * pst.setShort(1, v.getCodigoVenda()); pst.setDouble(2, v.getValorVenda());
-	 * pst.setString(3, v.getDataVenda()); pst.setShort(4, codCliente);
-	 * pst.setShort(5, v.getCodigoVenda());
-	 * 
-	 * // pst.setShort(5, codProduto); // pst.setLong(6, v.getQuantidadeItem());
-	 * // pst.setShort(7, v.getCodigoVenda());
-	 * 
-	 * pst.executeUpdate();
-	 * 
-	 * JOptionPane.showMessageDialog(null, "Modificado com sucesso"); } catch
-	 * (SQLException e) { JOptionPane.showMessageDialog(null,
-	 * "Erro ao atualizar a venda\nERRO: " + e); } finally {
-	 * ModuloConexao.closeConnection(conexao, pst); }
-	 * 
-	 * }
-	 * 
-	 * public void deleteVenda(short id) { Connection conexao =
-	 * ModuloConexao.conector(); PreparedStatement pst = null;
-	 * 
-	 * String sql = "delete from venda where codigo_venda=?"; try { pst =
-	 * conexao.prepareStatement(sql);
-	 * 
-	 * pst.setShort(1, id);
-	 * 
-	 * pst.executeUpdate();
-	 * 
-	 * JOptionPane.showMessageDialog(null, "Deletado com sucesso"); } catch
-	 * (SQLException e) { JOptionPane.showMessageDialog(null,
-	 * "Erro ao deletar: " + e); } finally {
-	 * ModuloConexao.closeConnection(conexao, pst); } }
-	 */
+	// método que faz
+	public void FechaVenda(Venda v) {
+		buscaCodCliente(v.getNomeCliente());
+		buscaCodProduto(v.getNomeProduto());
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+
+		String sql = "UPDATE venda SET valor_venda=?,data_venda=?,fk_cliente=? WHERE codigo_venda=?";
+		try {
+			pst = conexao.prepareStatement(sql);
+
+			pst.setDouble(1, v.getValorVenda());
+			pst.setString(2, v.getDataVenda());
+			pst.setShort(3, codCliente);
+			pst.setShort(4, v.getCodigoVenda());
+
+			pst.executeUpdate();
+
+			JOptionPane.showMessageDialog(null, "Venda finalizada!");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao finalizar a venda\nERRO: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
+		}
+
+	}
+
+	public void deletaVenda(short id) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		short cod = 0;
+		
+		try {
+			pst = conexao.prepareStatement(
+					"select * from venda inner join itens_venda_produto on venda.codigo_venda = itens_venda_produto.codigo_venda inner join produto on itens_venda_produto.codigo_produto = produto.codigo where valor_venda = ?");
+			pst.setShort(1, cod);
+			rs = pst.executeQuery();
+			rs.first();
+
+			do {
+				int qtdProd = rs.getInt("quantidade"), qtdVenda = rs.getInt("quant_produto");
+				int soma = qtdProd + qtdVenda;
+
+				pst = conexao.prepareStatement("update produto set quantidade=? where codigo=?");
+				pst.setInt(1, soma);
+				pst.setInt(2, rs.getInt("codigo_produto"));
+				pst.executeUpdate();
+				
+				pst = conexao.prepareStatement("delete from itens_venda_produto where codigo_venda=?");
+				pst.setShort(1, id);
+				pst.executeUpdate();
+
+			} while (rs.next());
+
+			pst = conexao.prepareStatement("delete from venda where codigo_venda=?");
+			pst.setShort(1, id);
+			pst.executeUpdate();
+
+			JOptionPane.showMessageDialog(null, "Venda deletada!");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao deletar: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
+		}
+	}
 
 	/**********************************************************
 	 * MÉTODOS PARA REALIZAR CONSULTAS NO BANCO
@@ -247,9 +279,9 @@ public class VendaControl {
 			i.setNomeProduto(rs.getString("nome"));
 			i.setCodVenda(rs.getShort("codigo"));
 			i.setQuantidade(rs.getInt("quantidade"));
-			
+
 			listaItens.add(i);
-				
+
 			// }
 
 		} catch (SQLException e) {

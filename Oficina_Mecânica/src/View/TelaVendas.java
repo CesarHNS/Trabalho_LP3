@@ -178,13 +178,13 @@ public class TelaVendas extends JFrame {
 		DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
 		tfDataVenda.setText(f.format(data));
 
-		btnRealizarCompra = new JButton("Realizar Venda");
+		btnRealizarCompra = new JButton("Realizar Venda");	
 		btnRealizarCompra.setToolTipText("Adicionar um novo produto");
 		btnRealizarCompra.setBackground(SystemColor.controlShadow);
 		btnRealizarCompra.setBounds(326, 579, 127, 35);
 		contentPane.add(btnRealizarCompra);
 
-		btnCancelarCompra = new JButton("Cancelar Venda");
+		btnCancelarCompra = new JButton("Cancelar Venda");	
 		btnCancelarCompra.setToolTipText("Adicionar um novo produto");
 		btnCancelarCompra.setBackground(SystemColor.controlShadow);
 		btnCancelarCompra.setBounds(506, 579, 127, 35);
@@ -272,6 +272,7 @@ public class TelaVendas extends JFrame {
 			}
 		});
 
+		//Botão que realiza a adição de produtos na tabela de vendas
 		btnAdicionarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Connection conexao = ModuloConexao.conector();
@@ -286,8 +287,9 @@ public class TelaVendas extends JFrame {
 				try {
 					pst = conexao.prepareStatement(sql);
 					rs = pst.executeQuery();
-					quant = rs.getInt("quantidade");
 					rs.first();
+					quant = rs.getInt("quantidade");
+					
 					// verificando a quantidade de produtos no banco
 					if (quant >= Integer.parseInt(tfQuantProd.getText())) {
 						itenVenda.setCodVenda(codVenda);
@@ -309,6 +311,32 @@ public class TelaVendas extends JFrame {
 				}
 			}
 		});
+		
+		//Botão que finaliza a venda
+		btnRealizarCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Venda v = new Venda();
+				short codVenda = vcontrol.buscaCodVenda();
+				
+				v.setCodigoVenda(codVenda);
+				v.setNomeCliente(tfNomeCliente.getText());
+				v.setDataVenda(tfDataVenda.getText());
+				v.setValorVenda(Double.parseDouble(tfValorTotal.getText()));
+				
+				new VendaControl().FechaVenda(v);
+			}
+		});
+		
+		btnCancelarCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VendaControl VControl = new VendaControl();
+				short codVenda = VControl.buscaCodVenda();
+				VControl.deletaVenda(codVenda);
+				
+				dispose();
+			}
+		});
+		
 	}
 
 	// Método para limpar os TextFields após o cadastramento dos fornecedores
