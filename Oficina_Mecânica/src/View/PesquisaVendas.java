@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -71,7 +72,7 @@ public class PesquisaVendas extends JFrame {
 															// quando clico no X
 		conexao = ModuloConexao.conector();
 
-		setBounds(320, 150, 720, 650);
+		setBounds(320, 150, 720, 600);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -118,8 +119,8 @@ public class PesquisaVendas extends JFrame {
 		// data no formato dd/mm/aaaa
 		DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
-		JLabel lblPesquisa = new JLabel("Vendas Realizada::");
-		lblPesquisa.setBounds(10, 79, 103, 24);
+		JLabel lblPesquisa = new JLabel("Vendas Realizadas::");
+		lblPesquisa.setBounds(10, 79, 127, 24);
 		contentPane.add(lblPesquisa);
 
 		JButton btnPesquisarProduto = new JButton("Pesquisar");
@@ -128,11 +129,11 @@ public class PesquisaVendas extends JFrame {
 		btnPesquisarProduto.setBounds(308, 21, 127, 35);
 		contentPane.add(btnPesquisarProduto);
 
-		JButton button = new JButton("Pesquisar");
-		button.setToolTipText("Adicionar um novo produto");
-		button.setBackground(SystemColor.controlShadow);
-		button.setBounds(10, 517, 127, 35);
-		contentPane.add(button);
+		JButton btnRelatrio = new JButton("Relat\u00F3rio");
+		btnRelatrio.setToolTipText("Gerar relat\u00F3rio da venda");
+		btnRelatrio.setBackground(SystemColor.controlShadow);
+		btnRelatrio.setBounds(10, 517, 127, 35);
+		contentPane.add(btnRelatrio);
 
 		/***********************************************************************
 		 * 
@@ -180,8 +181,7 @@ public class PesquisaVendas extends JFrame {
 
 			} while (rs.next());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao preencher a tabela de vendas:"+e);
 		}
 
 		modelo = new ModeloTabela(dados, colunas);
