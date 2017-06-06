@@ -21,9 +21,7 @@ public class ServicoTableModel extends AbstractTableModel{
         colunas = new Vector();
         colunas.add("Código");
         colunas.add("Nome");
-        colunas.add("Preço");
-        colunas.add("Quantidade");
-    
+        colunas.add("Preço");          
 
         /* Definição dos dados da tabela */
         linhas = new Vector();
@@ -76,9 +74,7 @@ public class ServicoTableModel extends AbstractTableModel{
             linha.add(s.getCodigo());
             linha.add(s.getDescricao());
             linha.add(s.getPreco());
-            linha.add(s.getQuantidade());
-       
-            
+                        
             /* Adiciona a linha a tabela */
             linhas.add(linha);
         }

@@ -1,30 +1,31 @@
 package model;
 
 public class Veiculo {
-	private String codigo;
+
+	private short codigo;
 	private String descricao;
 	private String montadora;
 	private String placa;
+	private String nomeCliente;
 
-	// constructors
 	public Veiculo() {
 		super();
 	}
 
-	public Veiculo(String codigo, String descricao, String montadora, String placa) {
+	public Veiculo(short codigo, String descricao, String montadora, String placa, String nomeCliente) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
 		this.montadora = montadora;
 		this.placa = placa;
+		this.nomeCliente = nomeCliente;
 	}
 
-	// getters and setters
-	public String getCodigo() {
+	public short getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(short codigo) {
 		this.codigo = codigo;
 	}
 
@@ -52,13 +53,22 @@ public class Veiculo {
 		this.placa = placa;
 	}
 
+	public String getNomeCliente() {
+		return nomeCliente;
+	}
+
+	public void setNomeCliente(String nomeCliente) {
+		this.nomeCliente = nomeCliente;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + codigo;
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((montadora == null) ? 0 : montadora.hashCode());
+		result = prime * result + ((nomeCliente == null) ? 0 : nomeCliente.hashCode());
 		result = prime * result + ((placa == null) ? 0 : placa.hashCode());
 		return result;
 	}
@@ -72,10 +82,7 @@ public class Veiculo {
 		if (getClass() != obj.getClass())
 			return false;
 		Veiculo other = (Veiculo) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
+		if (codigo != other.codigo)
 			return false;
 		if (descricao == null) {
 			if (other.descricao != null)
@@ -87,6 +94,11 @@ public class Veiculo {
 				return false;
 		} else if (!montadora.equals(other.montadora))
 			return false;
+		if (nomeCliente == null) {
+			if (other.nomeCliente != null)
+				return false;
+		} else if (!nomeCliente.equals(other.nomeCliente))
+			return false;
 		if (placa == null) {
 			if (other.placa != null)
 				return false;
@@ -97,10 +109,8 @@ public class Veiculo {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Veiculo [codigo=").append(codigo).append(", descricao=").append(descricao)
-				.append(", montadora=").append(montadora).append(", placa=").append(placa).append("]");
-		return builder.toString();
+		return "Veiculo [codigo=" + codigo + ", descricao=" + descricao + ", montadora=" + montadora + ", placa="
+				+ placa + ", nomeCliente=" + nomeCliente + "]";
 	}
 
 }

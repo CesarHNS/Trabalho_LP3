@@ -5,11 +5,21 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import dal.ModuloConexao;
+import model.Cliente;
+import model.tables.ClienteTableModel;
+import model.tables.ModeloTabela;
+import model.tables.ProdutoTableModel;
+
+import java.sql.*;
+//import net.proteanit.sql.DbUtils;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -17,38 +27,54 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import control.ClienteControl;
+
+import javax.swing.JRadioButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class TelaOrdemServico extends JFrame {
 
 	private JPanel contentPane;
 	private JTable jtPesquisaClientes;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JLabel lblCodigo;
+	private JTextField tfPesquisaCliente;
 	private JLabel lblNome;
 	private JPanel panel;
-	private JLabel lblCliente;
 	private JTextField textField_2;
 	private JLabel lblNOs;
 	private JLabel lblData;
 	private JTextField textField_3;
-	private JLabel lblNomeFuncionrio;
 	private JPanel panel_1;
 	private JLabel lblVeculo;
-	private JLabel lblServio;
-	private JLabel lblV;
-	private JLabel lblMecnico;
 	private JTextField textField_9;
 	private JLabel lblValor;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
-	private JComboBox comboBox_3;
-	private JTextField textField_5;
+	private JTextField txtVeiculo;
 	private JTable jtOrdemServico;
 	private JButton btnRelatrio;
-	private JComboBox comboBox_2;
 	private JPanel panel_2;
 	private JButton btnPesquisar;
 	private JButton btnAdicionar;
+	private JRadioButton rdbtnNewRadioButton;
+	private JRadioButton rdbtnOrdemDeServio;
+	private JPanel panel_4;
+	private JComboBox comboBox;
+	private JPanel panel_5;
+	private JLabel lblCliente;
+	private JTextField txtDefeito;
+	private JLabel lblFuncionrio;
+	private JTextField txtServico;
+	private JLabel lblServico;
+	private JTextField textField_6;
+	private JScrollPane scrollPane;
+	private JTextField txtFuncionario;
+	private JLabel lblFuncionrio_1;
+	private JButton btnPesquisarFuncServ;
+	ClienteTableModel modeloCliente;
+	Connection conexao = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
 
 	/**
 	 * Launch the application.
@@ -82,6 +108,9 @@ public class TelaOrdemServico extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
+		
+		conexao = ModuloConexao.conector();
+		
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -96,39 +125,33 @@ public class TelaOrdemServico extends JFrame {
 		panel.setBounds(430, 34, 599, 275);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 67, 579, 197);
+		panel.add(scrollPane);
 
 		jtPesquisaClientes = new JTable();
-		jtPesquisaClientes.setBounds(10, 67, 579, 197);
-		panel.add(jtPesquisaClientes);
+		scrollPane.setViewportView(jtPesquisaClientes);
 
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(10, 33, 86, 23);
-		panel.add(textField);
-		textField.setColumns(10);
+		tfPesquisaCliente = new JTextField();
+		tfPesquisaCliente.setBounds(10, 33, 392, 23);
+		panel.add(tfPesquisaCliente);
+		tfPesquisaCliente.setColumns(10);
 
-		textField_1 = new JTextField();
-		textField_1.setBounds(106, 33, 296, 23);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
-
-		lblCodigo = new JLabel("C\u00F3digo:");
-		lblCodigo.setBounds(10, 15, 86, 19);
-		panel.add(lblCodigo);
-
-		lblNome = new JLabel("Nome:");
-		lblNome.setBounds(109, 15, 86, 19);
+		lblNome = new JLabel("Digite sua pesquisa aqui:");
+		lblNome.setBounds(10, 11, 133, 19);
 		panel.add(lblNome);
 
-		btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar = new JButton("Pesquisar");		
 		btnPesquisar.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
 		btnPesquisar.setBackground(SystemColor.controlShadow);
-		btnPesquisar.setBounds(408, 27, 102, 29);
+		btnPesquisar.setBounds(487, 27, 102, 29);
 		panel.add(btnPesquisar);
-
-		lblCliente = new JLabel("CLIENTE:");
-		lblCliente.setBounds(430, 11, 86, 19);
-		contentPane.add(lblCliente);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(410, 33, 67, 23);
+		panel.add(textField_6);
 
 		panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.scrollbar);
@@ -155,56 +178,44 @@ public class TelaOrdemServico extends JFrame {
 		textField_3.setBounds(102, 34, 102, 23);
 		panel_1.add(textField_3);
 		textField_3.setColumns(10);
+		
+		panel_4 = new JPanel();
+		panel_4.setBounds(10, 84, 115, 19);
+		panel_1.add(panel_4);
+		panel_4.setLayout(null);
+		
+		rdbtnNewRadioButton = new JRadioButton("Or\u00E7amento");
+		rdbtnNewRadioButton.setBackground(SystemColor.scrollbar);
+		rdbtnNewRadioButton.setBounds(0, 0, 115, 19);
+		panel_4.add(rdbtnNewRadioButton);
+		
+		panel_5 = new JPanel();
+		panel_5.setBounds(161, 84, 139, 19);
+		panel_1.add(panel_5);
+		panel_5.setLayout(null);
+		
+		rdbtnOrdemDeServio = new JRadioButton("Ordem de Servi\u00E7o");
+		rdbtnOrdemDeServio.setBounds(0, 0, 139, 19);
+		panel_5.add(rdbtnOrdemDeServio);
+		rdbtnOrdemDeServio.setBackground(SystemColor.scrollbar);
 
-		lblNomeFuncionrio = new JLabel("Nome Funcion\u00E1rio:");
-		lblNomeFuncionrio.setBounds(9, 63, 129, 19);
-		panel_1.add(lblNomeFuncionrio);
-
-		comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(6, 81, 295, 23);
-		panel_1.add(comboBox_2);
-
-		lblVeculo = new JLabel("Ve\u00EDculo:");
+		lblVeculo = new JLabel("Situa\u00E7\u00E3o:");
 		lblVeculo.setBounds(16, 161, 63, 19);
 		contentPane.add(lblVeculo);
 
-		lblServio = new JLabel("Defeito:");
-		lblServio.setBounds(16, 200, 63, 19);
-		contentPane.add(lblServio);
-
-		lblV = new JLabel("Servi\u00E7o:");
-		lblV.setBounds(16, 240, 63, 19);
-		contentPane.add(lblV);
-
-		lblMecnico = new JLabel("Mec\u00E2nico:");
-		lblMecnico.setBounds(16, 281, 63, 19);
-		contentPane.add(lblMecnico);
-
 		textField_9 = new JTextField();
 		textField_9.setColumns(10);
-		textField_9.setBounds(89, 321, 86, 23);
+		textField_9.setBounds(52, 321, 86, 23);
 		contentPane.add(textField_9);
 
 		lblValor = new JLabel("Valor:");
 		lblValor.setBounds(16, 323, 39, 19);
 		contentPane.add(lblValor);
 
-		comboBox = new JComboBox();
-		comboBox.setBounds(89, 279, 324, 23);
-		contentPane.add(comboBox);
-
-		comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(89, 238, 324, 23);
-		contentPane.add(comboBox_1);
-
-		comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(89, 159, 324, 23);
-		contentPane.add(comboBox_3);
-
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(89, 198, 324, 23);
-		contentPane.add(textField_5);
+		txtVeiculo = new JTextField();
+		txtVeiculo.setColumns(10);
+		txtVeiculo.setBounds(83, 186, 324, 23);
+		contentPane.add(txtVeiculo);
 
 		panel_2 = new JPanel();
 		panel_2.setBackground(SystemColor.scrollbar);
@@ -221,16 +232,91 @@ public class TelaOrdemServico extends JFrame {
 		btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setToolTipText("Adicionar nova ordem de servi\u00E7o");
 		btnAdicionar.setBackground(SystemColor.controlShadow);
-		btnAdicionar.setBounds(190, 315, 102, 29);
+		btnAdicionar.setBounds(166, 315, 102, 29);
 		contentPane.add(btnAdicionar);
 
-		btnRelatrio = new JButton("Relat\u00F3rio");
-		btnRelatrio.setBounds(302, 315, 102, 29);
+		btnRelatrio = new JButton("Editar");
+		btnRelatrio.setBounds(278, 315, 102, 29);
 		contentPane.add(btnRelatrio);
 		btnRelatrio.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
 		btnRelatrio.setBackground(SystemColor.controlShadow);
+		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Aguardando aprova\u00E7\u00E3o", "Aguardadando pe\u00E7as", "Entrega Feita", "Or\u00E7amento reprovado"}));
+		comboBox.setBounds(85, 157, 200, 23);
+		contentPane.add(comboBox);
+		
+		lblCliente = new JLabel("Ve\u00EDculo");
+		lblCliente.setBounds(16, 191, 53, 19);
+		contentPane.add(lblCliente);
+		
+		txtDefeito = new JTextField();
+		txtDefeito.setColumns(10);
+		txtDefeito.setBounds(83, 215, 324, 23);
+		contentPane.add(txtDefeito);
+		
+		lblFuncionrio = new JLabel("Defeito");
+		lblFuncionrio.setBounds(16, 220, 53, 19);
+		contentPane.add(lblFuncionrio);
+		
+		txtServico = new JTextField();
+		txtServico.setColumns(10);
+		txtServico.setBounds(83, 244, 324, 23);
+		contentPane.add(txtServico);
+		
+		lblServico = new JLabel("Servico:");
+		lblServico.setBounds(16, 249, 53, 19);
+		contentPane.add(lblServico);
+		
+		txtFuncionario = new JTextField();
+		txtFuncionario.setColumns(10);
+		txtFuncionario.setBounds(83, 273, 324, 23);
+		contentPane.add(txtFuncionario);
+		
+		lblFuncionrio_1 = new JLabel("Funcion\u00E1rio");
+		lblFuncionrio_1.setBounds(16, 278, 63, 19);
+		contentPane.add(lblFuncionrio_1);
+		
+		btnPesquisarFuncServ = new JButton("Cancelar");
+		btnPesquisarFuncServ.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
+		btnPesquisarFuncServ.setBackground(SystemColor.controlShadow);
+		btnPesquisarFuncServ.setBounds(395, 315, 102, 29);
+		contentPane.add(btnPesquisarFuncServ);
+		
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				modeloCliente = new ClienteTableModel();
+				jtPesquisaClientes.setModel(modeloCliente);
+				atualizarTabelaPorBusca();
+			}
+		});
 	}
 
+	public void atualizarTabelaPorBusca() {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Cliente c = new Cliente();
+			// d.setNome(tfPesquisaCliente.getText());
+			c.setPesquisa(tfPesquisaCliente.getText());
+
+			/* Criação do DAO */
+			ClienteControl CControl = new ClienteControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Cliente> lista = CControl.buscaCliente(c);
+			ClienteTableModel modelo = (ClienteTableModel) jtPesquisaClientes.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um cliente");
+		}
+	}
+	
+	
 	private static class __Tmp {
 		private static void __tmp() {
 			javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();

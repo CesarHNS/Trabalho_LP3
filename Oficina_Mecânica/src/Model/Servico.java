@@ -4,19 +4,19 @@ public class Servico {
 	private Short codigo;
 	private String descricao;
 	private double preco;
-	private int quantidade;
 	private String pesquisa;
+	
 
 	public Servico() {
 		super();
 	}
 
-	public Servico(Short codigo, String descricao, double preco, int quantidade) {
+	public Servico(Short codigo, String descricao, double preco) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
 		this.preco = preco;
-		this.quantidade = quantidade;
+		
 	}
 
 	public String getPesquisa() {
@@ -50,14 +50,7 @@ public class Servico {
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-
-	public int getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -67,8 +60,7 @@ public class Servico {
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(preco);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + quantidade;
+		result = prime * result + (int) (temp ^ (temp >>> 32));		
 		return result;
 	}
 
@@ -93,15 +85,12 @@ public class Servico {
 			return false;
 		if (Double.doubleToLongBits(preco) != Double.doubleToLongBits(other.preco))
 			return false;
-		if (quantidade != other.quantidade)
-			return false;
-		return true;
+				return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Servico [codigo=" + codigo + ", descricao=" + descricao + ", preco=" + preco + ", quantidade="
-				+ quantidade + "]";
+		return "Servico [codigo=" + codigo + ", descricao=" + descricao + ", preco=" + preco + "]";
 	}
 
 }

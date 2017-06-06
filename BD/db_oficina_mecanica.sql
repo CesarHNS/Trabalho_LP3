@@ -142,34 +142,43 @@ CREATE TABLE `itens_venda_produto` (
 
 LOCK TABLES `itens_venda_produto` WRITE;
 /*!40000 ALTER TABLE `itens_venda_produto` DISABLE KEYS */;
-INSERT INTO `itens_venda_produto` VALUES (118,1,1),(119,1,1),(119,2,1),(120,1,1),(122,1,1),(123,1,1);
+INSERT INTO `itens_venda_produto` VALUES (127,1,5),(127,2,1);
 /*!40000 ALTER TABLE `itens_venda_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ordem_serv`
+-- Table structure for table `ordem_servico`
 --
 
-DROP TABLE IF EXISTS `ordem_serv`;
+DROP TABLE IF EXISTS `ordem_servico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ordem_serv` (
+CREATE TABLE `ordem_servico` (
   `codigo_os` smallint(6) NOT NULL AUTO_INCREMENT,
-  `data_os` varchar(50) NOT NULL,
-  `valor_os` double NOT NULL,
-  `status_os` varchar(50) NOT NULL,
-  `fk_codigo_cliente` smallint(6) NOT NULL,
-  PRIMARY KEY (`codigo_os`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `veiculo` varchar(150) NOT NULL,
+  `defeito` varchar(150) NOT NULL,
+  `servico` smallint(6) DEFAULT NULL,
+  `funcionario` smallint(6) DEFAULT NULL,
+  `valor` double DEFAULT NULL,
+  `cliente` smallint(6) NOT NULL,
+  `data_os` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`codigo_os`),
+  KEY `fk_servico` (`servico`),
+  KEY `fk_fucionario` (`funcionario`),
+  KEY `fk_cliente` (`cliente`),
+  CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente`) REFERENCES `clientes` (`codigo_cliente`),
+  CONSTRAINT `fk_fucionario` FOREIGN KEY (`funcionario`) REFERENCES `funcionarios` (`codigo_func`),
+  CONSTRAINT `fk_servico` FOREIGN KEY (`servico`) REFERENCES `serv` (`codigo_serv`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ordem_serv`
+-- Dumping data for table `ordem_servico`
 --
 
-LOCK TABLES `ordem_serv` WRITE;
-/*!40000 ALTER TABLE `ordem_serv` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ordem_serv` ENABLE KEYS */;
+LOCK TABLES `ordem_servico` WRITE;
+/*!40000 ALTER TABLE `ordem_servico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ordem_servico` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -199,7 +208,7 @@ CREATE TABLE `produto` (
 
 LOCK TABLES `produto` WRITE;
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
-INSERT INTO `produto` VALUES (1,'Arruela','asdfsaf',1,3,5,1),(2,'Cabo de Vela','keijfkjsdf',20,32,10,3);
+INSERT INTO `produto` VALUES (1,'Arruela','asdfsaf',1,3,0,1),(2,'Cabo de Vela','keijfkjsdf',20,32,9,3);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +223,6 @@ CREATE TABLE `serv` (
   `codigo_serv` smallint(6) NOT NULL AUTO_INCREMENT,
   `nome_serv` varchar(50) NOT NULL,
   `preco_serv` varchar(50) NOT NULL,
-  `quant_serv` varchar(50) NOT NULL,
   PRIMARY KEY (`codigo_serv`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -225,7 +233,37 @@ CREATE TABLE `serv` (
 
 LOCK TABLES `serv` WRITE;
 /*!40000 ALTER TABLE `serv` DISABLE KEYS */;
+INSERT INTO `serv` VALUES (1,'Balanceamento','250.0'),(2,'Alinhamento','150.0');
 /*!40000 ALTER TABLE `serv` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `veiculo`
+--
+
+DROP TABLE IF EXISTS `veiculo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `veiculo` (
+  `codigo_veiculo` smallint(6) NOT NULL AUTO_INCREMENT,
+  `nome_veiculo` varchar(50) NOT NULL,
+  `montadora` varchar(50) NOT NULL,
+  `placa` varchar(50) NOT NULL,
+  `codigo_cliente` smallint(6) NOT NULL,
+  PRIMARY KEY (`codigo_veiculo`,`codigo_cliente`),
+  KEY `codigo_veiculo` (`codigo_veiculo`),
+  KEY `fk_codigo_cliente` (`codigo_cliente`),
+  CONSTRAINT `fk_codigo_cliente` FOREIGN KEY (`codigo_cliente`) REFERENCES `clientes` (`codigo_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `veiculo`
+--
+
+LOCK TABLES `veiculo` WRITE;
+/*!40000 ALTER TABLE `veiculo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `veiculo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -243,7 +281,7 @@ CREATE TABLE `venda` (
   PRIMARY KEY (`codigo_venda`),
   KEY `cod_fk_cliente` (`fk_cliente`),
   CONSTRAINT `cod_fk_cliente` FOREIGN KEY (`fk_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +290,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
-INSERT INTO `venda` VALUES (108,'0.0','04/06/2017',NULL),(109,'0.0','04/06/2017',NULL),(110,'0.0','04/06/2017',NULL),(111,'0.0','04/06/2017',NULL),(112,'0.0','04/06/2017',NULL),(113,'0.0','04/06/2017',NULL),(114,'0.0','04/06/2017',NULL),(115,'0.0','04/06/2017',NULL),(116,'0.0','04/06/2017',NULL),(117,'0.0','04/06/2017',NULL),(118,'0.0','04/06/2017',NULL),(119,'0.0','04/06/2017',NULL),(120,'0.0','04/06/2017',NULL),(121,'0.0','04/06/2017',NULL),(122,'0.0','04/06/2017',NULL),(123,'0.0','04/06/2017',NULL),(124,'0.0','04/06/2017',NULL),(125,'0.0','04/06/2017',NULL),(126,'0.0','04/06/2017',NULL);
+INSERT INTO `venda` VALUES (127,'47.0','04/06/2017',1);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -265,4 +303,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-04 23:52:43
+-- Dump completed on 2017-06-05 23:34:23

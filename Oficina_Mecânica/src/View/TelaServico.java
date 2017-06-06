@@ -161,8 +161,7 @@ public class TelaServico extends JFrame {
 				s.setCodigo(Short.parseShort(tfCodigoServico.getText()));
 				s.setDescricao(tfNomeServico.getText());
 				s.setPreco(Double.parseDouble(tfPrecoServico.getText()));
-				s.setQuantidade(Integer.parseInt(tfQuantidadeServico.getText()));
-
+				
 				try {
 					new ServicoControl().create(s);
 				} catch (Exception e) {
@@ -181,8 +180,7 @@ public class TelaServico extends JFrame {
 		tfCodigoServico.setText("");
 		tfNomeServico.setText("");
 		tfPrecoServico.setText("");
-		tfQuantidadeServico.setText("");
-
+		
 	}
 
 	public void atualizarTabela() {

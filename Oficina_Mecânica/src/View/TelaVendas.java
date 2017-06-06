@@ -324,6 +324,8 @@ public class TelaVendas extends JFrame {
 				v.setValorVenda(Double.parseDouble(tfValorTotal.getText()));
 				
 				new VendaControl().FechaVenda(v);
+				LimparTela();
+				
 			}
 		});
 		

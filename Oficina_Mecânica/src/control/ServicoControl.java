@@ -18,7 +18,7 @@ public class ServicoControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 
-		String sql = "insert into servico (codigo,descricao,preco,quantidade) values(?,?,?,?,?)";
+		String sql = "insert into serv (codigo_serv,nome_serv,preco_serv) values(?,?,?)";
 
 		try {
 			pst = conexao.prepareStatement(sql);
@@ -26,7 +26,7 @@ public class ServicoControl {
 			pst.setShort(1, s.getCodigo());
 			pst.setString(2, s.getDescricao());
 			pst.setDouble(3, s.getPreco());
-			pst.setInt(4, s.getQuantidade());
+			
 
 			pst.executeUpdate();
 
@@ -44,15 +44,14 @@ public class ServicoControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 
-		String sql = "UPDATE clientes SET codigo=?,descricao=?,preco=?,quantidade=? WHERE codigo=?";
+		String sql = "UPDATE serv SET codigo_serv=?,nome_serv=?,preco_serv=? WHERE codigo_serv =?";
 		try {
 			pst = conexao.prepareStatement(sql);
 
 			pst.setShort(1, s.getCodigo());
 			pst.setString(2, s.getDescricao());
 			pst.setDouble(3, s.getPreco());
-			pst.setInt(4, s.getQuantidade());
-			pst.setShort(5, s.getCodigo());
+			pst.setShort(4, s.getCodigo());
 
 			pst.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Modificado com sucesso");
@@ -68,7 +67,7 @@ public class ServicoControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 
-		String sql = "delete from servico where codigo = ?";
+		String sql = "delete from serv where codigo_serv = ?";
 		try {
 			pst = conexao.prepareStatement(sql);
 
@@ -92,7 +91,7 @@ public class ServicoControl {
 
 		List<Servico> listaServico = new ArrayList<Servico>();
 
-		String sql = "select * from servico";
+		String sql = "select * from serv";
 
 		try {
 			pst = conexao.prepareStatement(sql);
@@ -101,11 +100,10 @@ public class ServicoControl {
 			while (rs.next()) {
 				s = new Servico();
 
-				s.setCodigo(rs.getShort("codigo"));
-				s.setDescricao(rs.getString("descricao"));
-				s.setPreco(rs.getDouble("preco"));
-				s.setQuantidade(rs.getInt("quantidade"));
-
+				s.setCodigo(rs.getShort("codigo_serv"));
+				s.setDescricao(rs.getString("nome_serv"));
+				s.setPreco(rs.getDouble("preco_serv"));
+				
 				listaServico.add(s);
 
 			}
@@ -125,7 +123,7 @@ public class ServicoControl {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 
-		String sql = "select * from servico where nome like '%" + s.getPesquisa() + "%'";
+		String sql = "select * from serv where nome_serv like '%" + s.getPesquisa() + "%'";
 
 		List<Servico> listaServico = new ArrayList<Servico>();
 
@@ -137,11 +135,10 @@ public class ServicoControl {
 			while (rs.next()) {
 				s = new Servico();
 
-				s.setCodigo(rs.getShort("codigo"));
-				s.setDescricao(rs.getString("descricao"));
-				s.setPreco(rs.getShort("preco"));
-				s.setQuantidade(rs.getInt("quantidade"));
-
+				s.setCodigo(rs.getShort("codigo_serv"));
+				s.setDescricao(rs.getString("nome_serv"));
+				s.setPreco(rs.getShort("preco_serv"));
+				
 				listaServico.add(s);
 
 			}
