@@ -213,19 +213,18 @@ public class TelaProdutos extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ProdutoTableModel modelo = (ProdutoTableModel) jtCadProduto.getModel();
 				Produtos p = new Produtos();
-
-				p.setCodigo(Short.parseShort(tfCodigoProduto.getText()));
-				p.setNome(tfNomeProduto.getText());
-				p.setDescricao(tfDescricaoProduto.getText());
-				p.setPrecoCompra(Double.parseDouble(tfPrecoCompra.getText()));
-				p.setPrecoVenda(Double.parseDouble(tfPrecoVenda.getText()));
-				p.setQuantidade(Integer.parseInt(tfQuantidadeProduto.getText()));
-				p.setFornecedor(cbFornecedor.getSelectedItem().toString());
-
 				try {
+					p.setCodigo(Short.parseShort(tfCodigoProduto.getText()));
+					p.setNome(tfNomeProduto.getText());
+					p.setDescricao(tfDescricaoProduto.getText());
+					p.setPrecoCompra(Double.parseDouble(tfPrecoCompra.getText()));
+					p.setPrecoVenda(Double.parseDouble(tfPrecoVenda.getText()));
+					p.setQuantidade(Integer.parseInt(tfQuantidadeProduto.getText()));
+					p.setFornecedor(cbFornecedor.getSelectedItem().toString());
+
 					new ProdutoControl().create(p);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Erro: " + e);
+					JOptionPane.showMessageDialog(null, "Preencha os campos corretamente: " + e);
 				}
 				LimparTela();
 				atualizarTabela();

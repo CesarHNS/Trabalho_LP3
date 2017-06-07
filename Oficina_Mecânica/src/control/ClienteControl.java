@@ -42,12 +42,15 @@ public class ClienteControl {
 			pst.setString(11, c.getTelefone());
 			pst.setString(12, c.getCelular());
 
+			
 			pst.executeUpdate();
+			
 
 			JOptionPane.showMessageDialog(null, "Salvo com sucesso");
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e);
-		} finally {
+		} 
+		finally {
 			ModuloConexao.closeConnection(conexao, pst);
 		}
 

@@ -45,7 +45,7 @@ import model.tables.ProdutoTableModel;
 //User Interface UI = view
 
 public class TelaClientes extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tfNomeCliente;
@@ -272,7 +272,7 @@ public class TelaClientes extends JFrame {
 		btnModificarCliente.setToolTipText("Modificar um cliente ");
 		contentPane.add(btnModificarCliente);
 
-		jtClientes = new JTable();		
+		jtClientes = new JTable();
 		scrollPane.setViewportView(jtClientes);
 		jtClientes.setToolTipText("");
 		modelo = new ClienteTableModel();
@@ -296,7 +296,9 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
 				Cliente c = new Cliente();
-				
+
+
+				try {
 				c.setId(Short.parseShort(tfCodigoCliente.getText()));
 				c.setNome(tfNomeCliente.getText());
 				c.setDataNasc(tfDataNascimento.getText());
@@ -304,18 +306,17 @@ public class TelaClientes extends JFrame {
 				c.setEndereco(tfEnderecoCliente.getText());
 				c.setBairro(tfBairroCliente.getText());
 				c.setCep(tfCepCliente.getText());
-				c.setCidade( tfCidadeCliente.getText());
+				c.setCidade(tfCidadeCliente.getText());
 				c.setEstado(cbEstado.getSelectedItem().toString());
 				c.setEmail(tfEmailCliente.getText());
 				c.setTelefone(tfTelefoneCliente.getText());
 				c.setCelular(tfCelularCliente.getText());
-				
-				try {
+
 					new ClienteControl().create(c);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Erro: " + e);
-				}				
-			
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Erro preencha os campos corretamente: " + e);
+				}
+
 				LimparTela();
 				atualizarTabela();
 
@@ -330,9 +331,14 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
 				Cliente c = new Cliente();
-				
-				if (jtClientes.getSelectedRow() != -1) {					
+
+				if (jtClientes.getSelectedRow() != -1) {
+					try {
 					new ClienteControl().delete(Short.parseShort(tfCodigoCliente.getText()));
+					}catch(NumberFormatException e){
+						JOptionPane.showMessageDialog(null, "Selecione um cliente: " + e);
+
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione um cliente");
 				}
@@ -360,7 +366,8 @@ public class TelaClientes extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
 				Cliente c = new Cliente();
-				
+
+				try {
 				c.setId(Short.parseShort(tfCodigoCliente.getText()));
 				c.setNome(tfNomeCliente.getText());
 				c.setDataNasc(tfDataNascimento.getText());
@@ -368,24 +375,23 @@ public class TelaClientes extends JFrame {
 				c.setEndereco(tfEnderecoCliente.getText());
 				c.setBairro(tfBairroCliente.getText());
 				c.setCep(tfCepCliente.getText());
-				c.setCidade( tfCidadeCliente.getText());
+				c.setCidade(tfCidadeCliente.getText());
 				c.setEstado(cbEstado.getSelectedItem().toString());
 				c.setEmail(tfEmailCliente.getText());
 				c.setTelefone(tfTelefoneCliente.getText());
 				c.setCelular(tfCelularCliente.getText());
-				
-				try {
+
 					new ClienteControl().update(c);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Erro: " + ex);
-				}				
-			
+					JOptionPane.showMessageDialog(null, "Preencha os campos corretamente: " + ex);
+				}
+
 				LimparTela();
 				atualizarTabela();
 
 			}
 		});
-		
+
 		btnPesquisarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				atualizarTabelaPorBusca();
@@ -434,7 +440,7 @@ public class TelaClientes extends JFrame {
 		tfTelefoneCliente.setText("");
 
 	}
-	
+
 	public void atualizarTabela() {
 		// TODO Auto-generated method stub
 		try {
@@ -457,7 +463,7 @@ public class TelaClientes extends JFrame {
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto");
 		}
 	}
-	
+
 	public void atualizarTabelaPorBusca() {
 		// TODO Auto-generated method stub
 		try {
@@ -481,8 +487,6 @@ public class TelaClientes extends JFrame {
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um cliente");
 		}
 	}
-	
-	
 
 	@SuppressWarnings("unused")
 	private static class __Tmp {

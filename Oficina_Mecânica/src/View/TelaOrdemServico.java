@@ -7,11 +7,20 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import dal.ModuloConexao;
 import model.Cliente;
+import model.Item;
+import model.OrdemServico;
+import model.Produtos;
+import model.Venda;
 import model.tables.ClienteTableModel;
+import model.tables.FuncionarioTableModel;
 import model.tables.ModeloTabela;
 import model.tables.ProdutoTableModel;
+import model.tables.ServicoTableModel;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 //import net.proteanit.sql.DbUtils;
 import java.util.List;
 
@@ -23,62 +32,65 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import control.ClienteControl;
+import control.ProdutoControl;
+import control.ServicoControl;
+import control.VendaControl;
 
 import javax.swing.JRadioButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 
 public class TelaOrdemServico extends JFrame {
 
 	private JPanel contentPane;
-	private JTable jtPesquisaClientes;
-	private JTextField tfPesquisaCliente;
-	private JLabel lblNome;
-	private JPanel panel;
-	private JTextField textField_2;
-	private JLabel lblNOs;
+	private JTable tablePesquisa;
+	private JTextField tfCliente;
+	private JTable tableServicos;
+	private JTextField tfDataVenda;
+	private JButton btnRealizarCompra;
+	private JButton btnCancelarCompra;
+	private JTextField tfValorTotal;
+	private JLabel lblNewLabel;
+	private JLabel lblPesquisa;
+	private JButton btnPesqCliente;
 	private JLabel lblData;
-	private JTextField textField_3;
-	private JPanel panel_1;
-	private JLabel lblVeculo;
-	private JTextField textField_9;
-	private JLabel lblValor;
-	private JTextField txtVeiculo;
-	private JTable jtOrdemServico;
-	private JButton btnRelatrio;
-	private JPanel panel_2;
-	private JButton btnPesquisar;
-	private JButton btnAdicionar;
-	private JRadioButton rdbtnNewRadioButton;
-	private JRadioButton rdbtnOrdemDeServio;
-	private JPanel panel_4;
-	private JComboBox comboBox;
-	private JPanel panel_5;
-	private JLabel lblCliente;
-	private JTextField txtDefeito;
-	private JLabel lblFuncionrio;
-	private JTextField txtServico;
-	private JLabel lblServico;
-	private JTextField textField_6;
+	private JTextField tfValorServico;
+	private JLabel lblValorItem;
 	private JScrollPane scrollPane;
-	private JTextField txtFuncionario;
-	private JLabel lblFuncionrio_1;
-	private JButton btnPesquisarFuncServ;
+	private JScrollPane scrollPane_1;
+	ModeloTabela modelo;
 	ClienteTableModel modeloCliente;
+	FuncionarioTableModel modeloFuncionario;
+	ServicoTableModel modeloServico;
+	ProdutoTableModel modeloProduto;
 	Connection conexao = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
+	int flag = 1;
+	double precoProduto, total = 0;
+	ServicoControl scontrol = new ServicoControl();
+	Item itenVenda = new Item();
+	private JTextField tfServico;
+	private JLabel lblNomeDoServio;
+	private JButton btnPesqServico;
+	private JTextField tfFuncionario;
+	private JLabel lblFuncionrio;
+	private JButton btnPesqFuncionario;
+	private JComboBox cbVeiculo;
 
-	/**
+	/***********************************************************************
 	 * Launch the application.
-	 */
+	 ***********************************************************************/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -92,25 +104,24 @@ public class TelaOrdemServico extends JFrame {
 		});
 	}
 
-	/**
+	/***********************************************************************
 	 * Create the frame.
-	 */
+	 ***********************************************************************/
 	public TelaOrdemServico() {
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				TelaProdutos frame = new TelaProdutos();
+				TelaOrdemServico frame = new TelaOrdemServico();
 				frame.setVisible(false);
 			}
 		});
-		setTitle("Tela de Ordem de Serviços");
+		setTitle("Ordens de Servi\u00E7o");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// fecha apenas a
 															// janela onde estou
 															// quando clico no X
-		
 		conexao = ModuloConexao.conector();
-		
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -118,205 +129,234 @@ public class TelaOrdemServico extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		panel = new JPanel();
-		panel.setBackground(SystemColor.scrollbar);
-		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(430, 34, 599, 275);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
+		tfCliente = new JTextField();
+		tfCliente.setBounds(10, 27, 367, 23);
+		contentPane.add(tfCliente);
+		tfCliente.setColumns(10);
+
+		JLabel lblNomeProduto = new JLabel("Nome do Cliente:");
+		lblNomeProduto.setBounds(10, 11, 127, 14);
+		contentPane.add(lblNomeProduto);
+
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 174, 1019, 176);
+		contentPane.add(scrollPane_1);
+
+		tablePesquisa = new JTable();
+		scrollPane_1.setViewportView(tablePesquisa);
+		tablePesquisa.setToolTipText("");
+
+		JButton btnAdicionaServico = new JButton("Adicionar");
+		btnAdicionaServico.setBackground(SystemColor.controlShadow);
+		btnAdicionaServico.setToolTipText("Adicionar um novo produto");
+		btnAdicionaServico.setBounds(123, 107, 127, 35);
+		contentPane.add(btnAdicionaServico);
+
+		JLabel lblDescricaoProduto = new JLabel("Ve\u00EDculo");
+		lblDescricaoProduto.setBounds(550, 11, 127, 14);
+		contentPane.add(lblDescricaoProduto);
+
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 67, 579, 197);
-		panel.add(scrollPane);
+		scrollPane.setBounds(10, 375, 1019, 193);
+		contentPane.add(scrollPane);
 
-		jtPesquisaClientes = new JTable();
-		scrollPane.setViewportView(jtPesquisaClientes);
+		tableServicos = new JTable();
+		scrollPane.setViewportView(tableServicos);
+		tableServicos.setToolTipText("");
 
-		tfPesquisaCliente = new JTextField();
-		tfPesquisaCliente.setBounds(10, 33, 392, 23);
-		panel.add(tfPesquisaCliente);
-		tfPesquisaCliente.setColumns(10);
+		JLabel lblTabelaDeVendas = new JLabel("Servi\u00E7os:");
+		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
+		contentPane.add(lblTabelaDeVendas);
 
-		lblNome = new JLabel("Digite sua pesquisa aqui:");
-		lblNome.setBounds(10, 11, 133, 19);
-		panel.add(lblNome);
+		tfDataVenda = new JTextField();
+		tfDataVenda.setColumns(10);
+		tfDataVenda.setBounds(20, 591, 103, 23);
+		contentPane.add(tfDataVenda);
+		Calendar c = Calendar.getInstance();
+		java.util.Date data = c.getTime();
+		// data no formato dd/mm/aaaa
+		DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		tfDataVenda.setText(f.format(data));
 
-		btnPesquisar = new JButton("Pesquisar");		
-		btnPesquisar.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
-		btnPesquisar.setBackground(SystemColor.controlShadow);
-		btnPesquisar.setBounds(487, 27, 102, 29);
-		panel.add(btnPesquisar);
-		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(410, 33, 67, 23);
-		panel.add(textField_6);
+		btnRealizarCompra = new JButton("Finalizar");
+		btnRealizarCompra.setToolTipText("Adicionar um novo produto");
+		btnRealizarCompra.setBackground(SystemColor.controlShadow);
+		btnRealizarCompra.setBounds(326, 579, 127, 35);
+		contentPane.add(btnRealizarCompra);
 
-		panel_1 = new JPanel();
-		panel_1.setBackground(SystemColor.scrollbar);
-		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(16, 34, 404, 114);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
+		btnCancelarCompra = new JButton("Cancelar ");
+		btnCancelarCompra.setToolTipText("Adicionar um novo produto");
+		btnCancelarCompra.setBackground(SystemColor.controlShadow);
+		btnCancelarCompra.setBounds(506, 579, 127, 35);
+		contentPane.add(btnCancelarCompra);
 
-		textField_2 = new JTextField();
-		textField_2.setBounds(6, 34, 86, 23);
-		panel_1.add(textField_2);
-		textField_2.setColumns(10);
+		tfValorTotal = new JTextField();
+		tfValorTotal.setColumns(10);
+		tfValorTotal.setBounds(764, 591, 103, 23);
+		contentPane.add(tfValorTotal);
 
-		lblNOs = new JLabel("N\u00BA OS");
-		lblNOs.setBounds(6, 16, 86, 19);
-		panel_1.add(lblNOs);
+		lblNewLabel = new JLabel("Valor Total:");
+		lblNewLabel.setBounds(686, 591, 68, 23);
+		contentPane.add(lblNewLabel);
+
+		lblPesquisa = new JLabel("Pesquisa:");
+		lblPesquisa.setBounds(10, 144, 103, 24);
+		contentPane.add(lblPesquisa);
+
+		btnPesqCliente = new JButton("Pesquisar");
+		btnPesqCliente.setToolTipText("Adicionar um novo produto");
+		btnPesqCliente.setBackground(SystemColor.controlShadow);
+		btnPesqCliente.setBounds(397, 15, 127, 35);
+		contentPane.add(btnPesqCliente);
 
 		lblData = new JLabel("Data:");
-		lblData.setBounds(105, 16, 86, 19);
-		panel_1.add(lblData);
+		lblData.setBounds(20, 571, 127, 14);
+		contentPane.add(lblData);
 
-		textField_3 = new JTextField();
-		textField_3.setBounds(102, 34, 102, 23);
-		panel_1.add(textField_3);
-		textField_3.setColumns(10);
-		
-		panel_4 = new JPanel();
-		panel_4.setBounds(10, 84, 115, 19);
-		panel_1.add(panel_4);
-		panel_4.setLayout(null);
-		
-		rdbtnNewRadioButton = new JRadioButton("Or\u00E7amento");
-		rdbtnNewRadioButton.setBackground(SystemColor.scrollbar);
-		rdbtnNewRadioButton.setBounds(0, 0, 115, 19);
-		panel_4.add(rdbtnNewRadioButton);
-		
-		panel_5 = new JPanel();
-		panel_5.setBounds(161, 84, 139, 19);
-		panel_1.add(panel_5);
-		panel_5.setLayout(null);
-		
-		rdbtnOrdemDeServio = new JRadioButton("Ordem de Servi\u00E7o");
-		rdbtnOrdemDeServio.setBounds(0, 0, 139, 19);
-		panel_5.add(rdbtnOrdemDeServio);
-		rdbtnOrdemDeServio.setBackground(SystemColor.scrollbar);
+		tfValorServico = new JTextField();
+		tfValorServico.setColumns(10);
+		tfValorServico.setBounds(10, 119, 103, 23);
+		contentPane.add(tfValorServico);
 
-		lblVeculo = new JLabel("Situa\u00E7\u00E3o:");
-		lblVeculo.setBounds(16, 161, 63, 19);
-		contentPane.add(lblVeculo);
+		lblValorItem = new JLabel("Valor do Servi\u00E7o:");
+		lblValorItem.setBounds(10, 99, 103, 14);
+		contentPane.add(lblValorItem);
 
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(52, 321, 86, 23);
-		contentPane.add(textField_9);
+		tfServico = new JTextField();
+		tfServico.setColumns(10);
+		tfServico.setBounds(10, 70, 367, 23);
+		contentPane.add(tfServico);
 
-		lblValor = new JLabel("Valor:");
-		lblValor.setBounds(16, 323, 39, 19);
-		contentPane.add(lblValor);
+		lblNomeDoServio = new JLabel("Nome do Servi\u00E7o:");
+		lblNomeDoServio.setBounds(10, 54, 127, 14);
+		contentPane.add(lblNomeDoServio);
 
-		txtVeiculo = new JTextField();
-		txtVeiculo.setColumns(10);
-		txtVeiculo.setBounds(83, 186, 324, 23);
-		contentPane.add(txtVeiculo);
+		btnPesqServico = new JButton("Pesquisar");
+		btnPesqServico.setToolTipText("Adicionar um novo produto");
+		btnPesqServico.setBackground(SystemColor.controlShadow);
+		btnPesqServico.setBounds(397, 58, 127, 35);
+		contentPane.add(btnPesqServico);
 
-		panel_2 = new JPanel();
-		panel_2.setBackground(SystemColor.scrollbar);
-		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_2.setBounds(17, 351, 1012, 259);
-		contentPane.add(panel_2);
-		panel_2.setLayout(null);
+		tfFuncionario = new JTextField();
+		tfFuncionario.setColumns(10);
+		tfFuncionario.setBounds(550, 70, 296, 23);
+		contentPane.add(tfFuncionario);
 
-		jtOrdemServico = new JTable();
-		jtOrdemServico.setBounds(10, 11, 992, 237);
-		panel_2.add(jtOrdemServico);
-
-		btnAdicionar = new JButton("Adicionar");
-		btnAdicionar.setToolTipText("Adicionar nova ordem de servi\u00E7o");
-		btnAdicionar.setBackground(SystemColor.controlShadow);
-		btnAdicionar.setBounds(166, 315, 102, 29);
-		contentPane.add(btnAdicionar);
-
-		btnRelatrio = new JButton("Editar");
-		btnRelatrio.setBounds(278, 315, 102, 29);
-		contentPane.add(btnRelatrio);
-		btnRelatrio.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
-		btnRelatrio.setBackground(SystemColor.controlShadow);
-		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Aguardando aprova\u00E7\u00E3o", "Aguardadando pe\u00E7as", "Entrega Feita", "Or\u00E7amento reprovado"}));
-		comboBox.setBounds(85, 157, 200, 23);
-		contentPane.add(comboBox);
-		
-		lblCliente = new JLabel("Ve\u00EDculo");
-		lblCliente.setBounds(16, 191, 53, 19);
-		contentPane.add(lblCliente);
-		
-		txtDefeito = new JTextField();
-		txtDefeito.setColumns(10);
-		txtDefeito.setBounds(83, 215, 324, 23);
-		contentPane.add(txtDefeito);
-		
-		lblFuncionrio = new JLabel("Defeito");
-		lblFuncionrio.setBounds(16, 220, 53, 19);
+		lblFuncionrio = new JLabel("Funcion\u00E1rio:");
+		lblFuncionrio.setBounds(550, 54, 127, 14);
 		contentPane.add(lblFuncionrio);
-		
-		txtServico = new JTextField();
-		txtServico.setColumns(10);
-		txtServico.setBounds(83, 244, 324, 23);
-		contentPane.add(txtServico);
-		
-		lblServico = new JLabel("Servico:");
-		lblServico.setBounds(16, 249, 53, 19);
-		contentPane.add(lblServico);
-		
-		txtFuncionario = new JTextField();
-		txtFuncionario.setColumns(10);
-		txtFuncionario.setBounds(83, 273, 324, 23);
-		contentPane.add(txtFuncionario);
-		
-		lblFuncionrio_1 = new JLabel("Funcion\u00E1rio");
-		lblFuncionrio_1.setBounds(16, 278, 63, 19);
-		contentPane.add(lblFuncionrio_1);
-		
-		btnPesquisarFuncServ = new JButton("Cancelar");
-		btnPesquisarFuncServ.setToolTipText("Gerar relat\u00F3rio de ordem de servi\u00E7o");
-		btnPesquisarFuncServ.setBackground(SystemColor.controlShadow);
-		btnPesquisarFuncServ.setBounds(395, 315, 102, 29);
-		contentPane.add(btnPesquisarFuncServ);
-		
-		btnPesquisar.addActionListener(new ActionListener() {
+
+		btnPesqFuncionario = new JButton("Pesquisar");
+		btnPesqFuncionario.setToolTipText("Adicionar um novo produto");
+		btnPesqFuncionario.setBackground(SystemColor.controlShadow);
+		btnPesqFuncionario.setBounds(878, 58, 127, 35);
+		contentPane.add(btnPesqFuncionario);
+
+		cbVeiculo = new JComboBox();
+		cbVeiculo.setBounds(550, 27, 296, 23);
+		contentPane.add(cbVeiculo);
+
+		/******************************************************************
+		 * EVENTOS DOS BOTÕES
+		 ******************************************************************/
+		btnPesqCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//a flag é utilizada para informar a tabela qual pesquisa que irá preenche-la
+				flag = 1;
 				modeloCliente = new ClienteTableModel();
-				jtPesquisaClientes.setModel(modeloCliente);
-				atualizarTabelaPorBusca();
+				tablePesquisa.setModel(modeloCliente);
+				atualizarTabelaPorBuscaCliente(tablePesquisa);
+				preecherCombo();
 			}
 		});
+
+		btnPesqFuncionario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				flag = 2;
+				modeloFuncionario = new FuncionarioTableModel();
+				tablePesquisa.setModel(modeloFuncionario);
+				new TelaFuncionarios().atualizarTabelaPorBusca(tablePesquisa);
+			}
+		});
+
+		btnPesqServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				flag = 3;
+				modeloServico = new ServicoTableModel();
+				tablePesquisa.setModel(modeloServico);
+				new TelaServico().atualizarTabelaPorBusca(tablePesquisa);
+			}
+		});
+
+		tablePesquisa.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (flag == 1) {
+					tfCliente.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
+					preecherCombo();
+
+				} else if (flag == 2) {
+					tfFuncionario.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
+
+				} else if (flag == 3) {
+					tfServico.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
+					tfValorServico.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 2).toString());
+
+				}
+			}
+		});
+
 	}
 
-	public void atualizarTabelaPorBusca() {
+	public void preecherCombo() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		short codCliente = new ServicoControl().buscaCodigoCliente(tfCliente.getText());
+
+		String sql = "select nome_veiculo from clientes inner join  veiculo on clientes.codigo_cliente = veiculo.codigo_cliente where clientes.codigo_cliente="
+				+ codCliente;
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			cbVeiculo.removeAllItems();
+			while (rs.next()) {
+				cbVeiculo.addItem(rs.getString("nome_veiculo"));
+			}
+			new ModuloConexao().closeConnection(conexao);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao preecher combobox\nERRO:" + e);
+		}
+
+	}
+
+	public void atualizarTabelaPorBuscaCliente(JTable tablePesquisa) {
 		// TODO Auto-generated method stub
 		try {
 			/* Criação do modelo */
 			Cliente c = new Cliente();
 			// d.setNome(tfPesquisaCliente.getText());
-			c.setPesquisa(tfPesquisaCliente.getText());
+			c.setPesquisa(tfCliente.getText());
 
 			/* Criação do DAO */
 			ClienteControl CControl = new ClienteControl();
 
 			// inserindo produtos na lista usando o método read
 			List<Cliente> lista = CControl.buscaCliente(c);
-			ClienteTableModel modelo = (ClienteTableModel) jtPesquisaClientes.getModel();
+			// criando um modelo do tipo produto para a tabela
+
+			ClienteTableModel modeloCliente = (ClienteTableModel) tablePesquisa.getModel();
 
 			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
+			modeloCliente.adicionar(lista);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um cliente");
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto: " + ex);
 		}
 	}
-	
-	
+
 	private static class __Tmp {
 		private static void __tmp() {
 			javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();

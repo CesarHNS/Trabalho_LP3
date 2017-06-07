@@ -109,28 +109,6 @@ public class TelaControle extends JFrame {
 		panel.add(btnProdutos);
 		btnProdutos.setBackground(SystemColor.controlShadow);
 
-		JButton btnVeculos = new JButton("Ve\u00EDculos");
-		btnVeculos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaVeiculos ObjTelaVeiculos = new TelaVeiculos();
-				ObjTelaVeiculos.setVisible(true);
-			}
-		});
-		btnVeculos.setToolTipText("Cadastrar Ve\u00EDculos");
-		btnVeculos.setBounds(25, 395, 144, 44);
-		panel.add(btnVeculos);
-		btnVeculos.setBackground(SystemColor.controlShadow);
-
-		JButton btnContasPagar = new JButton("Contas a Pagar");
-		btnContasPagar.setBounds(25, 450, 144, 44);
-		panel.add(btnContasPagar);
-		btnContasPagar.setBackground(SystemColor.controlShadow);
-
-		JButton btnContasAReceber = new JButton("Contas a Receber");
-		btnContasAReceber.setBounds(25, 505, 144, 44);
-		panel.add(btnContasAReceber);
-		btnContasAReceber.setBackground(SystemColor.controlShadow);
-
 		JButton btnServios = new JButton("Servi\u00E7os");
 		btnServios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

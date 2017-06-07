@@ -153,5 +153,63 @@ public class ServicoControl {
 		return listaServico;
 
 	}
+	
+
+	public short buscaCodServico() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		short codServ = 0;
+
+		String sql = "select * from serv";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				// colocando a venda sempre como na ultima posição
+				rs.last();
+				codServ = rs.getShort("codigo_serv");
+				// enquanto existir um valor ele vai guardar no objeto
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+
+		}
+		return codServ;
+	}
+	
+	public short buscaCodigoCliente(String nome) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		short codCliente = 0 ;
+
+		String sql = "select codigo_cliente from clientes where nome_cliente=?";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			pst.setString(1, nome);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+
+				codCliente = rs.getShort("codigo_cliente");
+
+			}
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao buscar fornecedor: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+		}
+		return codCliente;
+
+	}
 
 }

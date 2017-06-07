@@ -16,10 +16,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import control.ProdutoControl;
 import control.ServicoControl;
 import control.VendaControl;
+import model.Produtos;
 import model.Servico;
 import model.Venda;
+import model.tables.ProdutoTableModel;
 import model.tables.ServicoTableModel;
 import model.tables.VendaTableModel;
 
@@ -151,21 +154,28 @@ public class TelaServico extends JFrame {
 		tableServico.setToolTipText("");
 		modelo = new ServicoTableModel();
 		tableServico.setModel(modelo);
+		atualizarTabela();
+
+		btnPesquisarServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atualizarTabelaPorBusca(tableServico);
+			}
+		});
 
 		btnAdicionarServico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// ServicoTableModel modelo = (ServicoTableModel)
 				// tableServico.getModel();
 				Servico s = new Servico();
-
+				try {
 				s.setCodigo(Short.parseShort(tfCodigoServico.getText()));
 				s.setDescricao(tfNomeServico.getText());
 				s.setPreco(Double.parseDouble(tfPrecoServico.getText()));
+
 				
-				try {
 					new ServicoControl().create(s);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Erro: " + e);
+					JOptionPane.showMessageDialog(null, "Preencha os campos corretamente: " + e);
 				}
 
 				LimparTela();
@@ -180,7 +190,31 @@ public class TelaServico extends JFrame {
 		tfCodigoServico.setText("");
 		tfNomeServico.setText("");
 		tfPrecoServico.setText("");
-		
+
+	}
+
+	public void atualizarTabelaPorBusca(JTable table) {
+		// TODO Auto-generated method stub
+		try {
+			/* Criação do modelo */
+			Servico s = new Servico();
+			// d.setNome(tfPesquisaCliente.getText());
+			s.setPesquisa(tfPesquisaServico.getText());
+
+			/* Criação do DAO */
+			ServicoControl Sdao = new ServicoControl();
+
+			// inserindo produtos na lista usando o método read
+			List<Servico> lista = Sdao.buscaServico(s);
+			ServicoTableModel modelo = (ServicoTableModel) table.getModel();
+
+			/* Copia os dados da consulta para a tabela */
+			modelo.adicionar(lista);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um serviço!");
+		}
 	}
 
 	public void atualizarTabela() {

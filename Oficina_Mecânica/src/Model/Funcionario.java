@@ -1,10 +1,10 @@
 package model;
 
 public class Funcionario {
-	private String codigo;
+	private short codigo;
 	private String nome;
 	private String cpf;
-	private Short senha;
+	private String senha;
 	private String login;
 	private String cargo;
 
@@ -16,12 +16,13 @@ public class Funcionario {
 	private String email;
 	private String telefone;
 	private String celular;
+	private String pesquisa;
 
 	public Funcionario() {
 		super();
 	}
 
-	public Funcionario(String codigo, String nome, String cpf, Short senha, String login, String cargo, String endereco,
+	public Funcionario(short codigo, String nome, String cpf, String senha, String login, String cargo, String endereco,
 			String bairro, String cep, String cidade, String estado, String email, String telefone, String celular) {
 		super();
 		this.codigo = codigo;
@@ -40,11 +41,11 @@ public class Funcionario {
 		this.celular = celular;
 	}
 
-	public String getCodigo() {
+	public short getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(short codigo) {
 		this.codigo = codigo;
 	}
 
@@ -64,11 +65,11 @@ public class Funcionario {
 		this.cpf = cpf;
 	}
 
-	public Short getSenha() {
+	public String getSenha() {
 		return senha;
 	}
 
-	public void setSenha(Short senha) {
+	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
@@ -152,115 +153,12 @@ public class Funcionario {
 		this.celular = celular;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((bairro == null) ? 0 : bairro.hashCode());
-		result = prime * result + ((cargo == null) ? 0 : cargo.hashCode());
-		result = prime * result + ((celular == null) ? 0 : celular.hashCode());
-		result = prime * result + ((cep == null) ? 0 : cep.hashCode());
-		result = prime * result + ((cidade == null) ? 0 : cidade.hashCode());
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
-		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
-		result = prime * result + ((login == null) ? 0 : login.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
-		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
-		return result;
+	public String getPesquisa() {
+		return pesquisa;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Funcionario other = (Funcionario) obj;
-		if (bairro == null) {
-			if (other.bairro != null)
-				return false;
-		} else if (!bairro.equals(other.bairro))
-			return false;
-		if (cargo == null) {
-			if (other.cargo != null)
-				return false;
-		} else if (!cargo.equals(other.cargo))
-			return false;
-		if (celular == null) {
-			if (other.celular != null)
-				return false;
-		} else if (!celular.equals(other.celular))
-			return false;
-		if (cep == null) {
-			if (other.cep != null)
-				return false;
-		} else if (!cep.equals(other.cep))
-			return false;
-		if (cidade == null) {
-			if (other.cidade != null)
-				return false;
-		} else if (!cidade.equals(other.cidade))
-			return false;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (cpf == null) {
-			if (other.cpf != null)
-				return false;
-		} else if (!cpf.equals(other.cpf))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (endereco == null) {
-			if (other.endereco != null)
-				return false;
-		} else if (!endereco.equals(other.endereco))
-			return false;
-		if (estado == null) {
-			if (other.estado != null)
-				return false;
-		} else if (!estado.equals(other.estado))
-			return false;
-		if (login == null) {
-			if (other.login != null)
-				return false;
-		} else if (!login.equals(other.login))
-			return false;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (senha == null) {
-			if (other.senha != null)
-				return false;
-		} else if (!senha.equals(other.senha))
-			return false;
-		if (telefone == null) {
-			if (other.telefone != null)
-				return false;
-		} else if (!telefone.equals(other.telefone))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Funcionario [codigo=" + codigo + ", nome=" + nome + ", cpf=" + cpf + ", senha=" + senha + ", login="
-				+ login + ", cargo=" + cargo + ", endereco=" + endereco + ", bairro=" + bairro + ", cep=" + cep
-				+ ", cidade=" + cidade + ", estado=" + estado + ", email=" + email + ", telefone=" + telefone
-				+ ", celular=" + celular + "]";
+	public void setPesquisa(String pesquisa) {
+		this.pesquisa = pesquisa;
 	}
 
 }
