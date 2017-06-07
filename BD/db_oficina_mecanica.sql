@@ -119,6 +119,32 @@ INSERT INTO `funcionarios` VALUES (1,'Paulo de Souza','345.459.540-50','Paulo123
 UNLOCK TABLES;
 
 --
+-- Table structure for table `itens_os_servico`
+--
+
+DROP TABLE IF EXISTS `itens_os_servico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itens_os_servico` (
+  `codigo_os` smallint(6) NOT NULL,
+  `codigo_serv` smallint(6) NOT NULL,
+  PRIMARY KEY (`codigo_os`,`codigo_serv`),
+  KEY `fk_codigo_serv` (`codigo_serv`),
+  CONSTRAINT `fk_codigo_os` FOREIGN KEY (`codigo_os`) REFERENCES `ordem_servico` (`codigo_os`),
+  CONSTRAINT `fk_codigo_serv` FOREIGN KEY (`codigo_serv`) REFERENCES `serv` (`codigo_serv`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itens_os_servico`
+--
+
+LOCK TABLES `itens_os_servico` WRITE;
+/*!40000 ALTER TABLE `itens_os_servico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itens_os_servico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `itens_venda_produto`
 --
 
@@ -160,8 +186,8 @@ CREATE TABLE `ordem_servico` (
   `servico` smallint(6) DEFAULT NULL,
   `funcionario` smallint(6) DEFAULT NULL,
   `valor` double DEFAULT NULL,
-  `cliente` smallint(6) NOT NULL,
   `data_os` varchar(10) DEFAULT NULL,
+  `cliente` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`codigo_os`),
   KEY `fk_servico` (`servico`),
   KEY `fk_fucionario` (`funcionario`),
@@ -169,7 +195,7 @@ CREATE TABLE `ordem_servico` (
   CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente`) REFERENCES `clientes` (`codigo_cliente`),
   CONSTRAINT `fk_fucionario` FOREIGN KEY (`funcionario`) REFERENCES `funcionarios` (`codigo_func`),
   CONSTRAINT `fk_servico` FOREIGN KEY (`servico`) REFERENCES `serv` (`codigo_serv`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,6 +204,7 @@ CREATE TABLE `ordem_servico` (
 
 LOCK TABLES `ordem_servico` WRITE;
 /*!40000 ALTER TABLE `ordem_servico` DISABLE KEYS */;
+INSERT INTO `ordem_servico` VALUES (4,'','',NULL,NULL,NULL,NULL,NULL),(5,'','',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ordem_servico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,4 +330,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-05 23:34:23
+-- Dump completed on 2017-06-06 23:45:08

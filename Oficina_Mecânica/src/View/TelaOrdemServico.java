@@ -38,6 +38,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import control.ClienteControl;
+import control.OrdemServicoControl;
 import control.ProdutoControl;
 import control.ServicoControl;
 import control.VendaControl;
@@ -122,6 +123,8 @@ public class TelaOrdemServico extends JFrame {
 															// quando clico no X
 		conexao = ModuloConexao.conector();
 
+		new OrdemServicoControl().criaOS();
+		
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
