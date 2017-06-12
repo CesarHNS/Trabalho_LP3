@@ -80,7 +80,7 @@ public class TelaOrdemServico extends JFrame {
 	int flag = 1;
 	double precoProduto, total = 0;
 	ServicoControl scontrol = new ServicoControl();
-	Item itenVenda = new Item();
+	OrdemServico os = new OrdemServico();
 	private JTextField tfServico;
 	private JLabel lblNomeDoServio;
 	private JButton btnPesqServico;
@@ -88,6 +88,9 @@ public class TelaOrdemServico extends JFrame {
 	private JLabel lblFuncionrio;
 	private JButton btnPesqFuncionario;
 	private JComboBox cbVeiculo;
+	private JComboBox comboBox;
+	private JLabel lblSituaoDaOrdem;
+	short codOS;
 
 	/***********************************************************************
 	 * Launch the application.
@@ -124,7 +127,7 @@ public class TelaOrdemServico extends JFrame {
 		conexao = ModuloConexao.conector();
 
 		new OrdemServicoControl().criaOS();
-		
+
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
@@ -252,19 +255,50 @@ public class TelaOrdemServico extends JFrame {
 		btnPesqFuncionario = new JButton("Pesquisar");
 		btnPesqFuncionario.setToolTipText("Adicionar um novo produto");
 		btnPesqFuncionario.setBackground(SystemColor.controlShadow);
-		btnPesqFuncionario.setBounds(878, 58, 127, 35);
+		btnPesqFuncionario.setBounds(866, 64, 127, 35);
 		contentPane.add(btnPesqFuncionario);
 
 		cbVeiculo = new JComboBox();
 		cbVeiculo.setBounds(550, 27, 296, 23);
 		contentPane.add(cbVeiculo);
 
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Esperando pagando", "Em andamento", "Finalizada" }));
+		comboBox.setBounds(550, 113, 169, 23);
+		contentPane.add(comboBox);
+
+		lblSituaoDaOrdem = new JLabel("Situa\u00E7\u00E3o da ordem de servi\u00E7o:");
+		lblSituaoDaOrdem.setBounds(550, 99, 219, 14);
+		contentPane.add(lblSituaoDaOrdem);
+
 		/******************************************************************
 		 * EVENTOS DOS BOTÕES
 		 ******************************************************************/
+		btnAdicionaServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Connection conexao = ModuloConexao.conector();
+				PreparedStatement pst = null;
+				ResultSet rs = null;
+				short codServ = new OrdemServicoControl().selectCodServ(tfServico.getText());
+
+				// try {
+
+				os.setServico(codServ);
+
+				new OrdemServicoControl().adicionaServico(os);
+				atualizarTabelaPorServico();
+				/*
+				 * } catch (Exception e) { JOptionPane.showMessageDialog(null,
+				 * "Erro: " + e); }
+				 */
+			}
+
+		});
+
 		btnPesqCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//a flag é utilizada para informar a tabela qual pesquisa que irá preenche-la
+				// a flag é utilizada para informar a tabela qual pesquisa que
+				// irá preenche-la
 				flag = 1;
 				modeloCliente = new ClienteTableModel();
 				tablePesquisa.setModel(modeloCliente);
@@ -332,6 +366,39 @@ public class TelaOrdemServico extends JFrame {
 			JOptionPane.showMessageDialog(null, "Erro ao preecher combobox\nERRO:" + e);
 		}
 
+	}
+
+	public void atualizarTabelaPorServico() {
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Nome do Serviço", "Preço do Serviço" };
+
+		try {
+			pst = conexao.prepareStatement("Select nome_serv,preco_serv from serv");
+			rs = pst.executeQuery();
+			rs.first();
+			do {
+
+				dados.add(new Object[] { rs.getString("nome_serv"), rs.getInt("preco_serv") });
+
+			} while (rs.next());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		modelo = new ModeloTabela(dados, colunas);
+		tableServicos.setModel(modelo);
+		tableServicos.getColumnModel().getColumn(0).setPreferredWidth(500);
+		tableServicos.getColumnModel().getColumn(0).setResizable(false);
+		tableServicos.getColumnModel().getColumn(1).setPreferredWidth(250);
+		tableServicos.getColumnModel().getColumn(1).setResizable(false);
+		tableServicos.getTableHeader().setReorderingAllowed(false);
+		tableServicos.setAutoResizeMode(tableServicos.AUTO_RESIZE_OFF);
+		tableServicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela */
+		modelo.fireTableDataChanged();
 	}
 
 	public void atualizarTabelaPorBuscaCliente(JTable tablePesquisa) {

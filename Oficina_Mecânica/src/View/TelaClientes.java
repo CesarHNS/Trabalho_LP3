@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -39,7 +41,9 @@ import dal.ModuloConexao;
 
 import model.Cliente;
 import model.Produtos;
+import model.Veiculo;
 import model.tables.ClienteTableModel;
+import model.tables.ModeloTabela;
 import model.tables.ProdutoTableModel;
 
 //User Interface UI = view
@@ -77,6 +81,7 @@ public class TelaClientes extends JFrame {
 				try {
 					TelaClientes frame = new TelaClientes();
 					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -297,20 +302,19 @@ public class TelaClientes extends JFrame {
 				ClienteTableModel modelo = (ClienteTableModel) jtClientes.getModel();
 				Cliente c = new Cliente();
 
-
 				try {
-				c.setId(Short.parseShort(tfCodigoCliente.getText()));
-				c.setNome(tfNomeCliente.getText());
-				c.setDataNasc(tfDataNascimento.getText());
-				c.setCpf(tfCpfCliente.getText());
-				c.setEndereco(tfEnderecoCliente.getText());
-				c.setBairro(tfBairroCliente.getText());
-				c.setCep(tfCepCliente.getText());
-				c.setCidade(tfCidadeCliente.getText());
-				c.setEstado(cbEstado.getSelectedItem().toString());
-				c.setEmail(tfEmailCliente.getText());
-				c.setTelefone(tfTelefoneCliente.getText());
-				c.setCelular(tfCelularCliente.getText());
+					c.setId(Short.parseShort(tfCodigoCliente.getText()));
+					c.setNome(tfNomeCliente.getText());
+					c.setDataNasc(tfDataNascimento.getText());
+					c.setCpf(tfCpfCliente.getText());
+					c.setEndereco(tfEnderecoCliente.getText());
+					c.setBairro(tfBairroCliente.getText());
+					c.setCep(tfCepCliente.getText());
+					c.setCidade(tfCidadeCliente.getText());
+					c.setEstado(cbEstado.getSelectedItem().toString());
+					c.setEmail(tfEmailCliente.getText());
+					c.setTelefone(tfTelefoneCliente.getText());
+					c.setCelular(tfCelularCliente.getText());
 
 					new ClienteControl().create(c);
 				} catch (NumberFormatException e) {
@@ -334,8 +338,8 @@ public class TelaClientes extends JFrame {
 
 				if (jtClientes.getSelectedRow() != -1) {
 					try {
-					new ClienteControl().delete(Short.parseShort(tfCodigoCliente.getText()));
-					}catch(NumberFormatException e){
+						new ClienteControl().delete(Short.parseShort(tfCodigoCliente.getText()));
+					} catch (NumberFormatException e) {
 						JOptionPane.showMessageDialog(null, "Selecione um cliente: " + e);
 
 					}
@@ -368,18 +372,18 @@ public class TelaClientes extends JFrame {
 				Cliente c = new Cliente();
 
 				try {
-				c.setId(Short.parseShort(tfCodigoCliente.getText()));
-				c.setNome(tfNomeCliente.getText());
-				c.setDataNasc(tfDataNascimento.getText());
-				c.setCpf(tfCpfCliente.getText());
-				c.setEndereco(tfEnderecoCliente.getText());
-				c.setBairro(tfBairroCliente.getText());
-				c.setCep(tfCepCliente.getText());
-				c.setCidade(tfCidadeCliente.getText());
-				c.setEstado(cbEstado.getSelectedItem().toString());
-				c.setEmail(tfEmailCliente.getText());
-				c.setTelefone(tfTelefoneCliente.getText());
-				c.setCelular(tfCelularCliente.getText());
+					c.setId(Short.parseShort(tfCodigoCliente.getText()));
+					c.setNome(tfNomeCliente.getText());
+					c.setDataNasc(tfDataNascimento.getText());
+					c.setCpf(tfCpfCliente.getText());
+					c.setEndereco(tfEnderecoCliente.getText());
+					c.setBairro(tfBairroCliente.getText());
+					c.setCep(tfCepCliente.getText());
+					c.setCidade(tfCidadeCliente.getText());
+					c.setEstado(cbEstado.getSelectedItem().toString());
+					c.setEmail(tfEmailCliente.getText());
+					c.setTelefone(tfTelefoneCliente.getText());
+					c.setCelular(tfCelularCliente.getText());
 
 					new ClienteControl().update(c);
 				} catch (Exception ex) {
@@ -440,6 +444,50 @@ public class TelaClientes extends JFrame {
 		tfTelefoneCliente.setText("");
 
 	}
+	
+	/*public void atualizarTabelaTeste(){
+		Veiculo v = new Veiculo();
+
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Nome Veículo", "Montadora", "Placa Veículo", "Nome Cliente" };
+
+		try {
+			pst = conexao.prepareStatement(
+					" select * from veiculo inner join clientes on veiculo.codigo_cliente = clientes.codigo_cliente where clientes.codigo_cliente = veiculo.codigo_cliente");
+
+			rs = pst.executeQuery();
+			rs.first();
+			// enquanto o meu result set encontrar dados na tabela
+			do {
+
+				dados.add(new Object[] { rs.getString("nome_veiculo"), rs.getString("montadora"), rs.getString("placa"),
+						rs.getString("nome_cliente") });
+
+			} while (rs.next());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		modelo = new ModeloTabela(dados, colunas);
+		table.setModel(modelo);
+		table.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setPreferredWidth(100);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.getColumnModel().getColumn(3).setPreferredWidth(300);
+		table.getColumnModel().getColumn(3).setResizable(false);
+
+		table.getTableHeader().setReorderingAllowed(false);
+		table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela 
+		modelo.fireTableDataChanged();
+	}*/
 
 	public void atualizarTabela() {
 		// TODO Auto-generated method stub

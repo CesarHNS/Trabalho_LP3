@@ -11,6 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.JScrollBar;
+import javax.swing.JToolBar;
 
 public class TelaControle extends JFrame {
 
@@ -25,6 +30,8 @@ public class TelaControle extends JFrame {
 				try {
 					TelaControle frame = new TelaControle();
 					frame.setVisible(true);
+					// frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -40,22 +47,62 @@ public class TelaControle extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// quando clico no X
 															// fecha apenas a
 															// janela onde estou
-		setBounds(100, 100, 1280, 720);
+		setBounds(100, 100, 1280, 782);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.scrollbar);
-		panel.setBorder(new LineBorder(SystemColor.controlShadow));
-		panel.setBounds(10, 11, 195, 659);
-		contentPane.add(panel);
-		panel.setLayout(null);
-
 		JButton btnClientes = new JButton("Clientes");
-		btnClientes.setToolTipText("Cadastrar Clientes");
+		btnClientes.setBounds(10, 11, 144, 44);
+		contentPane.add(btnClientes);
+		btnClientes.setIcon(null);
+		btnClientes.setToolTipText("Cadastrar Clientes");	
+		btnClientes.setBackground(SystemColor.controlShadow);
+
+		JButton btnFuncionrios = new JButton("Funcionários");
+		btnFuncionrios.setBounds(10, 66, 144, 44);
+		contentPane.add(btnFuncionrios);
+		btnFuncionrios.setToolTipText("Cadastrar Fornecedores");	
+		btnFuncionrios.setBackground(SystemColor.controlShadow);
+
+		JButton btnFornecedores = new JButton("Fornecedores");
+		btnFornecedores.setBounds(10, 121, 144, 44);
+		contentPane.add(btnFornecedores);	
+		btnFornecedores.setToolTipText("Cadastrar Fornecedores");
+		btnFornecedores.setBackground(SystemColor.controlShadow);
+
+		JButton btnProdutos = new JButton("Produtos ");
+		btnProdutos.setBounds(10, 176, 144, 44);
+		contentPane.add(btnProdutos);	
+		btnProdutos.setToolTipText("Cadastrar Produtos");
+		btnProdutos.setBackground(SystemColor.controlShadow);
+
+		JButton btnServios = new JButton("Servi\u00E7os");
+		btnServios.setBounds(10, 286, 144, 44);
+		contentPane.add(btnServios);	
+		btnServios.setToolTipText("Cadastrar Servi\u00E7os");
+		btnServios.setBackground(SystemColor.controlShadow);
+
+		JButton btnOrdensDeServico = new JButton("OS");
+		btnOrdensDeServico.setBounds(10, 341, 144, 44);
+		contentPane.add(btnOrdensDeServico);	
+		btnOrdensDeServico.setToolTipText("Gerar ordem de servi\u00E7o");
+		btnOrdensDeServico.setBackground(SystemColor.controlShadow);
+
+		JButton btnVendas = new JButton("Vendas");
+		btnVendas.setBounds(10, 396, 144, 44);
+		contentPane.add(btnVendas);	
+		btnVendas.setToolTipText("Realizar Vendas de Produtos");
+		btnVendas.setBackground(SystemColor.controlShadow);
+		
+		JButton btnVeiculos = new JButton("Ve\u00EDculos");	
+		btnVeiculos.setToolTipText("Cadastrar Ve\u00EDculos");
+		btnVeiculos.setBackground(SystemColor.controlShadow);
+		btnVeiculos.setBounds(10, 231, 144, 44);
+		contentPane.add(btnVeiculos);
+		
 		btnClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaClientes ObjTelaClientes = null;
@@ -68,12 +115,7 @@ public class TelaControle extends JFrame {
 				ObjTelaClientes.setVisible(true);
 			}
 		});
-		btnClientes.setBounds(25, 11, 144, 44);
-		panel.add(btnClientes);
-		btnClientes.setBackground(SystemColor.controlShadow);
-
-		JButton btnFuncionrios = new JButton("Funcionários");
-		btnFuncionrios.setToolTipText("Cadastrar Fornecedores");
+		
 		btnFuncionrios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaFuncionarios ObjTelaFuncionarios = new TelaFuncionarios();
@@ -81,75 +123,47 @@ public class TelaControle extends JFrame {
 
 			}
 		});
-		btnFuncionrios.setBounds(25, 66, 144, 44);
-		panel.add(btnFuncionrios);
-		btnFuncionrios.setBackground(SystemColor.controlShadow);
-
-		JButton btnFornecedores = new JButton("Fornecedores");
+		
 		btnFornecedores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaFornecedores ObjTelaFornecedores = new TelaFornecedores();
 				ObjTelaFornecedores.setVisible(true);
 			}
 		});
-		btnFornecedores.setToolTipText("Cadastrar Fornecedores");
-		btnFornecedores.setBounds(25, 121, 144, 44);
-		panel.add(btnFornecedores);
-		btnFornecedores.setBackground(SystemColor.controlShadow);
-
-		JButton btnProdutos = new JButton("Produtos ");
+		
 		btnProdutos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaProdutos ObjTelaProdutos = new TelaProdutos();
 				ObjTelaProdutos.setVisible(true);
 			}
 		});
-		btnProdutos.setToolTipText("Cadastrar Produtos");
-		btnProdutos.setBounds(25, 176, 144, 44);
-		panel.add(btnProdutos);
-		btnProdutos.setBackground(SystemColor.controlShadow);
-
-		JButton btnServios = new JButton("Servi\u00E7os");
+		
 		btnServios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TelaServico ObjTelaServicos = new TelaServico();
 				ObjTelaServicos.setVisible(true);
 			}
 		});
-		btnServios.setToolTipText("Cadastrar Servi\u00E7os");
-		btnServios.setBackground(SystemColor.controlShadow);
-		btnServios.setBounds(25, 231, 144, 44);
-		panel.add(btnServios);
-
-		JButton btnOrdensDeServico = new JButton("OS");
+		
 		btnOrdensDeServico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaOrdemServico ObjOrdemServico = new TelaOrdemServico();
 				ObjOrdemServico.setVisible(true);
 			}
 		});
-		btnOrdensDeServico.setToolTipText("Gerar ordem de servi\u00E7o");
-		btnOrdensDeServico.setBounds(25, 286, 144, 44);
-		panel.add(btnOrdensDeServico);
-		btnOrdensDeServico.setBackground(SystemColor.controlShadow);
-
-		JButton btnVendas = new JButton("Vendas");
+		
 		btnVendas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				TelaVendas ObjTelaVendas = new TelaVendas();
 				ObjTelaVendas.setVisible(true);
 			}
 		});
-		btnVendas.setToolTipText("Realizar Vendas de Produtos");
-		btnVendas.setBackground(SystemColor.controlShadow);
-		btnVendas.setBounds(25, 340, 144, 44);
-		panel.add(btnVendas);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBorder(new LineBorder(SystemColor.controlShadow));
-		panel_1.setBackground(SystemColor.scrollbar);
-		panel_1.setBounds(215, 11, 1039, 659);
-		contentPane.add(panel_1);
+		
+		btnVeiculos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TelaVeiculos ObjTelaVeiculos = new TelaVeiculos();
+				ObjTelaVeiculos.setVisible(true);
+			}
+		});
 	}
 }

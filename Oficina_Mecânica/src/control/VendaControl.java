@@ -203,7 +203,7 @@ public class VendaControl {
 		}
 	}
 
-	public void buscaCodCliente(String nomeCliente) {
+	public short buscaCodCliente(String nomeCliente) {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -226,6 +226,8 @@ public class VendaControl {
 		} finally {
 			ModuloConexao.closeConnection(conexao, pst, rs);
 		}
+		
+		return codCliente;
 	}
 
 	public void buscaNomeProduto(short codProduto) {

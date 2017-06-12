@@ -21,6 +21,7 @@ import model.Login;
 import control.LoginControl;
 
 import javax.swing.ImageIcon;
+import java.awt.Frame;
 
 public class TelaLogin extends JFrame {
 
@@ -43,6 +44,8 @@ public class TelaLogin extends JFrame {
 				try {
 					TelaLogin frame = new TelaLogin();
 					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -57,7 +60,7 @@ public class TelaLogin extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// fecha todas as janelas
 														// quando clico no X
-		setBounds(100, 100, 1280, 720);
+		setBounds(100, 100, 350, 450);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.scrollbar);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -66,43 +69,43 @@ public class TelaLogin extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.controlShadow);
-		panel.setBounds(526, 217, 232, 290);
+		panel.setBounds(0, 0, 344, 421);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
 		JButton btnNewButton = new JButton("Entrar");
-		btnNewButton.setBounds(23, 173, 77, 23);
+		btnNewButton.setBounds(75, 231, 77, 23);
 		panel.add(btnNewButton);
 
 		txtPassword = new JPasswordField();
 		txtPassword.setToolTipText("Digite sua senha aqui\r\n");
-		txtPassword.setBounds(23, 126, 182, 20);
+		txtPassword.setBounds(75, 184, 182, 20);
 		panel.add(txtPassword);
 
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblPassword.setForeground(Color.WHITE);
-		lblPassword.setBounds(23, 101, 46, 14);
+		lblPassword.setBounds(75, 159, 46, 14);
 		panel.add(lblPassword);
 
 		txtLogin = new JTextField();
 		txtLogin.setToolTipText("Digite sua Login aqui\r\n");
-		txtLogin.setBounds(23, 56, 187, 20);
+		txtLogin.setBounds(75, 114, 187, 20);
 		panel.add(txtLogin);
 		txtLogin.setColumns(10);
 
 		JLabel lblNewLabel = new JLabel("Login");
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setBounds(23, 31, 46, 14);
+		lblNewLabel.setBounds(75, 89, 46, 14);
 		panel.add(lblNewLabel);
 
 		JLabel lblStatus = new JLabel("");
 		lblStatus.setIcon(new ImageIcon(TelaLogin.class.getResource("/icones/dbOk.png")));
-		lblStatus.setBounds(184, 241, 38, 38);
-		panel.add(lblStatus);		
-				
-		conexao = ModuloConexao.conector();	
-		
+		lblStatus.setBounds(286, 348, 38, 38);
+		panel.add(lblStatus);
+
+		conexao = ModuloConexao.conector();
+
 		if (conexao != null) {
 			lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/dbOk.png")));
 		} else {
@@ -113,14 +116,14 @@ public class TelaLogin extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// utilizando o metódo logar ao clicar no botão "Entrar"	
+				// utilizando o metódo logar ao clicar no botão "Entrar"
 				LoginControl LoginControl = new LoginControl();
 				Login l = new Login();
-				
+
 				l.setLogin(txtLogin.getText());
 				l.setPassword(txtPassword.getText());
-				
-				//chamando o método da classe logar da classe LoginControl
+
+				// chamando o método da classe logar da classe LoginControl
 				LoginControl.logar(l);
 				dispose();
 			}

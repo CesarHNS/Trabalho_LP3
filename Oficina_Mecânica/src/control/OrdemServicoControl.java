@@ -17,7 +17,7 @@ import model.Venda;
 
 public class OrdemServicoControl {
 	// variável global para receber o valor do método buscaCodigoFornecedor
-	short codCliente, codServico, codFornecedor;
+	short  codServico, codOS;
 	String nomeProduto;
 	Calendar c = Calendar.getInstance();
 	java.util.Date data = c.getTime();
@@ -60,14 +60,15 @@ public class OrdemServicoControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
+		short codOS = selectCodOs();
 
 		String sql = "insert into itens_os_servico (codigo_os,codigo_serv) values(?,?)";
 
 		try {
 			pst = conexao.prepareStatement(sql);
-
-			pst.setShort(1, os.getCodigo_os());
+			pst.setShort(1, codOS);
 			pst.setShort(2, os.getServico());
+			
 
 			pst.executeUpdate();
 
@@ -79,6 +80,8 @@ public class OrdemServicoControl {
 
 		finally {
 			ModuloConexao.closeConnection(conexao, pst);
+			System.out.println("serv: "+os.getServico()+"\nOrdem Servico: "+codOS);
+
 		}
 
 	}
@@ -111,44 +114,66 @@ public class OrdemServicoControl {
 
 	}
 
-	public void deletaVenda(short id) {
+	public void deletaOS(short id) {
+
+	}
+
+	public short selectCodOs() {
+
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;		
+
+		String sql = " select codigo_os from ordem_servico";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				// colocando a venda sempre como na ultima posição
+				rs.last();
+				codOS = rs.getShort("codigo_os");
+				// enquanto existir um valor ele vai guardar no objeto
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+
+		}
+		return codOS;
+		
+
+	}
+	
+	public short selectCodServ(String nomeServ){
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		short cod = 0;
+		short codServ = 0 ;
+
+		String sql = "select codigo_serv from serv where nome_serv=?";
 
 		try {
-			pst = conexao.prepareStatement(
-					"select * from venda inner join itens_venda_produto on venda.codigo_venda = itens_venda_produto.codigo_venda inner join produto on itens_venda_produto.codigo_produto = produto.codigo where valor_venda = ?");
-			pst.setShort(1, cod);
+			pst = conexao.prepareStatement(sql);
+			pst.setString(1, nomeServ);
 			rs = pst.executeQuery();
-			rs.first();
 
-			do {
-				int qtdProd = rs.getInt("quantidade"), qtdVenda = rs.getInt("quant_produto");
-				int soma = qtdProd + qtdVenda;
+			while (rs.next()) {
 
-				pst = conexao.prepareStatement("update produto set quantidade=? where codigo=?");
-				pst.setInt(1, soma);
-				pst.setInt(2, rs.getInt("codigo_produto"));
-				pst.executeUpdate();
+				codServ = rs.getShort("codigo_serv");
 
-				pst = conexao.prepareStatement("delete from itens_venda_produto where codigo_venda=?");
-				pst.setShort(1, id);
-				pst.executeUpdate();
+			}
 
-			} while (rs.next());
-
-			pst = conexao.prepareStatement("delete from venda where codigo_venda=?");
-			pst.setShort(1, id);
-			pst.executeUpdate();
-
-			JOptionPane.showMessageDialog(null, "Venda deletada!");
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Erro ao deletar: " + e);
+			JOptionPane.showMessageDialog(null, "Erro ao buscar fornecedor: " + e);
 		} finally {
-			ModuloConexao.closeConnection(conexao, pst);
+			ModuloConexao.closeConnection(conexao, pst, rs);
 		}
+		return codServ;
 	}
 
 }

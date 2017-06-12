@@ -45,7 +45,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','asdfasdfsfafs','(  )    -    ','(22)92222-2222'),(3,'Testando Cliente control','  /  /    ','111.111.111-11','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222');
+INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'Roberto de Lima','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','asdfasdfsfafs','(  )    -    ','(22)92222-2222'),(3,'Testando Cliente control','  /  /    ','111.111.111-11','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,6 +188,7 @@ CREATE TABLE `ordem_servico` (
   `valor` double DEFAULT NULL,
   `data_os` varchar(10) DEFAULT NULL,
   `cliente` smallint(6) DEFAULT NULL,
+  `situacao` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`codigo_os`),
   KEY `fk_servico` (`servico`),
   KEY `fk_fucionario` (`funcionario`),
@@ -195,7 +196,7 @@ CREATE TABLE `ordem_servico` (
   CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente`) REFERENCES `clientes` (`codigo_cliente`),
   CONSTRAINT `fk_fucionario` FOREIGN KEY (`funcionario`) REFERENCES `funcionarios` (`codigo_func`),
   CONSTRAINT `fk_servico` FOREIGN KEY (`servico`) REFERENCES `serv` (`codigo_serv`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +205,7 @@ CREATE TABLE `ordem_servico` (
 
 LOCK TABLES `ordem_servico` WRITE;
 /*!40000 ALTER TABLE `ordem_servico` DISABLE KEYS */;
-INSERT INTO `ordem_servico` VALUES (4,'','',NULL,NULL,NULL,NULL,NULL),(5,'','',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `ordem_servico` VALUES (4,'','',NULL,NULL,NULL,NULL,NULL,NULL),(5,'','',NULL,NULL,NULL,NULL,NULL,NULL),(6,'','',NULL,NULL,NULL,NULL,NULL,NULL),(7,'','',NULL,NULL,NULL,NULL,NULL,NULL),(8,'','',NULL,NULL,NULL,NULL,NULL,NULL),(9,'','',NULL,NULL,NULL,NULL,NULL,NULL),(10,'','',NULL,NULL,NULL,NULL,NULL,NULL),(11,'','',NULL,NULL,NULL,NULL,NULL,NULL),(12,'','',NULL,NULL,NULL,NULL,NULL,NULL),(13,'','',NULL,NULL,NULL,NULL,NULL,NULL),(14,'','',NULL,NULL,NULL,NULL,NULL,NULL),(15,'','',NULL,NULL,NULL,NULL,NULL,NULL),(16,'','',NULL,NULL,NULL,NULL,NULL,NULL),(17,'','',NULL,NULL,NULL,NULL,NULL,NULL),(18,'','',NULL,NULL,NULL,NULL,NULL,NULL),(19,'','',NULL,NULL,NULL,NULL,NULL,NULL),(20,'','',NULL,NULL,NULL,NULL,NULL,NULL),(21,'','',NULL,NULL,NULL,NULL,NULL,NULL),(22,'','',NULL,NULL,NULL,NULL,NULL,NULL),(23,'','',NULL,NULL,NULL,NULL,NULL,NULL),(24,'','',NULL,NULL,NULL,NULL,NULL,NULL),(25,'','',NULL,NULL,NULL,NULL,NULL,NULL),(26,'','',NULL,NULL,NULL,NULL,NULL,NULL),(27,'','',NULL,NULL,NULL,NULL,NULL,NULL),(28,'','',NULL,NULL,NULL,NULL,NULL,NULL),(29,'','',NULL,NULL,NULL,NULL,NULL,NULL),(30,'','',NULL,NULL,NULL,NULL,NULL,NULL),(31,'','',NULL,NULL,NULL,NULL,NULL,NULL),(32,'','',NULL,NULL,NULL,NULL,NULL,NULL),(33,'','',NULL,NULL,NULL,NULL,NULL,NULL),(34,'','',NULL,NULL,NULL,NULL,NULL,NULL),(35,'','',NULL,NULL,NULL,NULL,NULL,NULL),(36,'','',NULL,NULL,NULL,NULL,NULL,NULL),(37,'','',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ordem_servico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,7 +282,7 @@ CREATE TABLE `veiculo` (
   KEY `codigo_veiculo` (`codigo_veiculo`),
   KEY `fk_codigo_cliente` (`codigo_cliente`),
   CONSTRAINT `fk_codigo_cliente` FOREIGN KEY (`codigo_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,6 +291,7 @@ CREATE TABLE `veiculo` (
 
 LOCK TABLES `veiculo` WRITE;
 /*!40000 ALTER TABLE `veiculo` DISABLE KEYS */;
+INSERT INTO `veiculo` VALUES (1,'Gol G6 - 2013','Volkswagen','AHR - 5832',1),(1,'HRV - 2016','Honda','JTE - 3474',2),(2,'Uno Way - 2015','Fiat','KJY - 4923',1),(2,'Toro Volcano - 2016','Fiat','TSY - 9837',2),(3,'Fusion - 2014','Ford','PIY - 7519',2);
 /*!40000 ALTER TABLE `veiculo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +310,7 @@ CREATE TABLE `venda` (
   PRIMARY KEY (`codigo_venda`),
   KEY `cod_fk_cliente` (`fk_cliente`),
   CONSTRAINT `cod_fk_cliente` FOREIGN KEY (`fk_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +319,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
-INSERT INTO `venda` VALUES (127,'47.0','04/06/2017',1);
+INSERT INTO `venda` VALUES (127,'47.0','04/06/2017',1),(129,'0.0','11/06/2017',NULL),(130,'0.0','11/06/2017',NULL);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -330,4 +332,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-06 23:45:08
+-- Dump completed on 2017-06-11 23:38:59
