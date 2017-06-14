@@ -44,6 +44,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JComboBox;
 
 public class TelaVendas extends JFrame {
 
@@ -77,6 +78,7 @@ public class TelaVendas extends JFrame {
 	double precoProduto, total = 0;
 	VendaControl vcontrol = new VendaControl();
 	Item itenVenda = new Item();
+	private JButton btnPesqVenda;
 
 	/***********************************************************************
 	 * Launch the application.
@@ -87,6 +89,8 @@ public class TelaVendas extends JFrame {
 				try {
 					TelaVendas frame = new TelaVendas();
 					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -104,6 +108,8 @@ public class TelaVendas extends JFrame {
 			public void windowClosed(WindowEvent arg0) {
 				TelaProdutos frame = new TelaProdutos();
 				frame.setVisible(false);
+				frame.setLocationRelativeTo(null);
+
 			}
 		});
 		setTitle("Tela de Vendas");
@@ -232,6 +238,12 @@ public class TelaVendas extends JFrame {
 		lblValorItem.setBounds(123, 65, 103, 14);
 		contentPane.add(lblValorItem);
 
+		btnPesqVenda = new JButton("Pesquisar Vendas");
+		btnPesqVenda.setToolTipText("Adicionar um novo produto");
+		btnPesqVenda.setBackground(SystemColor.controlShadow);
+		btnPesqVenda.setBounds(855, 107, 150, 35);
+		contentPane.add(btnPesqVenda);
+
 		/******************************************************************
 		 * EVENTOS DOS BOTÕES
 		 ******************************************************************/
@@ -325,6 +337,9 @@ public class TelaVendas extends JFrame {
 					v.setNomeCliente(tfNomeCliente.getText());
 					v.setDataVenda(tfDataVenda.getText());
 					v.setValorVenda(Double.parseDouble(tfValorTotal.getText()));
+					
+					//new FormaPagamento().setVisible(true);
+					//setLocationRelativeTo(null);
 
 					new VendaControl().FechaVenda(v);
 					LimparTela();
@@ -341,6 +356,15 @@ public class TelaVendas extends JFrame {
 				VControl.deletaVenda(codVenda);
 
 				dispose();
+			}
+		});
+
+		btnPesqVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				new PesquisaVendas().setVisible(true);
+				setLocationRelativeTo(null);
+
 			}
 		});
 

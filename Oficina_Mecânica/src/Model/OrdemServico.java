@@ -9,6 +9,7 @@ public class OrdemServico {
 	private Double valor;
 	private Short cliente;
 	private String data_os;
+	private String situacao;
 
 	public Short getCodigo_os() {
 		return codigo_os;
@@ -72,6 +73,14 @@ public class OrdemServico {
 
 	public void setData_os(String data_os) {
 		this.data_os = data_os;
+	}
+
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
 	}
 
 }

@@ -50,6 +50,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import javax.swing.JTabbedPane;
 
 public class TelaOrdemServico extends JFrame {
 
@@ -57,9 +58,9 @@ public class TelaOrdemServico extends JFrame {
 	private JTable tablePesquisa;
 	private JTextField tfCliente;
 	private JTable tableServicos;
-	private JTextField tfDataVenda;
+	private JTextField tfDataOS;
 	private JButton btnRealizarCompra;
-	private JButton btnCancelarCompra;
+	private JButton btnCancelarOS;
 	private JTextField tfValorTotal;
 	private JLabel lblNewLabel;
 	private JLabel lblPesquisa;
@@ -81,6 +82,7 @@ public class TelaOrdemServico extends JFrame {
 	double precoProduto, total = 0;
 	ServicoControl scontrol = new ServicoControl();
 	OrdemServico os = new OrdemServico();
+	OrdemServicoControl osControl = new OrdemServicoControl();
 	private JTextField tfServico;
 	private JLabel lblNomeDoServio;
 	private JButton btnPesqServico;
@@ -88,9 +90,12 @@ public class TelaOrdemServico extends JFrame {
 	private JLabel lblFuncionrio;
 	private JButton btnPesqFuncionario;
 	private JComboBox cbVeiculo;
-	private JComboBox comboBox;
+	private JComboBox cbSituacao;
 	private JLabel lblSituaoDaOrdem;
 	short codOS;
+	private JTextField tfDefeito;
+	private JLabel lblDefeito;
+	private JButton btnRelatorio;
 
 	/***********************************************************************
 	 * Launch the application.
@@ -101,6 +106,8 @@ public class TelaOrdemServico extends JFrame {
 				try {
 					TelaOrdemServico frame = new TelaOrdemServico();
 					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -125,8 +132,6 @@ public class TelaOrdemServico extends JFrame {
 															// janela onde estou
 															// quando clico no X
 		conexao = ModuloConexao.conector();
-
-		new OrdemServicoControl().criaOS();
 
 		setBounds(320, 150, 1045, 650);
 		contentPane = new JPanel();
@@ -174,15 +179,15 @@ public class TelaOrdemServico extends JFrame {
 		lblTabelaDeVendas.setBounds(10, 351, 103, 24);
 		contentPane.add(lblTabelaDeVendas);
 
-		tfDataVenda = new JTextField();
-		tfDataVenda.setColumns(10);
-		tfDataVenda.setBounds(20, 591, 103, 23);
-		contentPane.add(tfDataVenda);
+		tfDataOS = new JTextField();
+		tfDataOS.setColumns(10);
+		tfDataOS.setBounds(20, 591, 103, 23);
+		contentPane.add(tfDataOS);
 		Calendar c = Calendar.getInstance();
 		java.util.Date data = c.getTime();
 		// data no formato dd/mm/aaaa
 		DateFormat f = DateFormat.getDateInstance(DateFormat.MEDIUM);
-		tfDataVenda.setText(f.format(data));
+		tfDataOS.setText(f.format(data));
 
 		btnRealizarCompra = new JButton("Finalizar");
 		btnRealizarCompra.setToolTipText("Adicionar um novo produto");
@@ -190,11 +195,11 @@ public class TelaOrdemServico extends JFrame {
 		btnRealizarCompra.setBounds(326, 579, 127, 35);
 		contentPane.add(btnRealizarCompra);
 
-		btnCancelarCompra = new JButton("Cancelar ");
-		btnCancelarCompra.setToolTipText("Adicionar um novo produto");
-		btnCancelarCompra.setBackground(SystemColor.controlShadow);
-		btnCancelarCompra.setBounds(506, 579, 127, 35);
-		contentPane.add(btnCancelarCompra);
+		btnCancelarOS = new JButton("Cancelar ");
+		btnCancelarOS.setToolTipText("Adicionar um novo produto");
+		btnCancelarOS.setBackground(SystemColor.controlShadow);
+		btnCancelarOS.setBounds(506, 579, 127, 35);
+		contentPane.add(btnCancelarOS);
 
 		tfValorTotal = new JTextField();
 		tfValorTotal.setColumns(10);
@@ -262,14 +267,30 @@ public class TelaOrdemServico extends JFrame {
 		cbVeiculo.setBounds(550, 27, 296, 23);
 		contentPane.add(cbVeiculo);
 
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Esperando pagando", "Em andamento", "Finalizada" }));
-		comboBox.setBounds(550, 113, 169, 23);
-		contentPane.add(comboBox);
+		cbSituacao = new JComboBox();
+		cbSituacao.setModel(
+				new DefaultComboBoxModel(new String[] { "Esperando pagamento", "Em andamento", "Finalizada" }));
+		cbSituacao.setBounds(550, 113, 169, 23);
+		contentPane.add(cbSituacao);
 
 		lblSituaoDaOrdem = new JLabel("Situa\u00E7\u00E3o da ordem de servi\u00E7o:");
 		lblSituaoDaOrdem.setBounds(550, 99, 219, 14);
 		contentPane.add(lblSituaoDaOrdem);
+
+		tfDefeito = new JTextField();
+		tfDefeito.setColumns(10);
+		tfDefeito.setBounds(263, 119, 261, 23);
+		contentPane.add(tfDefeito);
+
+		lblDefeito = new JLabel("Defeito:");
+		lblDefeito.setBounds(263, 99, 103, 14);
+		contentPane.add(lblDefeito);
+
+		btnRelatorio = new JButton("Relat\u00F3rio");
+		btnRelatorio.setToolTipText("Adicionar um novo produto");
+		btnRelatorio.setBackground(SystemColor.controlShadow);
+		btnRelatorio.setBounds(866, 128, 127, 35);
+		contentPane.add(btnRelatorio);
 
 		/******************************************************************
 		 * EVENTOS DOS BOTÕES
@@ -281,16 +302,17 @@ public class TelaOrdemServico extends JFrame {
 				ResultSet rs = null;
 				short codServ = new OrdemServicoControl().selectCodServ(tfServico.getText());
 
-				// try {
+				try {
 
-				os.setServico(codServ);
+					os.setServico(codServ);
 
-				new OrdemServicoControl().adicionaServico(os);
+					osControl.adicionaServico(os);
+
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e);
+				}
 				atualizarTabelaPorServico();
-				/*
-				 * } catch (Exception e) { JOptionPane.showMessageDialog(null,
-				 * "Erro: " + e); }
-				 */
+
 			}
 
 		});
@@ -300,6 +322,9 @@ public class TelaOrdemServico extends JFrame {
 				// a flag é utilizada para informar a tabela qual pesquisa que
 				// irá preenche-la
 				flag = 1;
+				// cria uma nova venda sempre que pesquiso um cliente
+				new OrdemServicoControl().criaOS();
+
 				modeloCliente = new ClienteTableModel();
 				tablePesquisa.setModel(modeloCliente);
 				atualizarTabelaPorBuscaCliente(tablePesquisa);
@@ -321,7 +346,7 @@ public class TelaOrdemServico extends JFrame {
 				flag = 3;
 				modeloServico = new ServicoTableModel();
 				tablePesquisa.setModel(modeloServico);
-				new TelaServico().atualizarTabelaPorBusca(tablePesquisa);
+				preencherTabelaPorBusca();
 			}
 		});
 
@@ -339,6 +364,40 @@ public class TelaOrdemServico extends JFrame {
 					tfServico.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 1).toString());
 					tfValorServico.setText(tablePesquisa.getValueAt(tablePesquisa.getSelectedRow(), 2).toString());
 
+				}
+			}
+		});
+
+		btnCancelarOS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				codOS = osControl.selectCodOs();
+				osControl.deletaOS(codOS);
+
+				dispose();
+			}
+		});
+
+		btnRealizarCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				OrdemServico os = new OrdemServico();
+				short codOS = osControl.selectCodOs();
+				short codFunc = osControl.selectCodFunc(tfFuncionario.getText());
+				short codCliente = new VendaControl().buscaCodCliente(tfCliente.getText());
+				try {
+					os.setVeiculo(cbVeiculo.getSelectedItem().toString());
+					os.setDefeito(tfDefeito.getText());
+					os.setFuncionario(codFunc);
+					os.setValor(Double.parseDouble(tfValorTotal.getText()));
+					os.setData_os(tfDataOS.getText());
+					os.setCliente(codCliente);
+					os.setSituacao(cbSituacao.getSelectedItem().toString());
+					os.setCodigo_os(codOS);
+
+					osControl.finalizaOS(os);
+
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Erro ao finalizar a ordem de serviço:" + ex);
 				}
 			}
 		});
@@ -372,9 +431,13 @@ public class TelaOrdemServico extends JFrame {
 		ArrayList<Object[]> dados = new ArrayList();
 		// ArrayList dados = new ArrayList();
 		String[] colunas = new String[] { "Nome do Serviço", "Preço do Serviço" };
+		codOS = new OrdemServicoControl().selectCodOs();
+		short codServ = new OrdemServicoControl().selectCodServ(tfServico.getText());
 
 		try {
-			pst = conexao.prepareStatement("Select nome_serv,preco_serv from serv");
+			pst = conexao.prepareStatement(
+					"select nome_serv,preco_serv from itens_os_servico inner join serv on itens_os_servico.codigo_serv = serv.codigo_serv where codigo_os="
+							+ codOS);
 			rs = pst.executeQuery();
 			rs.first();
 			do {
@@ -399,6 +462,7 @@ public class TelaOrdemServico extends JFrame {
 
 		/* Atualiza a tabela */
 		modelo.fireTableDataChanged();
+		SomaServico();
 	}
 
 	public void atualizarTabelaPorBuscaCliente(JTable tablePesquisa) {
@@ -425,6 +489,79 @@ public class TelaOrdemServico extends JFrame {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um produto: " + ex);
 		}
+	}
+
+	private void preencherTabelaPorBusca() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Código", "Nome", "Valor" };
+
+		short codServ = new ServicoControl().buscaCodServico();
+
+		try {
+			pst = conexao.prepareStatement("select * from serv where nome_serv like '%" + tfServico.getText() + "%'");
+			rs = pst.executeQuery();
+			rs.first();
+			// enquanto o meu result set encontrar dados na tabela
+			do {
+
+				dados.add(new Object[] { rs.getShort("codigo_serv"), rs.getString("nome_serv"),
+						rs.getDouble("preco_serv") });
+
+			} while (rs.next());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao preencher a tabela de serviços:" + e);
+		}
+
+		modelo = new ModeloTabela(dados, colunas);
+		tablePesquisa.setModel(modelo);
+		tablePesquisa.getColumnModel().getColumn(0).setPreferredWidth(80);
+		tablePesquisa.getColumnModel().getColumn(0).setResizable(false);
+		tablePesquisa.getColumnModel().getColumn(1).setPreferredWidth(400);
+		tablePesquisa.getColumnModel().getColumn(1).setResizable(false);
+		tablePesquisa.getColumnModel().getColumn(2).setPreferredWidth(80);
+		tablePesquisa.getColumnModel().getColumn(2).setResizable(false);
+		tablePesquisa.getTableHeader().setReorderingAllowed(false);
+		tablePesquisa.setAutoResizeMode(tablePesquisa.AUTO_RESIZE_OFF);
+		tablePesquisa.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela */
+		modelo.fireTableDataChanged();
+
+	}
+
+	public void SomaServico() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		total = 0;
+		double valor = 0;
+
+		short codOS = osControl.selectCodOs();
+		String sql = "select preco_serv from itens_os_servico inner join serv on itens_os_servico.codigo_serv = serv.codigo_serv where codigo_os="
+				+ codOS;
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			rs = pst.executeQuery();
+			// rs.first();
+			while (rs.next()) {
+				valor = rs.getDouble("preco_serv");
+				// calculando o valor total da ordem de serviço
+				total += valor;
+				System.out.println("valor:" + valor + "Total:" + total);
+
+			}
+			tfValorTotal.setText(String.valueOf(total));
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro na soma do total da ordem de serviço: " + e);
+
+		}
+
 	}
 
 	private static class __Tmp {

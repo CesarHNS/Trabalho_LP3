@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_oficina_mecanica
 -- ------------------------------------------------------
@@ -36,7 +36,7 @@ CREATE TABLE `clientes` (
   `telefone_cliente` varchar(50) NOT NULL,
   `celular_cliente` varchar(50) NOT NULL,
   PRIMARY KEY (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'Roberto de Lima','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','asdfasdfsfafs','(  )    -    ','(22)92222-2222'),(3,'Testando Cliente control','  /  /    ','111.111.111-11','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222');
+INSERT INTO `clientes` VALUES (1,'Paulo de Souza','21/03/1983','333.333.333-33','AV: São Carlos, 1004','Centro','11.111-111','São Carlos','SP 	 ','Paulo.Souza@hotmail.com','(16)3343-1838','(33)93333-3333'),(2,'Roberto de Lima','  /  /    ','   .   .   -  ','','','  .   -   ','','AC 	','asdfasdfsfafs','(  )    -    ','(22)92222-2222'),(3,'Augusto Lima','  /  /    ','111.111.111-11','','','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222'),(4,'Cleber Rodrigues','  /  /    ','111.111.111-11','asdfasdfsa','sdfsdfsdf','  .   -   ','','AC 	','','(  )    -    ','(22)92222-2222'),(5,'Alberto Dias','  /  /    ','111.111.111-11','asdfasdfsa','sdfsdfsdf','  .   -   ','','RJ 	 ','','(  )    -    ','(22)92222-2222');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,6 +141,7 @@ CREATE TABLE `itens_os_servico` (
 
 LOCK TABLES `itens_os_servico` WRITE;
 /*!40000 ALTER TABLE `itens_os_servico` DISABLE KEYS */;
+INSERT INTO `itens_os_servico` VALUES (127,1),(127,2);
 /*!40000 ALTER TABLE `itens_os_servico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +169,7 @@ CREATE TABLE `itens_venda_produto` (
 
 LOCK TABLES `itens_venda_produto` WRITE;
 /*!40000 ALTER TABLE `itens_venda_produto` DISABLE KEYS */;
-INSERT INTO `itens_venda_produto` VALUES (127,1,5),(127,2,1);
+INSERT INTO `itens_venda_produto` VALUES (127,1,5),(127,2,1),(131,2,1),(132,2,1);
 /*!40000 ALTER TABLE `itens_venda_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,20 +184,17 @@ CREATE TABLE `ordem_servico` (
   `codigo_os` smallint(6) NOT NULL AUTO_INCREMENT,
   `veiculo` varchar(150) NOT NULL,
   `defeito` varchar(150) NOT NULL,
-  `servico` smallint(6) DEFAULT NULL,
   `funcionario` smallint(6) DEFAULT NULL,
   `valor` double DEFAULT NULL,
   `data_os` varchar(10) DEFAULT NULL,
   `cliente` smallint(6) DEFAULT NULL,
   `situacao` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`codigo_os`),
-  KEY `fk_servico` (`servico`),
   KEY `fk_fucionario` (`funcionario`),
   KEY `fk_cliente` (`cliente`),
   CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente`) REFERENCES `clientes` (`codigo_cliente`),
-  CONSTRAINT `fk_fucionario` FOREIGN KEY (`funcionario`) REFERENCES `funcionarios` (`codigo_func`),
-  CONSTRAINT `fk_servico` FOREIGN KEY (`servico`) REFERENCES `serv` (`codigo_serv`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_fucionario` FOREIGN KEY (`funcionario`) REFERENCES `funcionarios` (`codigo_func`)
+) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +203,7 @@ CREATE TABLE `ordem_servico` (
 
 LOCK TABLES `ordem_servico` WRITE;
 /*!40000 ALTER TABLE `ordem_servico` DISABLE KEYS */;
-INSERT INTO `ordem_servico` VALUES (4,'','',NULL,NULL,NULL,NULL,NULL,NULL),(5,'','',NULL,NULL,NULL,NULL,NULL,NULL),(6,'','',NULL,NULL,NULL,NULL,NULL,NULL),(7,'','',NULL,NULL,NULL,NULL,NULL,NULL),(8,'','',NULL,NULL,NULL,NULL,NULL,NULL),(9,'','',NULL,NULL,NULL,NULL,NULL,NULL),(10,'','',NULL,NULL,NULL,NULL,NULL,NULL),(11,'','',NULL,NULL,NULL,NULL,NULL,NULL),(12,'','',NULL,NULL,NULL,NULL,NULL,NULL),(13,'','',NULL,NULL,NULL,NULL,NULL,NULL),(14,'','',NULL,NULL,NULL,NULL,NULL,NULL),(15,'','',NULL,NULL,NULL,NULL,NULL,NULL),(16,'','',NULL,NULL,NULL,NULL,NULL,NULL),(17,'','',NULL,NULL,NULL,NULL,NULL,NULL),(18,'','',NULL,NULL,NULL,NULL,NULL,NULL),(19,'','',NULL,NULL,NULL,NULL,NULL,NULL),(20,'','',NULL,NULL,NULL,NULL,NULL,NULL),(21,'','',NULL,NULL,NULL,NULL,NULL,NULL),(22,'','',NULL,NULL,NULL,NULL,NULL,NULL),(23,'','',NULL,NULL,NULL,NULL,NULL,NULL),(24,'','',NULL,NULL,NULL,NULL,NULL,NULL),(25,'','',NULL,NULL,NULL,NULL,NULL,NULL),(26,'','',NULL,NULL,NULL,NULL,NULL,NULL),(27,'','',NULL,NULL,NULL,NULL,NULL,NULL),(28,'','',NULL,NULL,NULL,NULL,NULL,NULL),(29,'','',NULL,NULL,NULL,NULL,NULL,NULL),(30,'','',NULL,NULL,NULL,NULL,NULL,NULL),(31,'','',NULL,NULL,NULL,NULL,NULL,NULL),(32,'','',NULL,NULL,NULL,NULL,NULL,NULL),(33,'','',NULL,NULL,NULL,NULL,NULL,NULL),(34,'','',NULL,NULL,NULL,NULL,NULL,NULL),(35,'','',NULL,NULL,NULL,NULL,NULL,NULL),(36,'','',NULL,NULL,NULL,NULL,NULL,NULL),(37,'','',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `ordem_servico` VALUES (127,'Gol G6 - 2013','',1,400,'12/06/2017',1,'Esperando pagando');
 /*!40000 ALTER TABLE `ordem_servico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +234,7 @@ CREATE TABLE `produto` (
 
 LOCK TABLES `produto` WRITE;
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
-INSERT INTO `produto` VALUES (1,'Arruela','asdfsaf',1,3,0,1),(2,'Cabo de Vela','keijfkjsdf',20,32,9,3);
+INSERT INTO `produto` VALUES (1,'Arruela','asdfsaf',1,3,0,1),(2,'Cabo de Vela','keijfkjsdf',20,32,7,3);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,7 +308,7 @@ CREATE TABLE `venda` (
   PRIMARY KEY (`codigo_venda`),
   KEY `cod_fk_cliente` (`fk_cliente`),
   CONSTRAINT `cod_fk_cliente` FOREIGN KEY (`fk_cliente`) REFERENCES `clientes` (`codigo_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -319,7 +317,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
-INSERT INTO `venda` VALUES (127,'47.0','04/06/2017',1),(129,'0.0','11/06/2017',NULL),(130,'0.0','11/06/2017',NULL);
+INSERT INTO `venda` VALUES (127,'47.0','04/06/2017',1),(131,'32.0','12/06/2017',2),(132,'32.0','12/06/2017',5);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -332,4 +330,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-11 23:38:59
+-- Dump completed on 2017-06-12 17:58:19

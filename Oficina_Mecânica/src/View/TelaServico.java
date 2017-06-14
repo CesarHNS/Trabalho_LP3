@@ -4,6 +4,11 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,14 +19,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import control.ProdutoControl;
 import control.ServicoControl;
 import control.VendaControl;
+import dal.ModuloConexao;
 import model.Produtos;
 import model.Servico;
 import model.Venda;
+import model.tables.ModeloTabela;
 import model.tables.ProdutoTableModel;
 import model.tables.ServicoTableModel;
 import model.tables.VendaTableModel;
@@ -38,8 +46,8 @@ public class TelaServico extends JFrame {
 	private JTextField tfPesquisaServico;
 	private JTextField tfCodigoServico;
 	private JTextField tfPrecoServico;
-	private JTextField tfQuantidadeServico;
 	ServicoTableModel modelo;
+	ModeloTabela modeloTab;
 
 	/**
 	 * Launch the application.
@@ -140,25 +148,18 @@ public class TelaServico extends JFrame {
 		lblPrecoServico.setBounds(360, 17, 57, 14);
 		contentPane.add(lblPrecoServico);
 
-		tfQuantidadeServico = new JTextField();
-		tfQuantidadeServico.setColumns(10);
-		tfQuantidadeServico.setBounds(404, 33, 38, 23);
-		contentPane.add(tfQuantidadeServico);
-
-		JLabel lblQuantidadeServico = new JLabel("Quantidade");
-		lblQuantidadeServico.setBounds(404, 17, 76, 14);
-		contentPane.add(lblQuantidadeServico);
-
 		tableServico = new JTable();
 		scrollPane.setViewportView(tableServico);
 		tableServico.setToolTipText("");
 		modelo = new ServicoTableModel();
 		tableServico.setModel(modelo);
-		atualizarTabela();
+		// atualizarTabela();
+		preencherTabela();
 
 		btnPesquisarServico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				atualizarTabelaPorBusca(tableServico);
+				//atualizarTabelaPorBusca(tableServico);
+				preencherTabelaPorBusca();
 			}
 		});
 
@@ -168,18 +169,16 @@ public class TelaServico extends JFrame {
 				// tableServico.getModel();
 				Servico s = new Servico();
 				try {
-				s.setCodigo(Short.parseShort(tfCodigoServico.getText()));
-				s.setDescricao(tfNomeServico.getText());
-				s.setPreco(Double.parseDouble(tfPrecoServico.getText()));
+					s.setCodigo(Short.parseShort(tfCodigoServico.getText()));
+					s.setDescricao(tfNomeServico.getText());
+					s.setPreco(Double.parseDouble(tfPrecoServico.getText()));
 
-				
-					new ServicoControl().create(s);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Preencha os campos corretamente: " + e);
 				}
 
 				LimparTela();
-				atualizarTabela();
+				preencherTabela();
 
 			}
 		});
@@ -193,57 +192,96 @@ public class TelaServico extends JFrame {
 
 	}
 
-	public void atualizarTabelaPorBusca(JTable table) {
-		// TODO Auto-generated method stub
-		try {
-			/* Criação do modelo */
-			Servico s = new Servico();
-			// d.setNome(tfPesquisaCliente.getText());
-			s.setPesquisa(tfPesquisaServico.getText());
-
-			/* Criação do DAO */
-			ServicoControl Sdao = new ServicoControl();
-
-			// inserindo produtos na lista usando o método read
-			List<Servico> lista = Sdao.buscaServico(s);
-			ServicoTableModel modelo = (ServicoTableModel) table.getModel();
-
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um serviço!");
-		}
-	}
-
-	public void atualizarTabela() {
-		// TODO Auto-generated method stub
-		try {
-			/* Criação do modelo */
-			Servico s = new Servico();
-			// d.setNome(tfPesquisaCliente.getText());
-
-			/* Criação do DAO */
-			ServicoControl SControl = new ServicoControl();
-
-			// inserindo produtos na lista usando o método read
-			List<Servico> lista = SControl.read(s);
-			ServicoTableModel modelo = (ServicoTableModel) tableServico.getModel();
-
-			/* Copia os dados da consulta para a tabela */
-			modelo.adicionar(lista);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao tentar buscar um servico");
-		}
-	}
+	
 
 	private static class __Tmp {
 		private static void __tmp() {
 			javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();
 		}
+	}
+
+	private void preencherTabela() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Código", "Nome", "Valor" };
+
+		try {
+			pst = conexao.prepareStatement("select * from serv");
+			rs = pst.executeQuery();
+			rs.first();
+			// enquanto o meu result set encontrar dados na tabela
+			do {
+
+				dados.add(new Object[] { rs.getShort("codigo_serv"), rs.getString("nome_serv"),
+						rs.getDouble("preco_serv") });
+
+			} while (rs.next());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao preencher a tabela de serviços:" + e);
+		}
+
+		modeloTab = new ModeloTabela(dados, colunas);
+		tableServico.setModel(modeloTab);
+		tableServico.getColumnModel().getColumn(0).setPreferredWidth(80);
+		tableServico.getColumnModel().getColumn(0).setResizable(false);
+		tableServico.getColumnModel().getColumn(1).setPreferredWidth(400);
+		tableServico.getColumnModel().getColumn(1).setResizable(false);
+		tableServico.getColumnModel().getColumn(2).setPreferredWidth(80);
+		tableServico.getColumnModel().getColumn(2).setResizable(false);
+		tableServico.getTableHeader().setReorderingAllowed(false);
+		tableServico.setAutoResizeMode(tableServico.AUTO_RESIZE_OFF);
+		tableServico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela */
+		modelo.fireTableDataChanged();
+
+	}
+
+	private void preencherTabelaPorBusca() {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		ArrayList<Object[]> dados = new ArrayList();
+		// ArrayList dados = new ArrayList();
+		String[] colunas = new String[] { "Código", "Nome", "Valor" };
+
+		short codServ = new ServicoControl().buscaCodServico();
+
+		try {
+			pst = conexao.prepareStatement("select * from serv where nome_serv like '%" + tfPesquisaServico.getText() + "%'" );
+			rs = pst.executeQuery();
+			rs.first();
+			// enquanto o meu result set encontrar dados na tabela
+			do {
+
+				dados.add(new Object[] { rs.getShort("codigo_serv"), rs.getString("nome_serv"),
+						rs.getDouble("preco_serv") });
+
+			} while (rs.next());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao preencher a tabela de serviços:" + e);
+		}
+
+		modeloTab = new ModeloTabela(dados, colunas);
+		tableServico.setModel(modeloTab);
+		tableServico.getColumnModel().getColumn(0).setPreferredWidth(80);
+		tableServico.getColumnModel().getColumn(0).setResizable(false);
+		tableServico.getColumnModel().getColumn(1).setPreferredWidth(400);
+		tableServico.getColumnModel().getColumn(1).setResizable(false);
+		tableServico.getColumnModel().getColumn(2).setPreferredWidth(80);
+		tableServico.getColumnModel().getColumn(2).setResizable(false);
+		tableServico.getTableHeader().setReorderingAllowed(false);
+		tableServico.setAutoResizeMode(tableServico.AUTO_RESIZE_OFF);
+		tableServico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		/* Atualiza a tabela */
+		modelo.fireTableDataChanged();
+
 	}
 
 }

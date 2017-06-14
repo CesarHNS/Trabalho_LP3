@@ -125,6 +125,7 @@ public class TelaLogin extends JFrame {
 
 				// chamando o método da classe logar da classe LoginControl
 				LoginControl.logar(l);
+				setLocationRelativeTo(null);
 				dispose();
 			}
 

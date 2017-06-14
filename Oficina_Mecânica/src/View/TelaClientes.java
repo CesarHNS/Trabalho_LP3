@@ -11,6 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,6 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.Document;
 import javax.swing.text.MaskFormatter;
 
 import control.ClienteControl;
@@ -45,6 +47,12 @@ import model.Veiculo;
 import model.tables.ClienteTableModel;
 import model.tables.ModeloTabela;
 import model.tables.ProdutoTableModel;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRResultSetDataSource;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 //User Interface UI = view
 
@@ -294,6 +302,12 @@ public class TelaClientes extends JFrame {
 						"RJ \t ", "RN \t ", "RS \t ", "RO \t ", "RO \t ", "SC \t", "SP \t ", "SE \t ", "TO \t" }));
 		contentPane.add(cbEstado);
 
+		JButton btnRelatorio = new JButton("Relat\u00F3rio");
+		btnRelatorio.setToolTipText("Modificar um cliente ");
+		btnRelatorio.setBackground(SystemColor.controlShadow);
+		btnRelatorio.setBounds(443, 107, 127, 35);
+		contentPane.add(btnRelatorio);
+
 		/***********************************************************************
 		 * Botão que adiciona os clientes
 		 **********************************************************************/
@@ -402,6 +416,40 @@ public class TelaClientes extends JFrame {
 			}
 		});
 
+		// botão para gerar relatórios
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			/*	conexao = ModuloConexao.conector();
+				pst = null;
+				rs = null;
+				
+				String sql = "select codigo_cliente,nome_cliente,email_cliente,telefone_cliente from clientes";
+
+				try {
+					pst = conexao.prepareStatement(sql);
+					rs = pst.executeQuery();
+
+					JRResultSetDataSource relatResul = new JRResultSetDataSource(rs);
+					JasperPrint jpPrint = null;
+					try {
+						jpPrint = JasperFillManager.fillReport(
+								"C:/Users/Projeto/Documents/GitHub/Trabalho_LP3/Oficina_Mecânica/src/Relatorios/Clientes.jasper",
+								new HashMap(), relatResul);
+					} catch (JRException e) {
+						JOptionPane.showMessageDialog(null, "Erro ao gerar relatório: " + e);
+					}
+					JasperViewer jv = new JasperViewer(jpPrint);
+					jv.setVisible(true);
+
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(null, "Erro ao buscar dados do relatório: " + e);
+				} */
+				
+				//Document document 
+
+			}
+		});
+
 	}
 
 	/***********************************************************************
@@ -444,50 +492,44 @@ public class TelaClientes extends JFrame {
 		tfTelefoneCliente.setText("");
 
 	}
-	
-	/*public void atualizarTabelaTeste(){
-		Veiculo v = new Veiculo();
 
-		ArrayList<Object[]> dados = new ArrayList();
-		// ArrayList dados = new ArrayList();
-		String[] colunas = new String[] { "Nome Veículo", "Montadora", "Placa Veículo", "Nome Cliente" };
-
-		try {
-			pst = conexao.prepareStatement(
-					" select * from veiculo inner join clientes on veiculo.codigo_cliente = clientes.codigo_cliente where clientes.codigo_cliente = veiculo.codigo_cliente");
-
-			rs = pst.executeQuery();
-			rs.first();
-			// enquanto o meu result set encontrar dados na tabela
-			do {
-
-				dados.add(new Object[] { rs.getString("nome_veiculo"), rs.getString("montadora"), rs.getString("placa"),
-						rs.getString("nome_cliente") });
-
-			} while (rs.next());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		modelo = new ModeloTabela(dados, colunas);
-		table.setModel(modelo);
-		table.getColumnModel().getColumn(0).setPreferredWidth(300);
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(3).setPreferredWidth(300);
-		table.getColumnModel().getColumn(3).setResizable(false);
-
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		/* Atualiza a tabela 
-		modelo.fireTableDataChanged();
-	}*/
+	/*
+	 * public void atualizarTabelaTeste(){ Veiculo v = new Veiculo();
+	 * 
+	 * ArrayList<Object[]> dados = new ArrayList(); // ArrayList dados = new
+	 * ArrayList(); String[] colunas = new String[] { "Nome Veículo",
+	 * "Montadora", "Placa Veículo", "Nome Cliente" };
+	 * 
+	 * try { pst = conexao.prepareStatement(
+	 * " select * from veiculo inner join clientes on veiculo.codigo_cliente = clientes.codigo_cliente where clientes.codigo_cliente = veiculo.codigo_cliente"
+	 * );
+	 * 
+	 * rs = pst.executeQuery(); rs.first(); // enquanto o meu result set
+	 * encontrar dados na tabela do {
+	 * 
+	 * dados.add(new Object[] { rs.getString("nome_veiculo"),
+	 * rs.getString("montadora"), rs.getString("placa"),
+	 * rs.getString("nome_cliente") });
+	 * 
+	 * } while (rs.next()); } catch (SQLException e) { // TODO Auto-generated
+	 * catch block e.printStackTrace(); }
+	 * 
+	 * modelo = new ModeloTabela(dados, colunas); table.setModel(modelo);
+	 * table.getColumnModel().getColumn(0).setPreferredWidth(300);
+	 * table.getColumnModel().getColumn(0).setResizable(false);
+	 * table.getColumnModel().getColumn(1).setPreferredWidth(100);
+	 * table.getColumnModel().getColumn(1).setResizable(false);
+	 * table.getColumnModel().getColumn(2).setPreferredWidth(100);
+	 * table.getColumnModel().getColumn(2).setResizable(false);
+	 * table.getColumnModel().getColumn(3).setPreferredWidth(300);
+	 * table.getColumnModel().getColumn(3).setResizable(false);
+	 * 
+	 * table.getTableHeader().setReorderingAllowed(false);
+	 * table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
+	 * table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	 * 
+	 * /* Atualiza a tabela modelo.fireTableDataChanged(); }
+	 */
 
 	public void atualizarTabela() {
 		// TODO Auto-generated method stub

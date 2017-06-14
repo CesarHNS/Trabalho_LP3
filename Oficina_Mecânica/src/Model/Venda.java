@@ -7,6 +7,7 @@ public class Venda {
 	private String nomeCliente;
 	private String nomeProduto;
 	private int quantidadeItem;
+	private String situacao;
 	public Venda() {
 		super();
 	}
@@ -107,6 +108,12 @@ public class Venda {
 		return "Venda [codigoVenda=" + codigoVenda + ", dataVenda=" + dataVenda + ", valorVenda=" + valorVenda
 				+ ", nomeCliente=" + nomeCliente + ", nomeProduto=" + nomeProduto + ", quantidadeItem=" + quantidadeItem
 				+ "]";
+	}
+	public String getSituacao() {
+		return null;
 	}	
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
 	
 }

@@ -17,7 +17,7 @@ import model.Venda;
 
 public class OrdemServicoControl {
 	// variável global para receber o valor do método buscaCodigoFornecedor
-	short  codServico, codOS;
+	short codServico, codOS;
 	String nomeProduto;
 	Calendar c = Calendar.getInstance();
 	java.util.Date data = c.getTime();
@@ -60,7 +60,7 @@ public class OrdemServicoControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		short codOS = selectCodOs();
+		codOS = selectCodOs();
 
 		String sql = "insert into itens_os_servico (codigo_os,codigo_serv) values(?,?)";
 
@@ -68,7 +68,6 @@ public class OrdemServicoControl {
 			pst = conexao.prepareStatement(sql);
 			pst.setShort(1, codOS);
 			pst.setShort(2, os.getServico());
-			
 
 			pst.executeUpdate();
 
@@ -80,41 +79,59 @@ public class OrdemServicoControl {
 
 		finally {
 			ModuloConexao.closeConnection(conexao, pst);
-			System.out.println("serv: "+os.getServico()+"\nOrdem Servico: "+codOS);
 
 		}
-
 	}
 
-	// método que faz
-	public void FinalizaOS(OrdemServico os) {
+	public void finalizaOS(OrdemServico os) {
+
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 
-		String sql = "UPDATE ordem_servico SET veiculo=?,defeito=?,servico=?,funcionario=?,valor=?,cliente=?,data_os=? WHERE codigo_os=?";
+		String sql = "UPDATE ordem_servico SET veiculo=?,defeito=?,funcionario=?,valor=?,data_os=?,cliente=?,situacao=? WHERE codigo_os=?";
 		try {
 			pst = conexao.prepareStatement(sql);
 
 			pst.setString(1, os.getVeiculo());
 			pst.setString(2, os.getDefeito());
-			pst.setShort(3, os.getServico());
-			pst.setShort(4, os.getFuncionario());
-			pst.setDouble(5, os.getValor());
+			pst.setShort(3, os.getFuncionario());
+			pst.setDouble(4, os.getValor());
+			pst.setString(5, os.getData_os());
 			pst.setShort(6, os.getCliente());
-			pst.setString(7, os.getData_os());
+			pst.setString(7, os.getSituacao());
+			pst.setShort(8, os.getCodigo_os());
 
 			pst.executeUpdate();
 
-			JOptionPane.showMessageDialog(null, "Ordem de serviço finalizada!");
+			JOptionPane.showMessageDialog(null, "Ordem de serviços realizada com sucesso!");
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Erro ao finalizar a ordem de serviço\nERRO: " + e);
+			JOptionPane.showMessageDialog(null, "Erro ao finalizar a ordem servico\nERRO: " + e);
 		} finally {
 			ModuloConexao.closeConnection(conexao, pst);
 		}
-
 	}
 
 	public void deletaOS(short id) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+
+			pst = conexao.prepareStatement("delete from itens_os_servico where codigo_os=?");
+			pst.setShort(1, id);
+			pst.executeUpdate();
+
+			pst = conexao.prepareStatement("delete from ordem_servico where codigo_os=?");
+			pst.setShort(1, id);
+			pst.executeUpdate();
+
+			JOptionPane.showMessageDialog(null, "Ordem de serviço deletada!");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao deletar: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst);
+		}
 
 	}
 
@@ -122,7 +139,7 @@ public class OrdemServicoControl {
 
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
-		ResultSet rs = null;		
+		ResultSet rs = null;
 
 		String sql = " select codigo_os from ordem_servico";
 
@@ -145,15 +162,14 @@ public class OrdemServicoControl {
 
 		}
 		return codOS;
-		
 
 	}
-	
-	public short selectCodServ(String nomeServ){
+
+	public short selectCodServ(String nomeServ) {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		short codServ = 0 ;
+		short codServ = 0;
 
 		String sql = "select codigo_serv from serv where nome_serv=?";
 
@@ -174,6 +190,35 @@ public class OrdemServicoControl {
 			ModuloConexao.closeConnection(conexao, pst, rs);
 		}
 		return codServ;
+	}
+
+	public short selectCodFunc(String nomeFunc) {
+		Connection conexao = ModuloConexao.conector();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		short codFunc = 0;
+
+		String sql = "select codigo_func from funcionarios where nome_func=?";
+
+		try {
+			pst = conexao.prepareStatement(sql);
+			pst.setString(1, nomeFunc);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+
+				codFunc = rs.getShort("codigo_func");
+
+			}
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao buscar funcionário: " + e);
+		} finally {
+			ModuloConexao.closeConnection(conexao, pst, rs);
+		}
+
+		return codFunc;
+
 	}
 
 }

@@ -115,7 +115,7 @@ public class VendaControl {
 		Connection conexao = ModuloConexao.conector();
 		PreparedStatement pst = null;
 
-		String sql = "UPDATE venda SET valor_venda=?,data_venda=?,fk_cliente=? WHERE codigo_venda=?";
+		String sql = "UPDATE venda SET valor_venda=?,data_venda=?,fk_cliente=?,situacao='Aguardando Pagamento' WHERE codigo_venda=?";
 		try {
 			pst = conexao.prepareStatement(sql);
 
@@ -175,7 +175,7 @@ public class VendaControl {
 		}
 	}
 
-	/**********************************************************
+	/***********************************************************
 	 * MÉTODOS PARA REALIZAR CONSULTAS NO BANCO
 	 ***********************************************************/
 	public void buscaCodProduto(String nomeProduto) {
